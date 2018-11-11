@@ -20,7 +20,6 @@
 
     <modules>
         <module>base</module>
-        <module>config</module>
         <module>model</module>
         <module>service</module>
         <module>web</module>
