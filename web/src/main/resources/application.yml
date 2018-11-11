@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+    datasource:
+        name: talk
+        url: jdbc:mysql://120.78.73.227:3306/ydq?useSSL=false&allowMultiQueries=true&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Hongkong
+        username: root
+        password: lm996927@123
+        driver-class-name: com.mysql.cj.jdbc.Driver
