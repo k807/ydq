@@ -11,6 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 public class User {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -21,6 +22,7 @@ public class User {
 
     private String password;
 
+    @Column(nullable = false)
     private String phone;
 
     @ManyToOne
