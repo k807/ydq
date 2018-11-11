@@ -1,4 +1,4 @@
-package group.ydq.service.annotation;
+package group.ydq.base.annotation;
 
 import java.lang.annotation.*;
 

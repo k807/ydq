@@ -1,14 +1,11 @@
 package group.ydq.service.interceptor;
 
-import group.ydq.service.annotation.RequestRole;
 import group.ydq.service.service.RBACService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Objects;
 
 /**
  * =============================================

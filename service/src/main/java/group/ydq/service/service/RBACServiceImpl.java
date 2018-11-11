@@ -12,8 +12,7 @@ import group.ydq.model.entity.rbac.User;
 public class RBACServiceImpl extends BaseServiceImpl implements RBACService {
     @Override
     public boolean checkPassword(User user) {
-
-        return false;
+        return true;
     }
 
 
