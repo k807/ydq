@@ -2,14 +2,17 @@ package group.ydq.service.service;
 
 import group.ydq.model.dao.dm.ProjectRepository;
 import group.ydq.model.entity.dm.Project;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * @author Daylight
  * @date 2018/11/12 16:32
  */
-public class ProjectServiceImpl extends BaseServiceImpl implements ProjectService {
-    @Autowired
+@Service("declareService")
+public class DeclareServiceImpl extends BaseServiceImpl implements DeclareService {
+    @Resource
     private ProjectRepository repository;
     /**
      * 项目保存操作
@@ -17,7 +20,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
      */
     @Override
     public void save(Project project) {
-
+        repository.save(project);
     }
 
     /**
