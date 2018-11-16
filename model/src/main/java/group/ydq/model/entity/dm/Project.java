@@ -3,6 +3,7 @@ package group.ydq.model.entity.dm;
 import group.ydq.model.entity.rbac.User;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,11 +29,12 @@ public class Project {
 
     private String major;
 
+    @ManyToMany
     private List<Member> members;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition="longblob", nullable=true)
+    @Column(columnDefinition="longblob")
     private byte[] commitment;
 
     private String filepath;
@@ -115,5 +117,21 @@ public class Project {
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", level=" + level +
+                ", name='" + name + '\'' +
+                ", leader=" + leader +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", major='" + major + '\'' +
+                ", members=" + members +
+                ", commitment=" + Arrays.toString(commitment) +
+                ", filepath='" + filepath + '\'' +
+                '}';
     }
 }

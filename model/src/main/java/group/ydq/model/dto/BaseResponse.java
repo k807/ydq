@@ -12,7 +12,7 @@ public class BaseResponse {
 
     private String msg;
 
-    Object object;
+    private Object object;
 
     public BaseResponse() {
         this.statusCode = "200";

@@ -32,10 +32,6 @@ public class Message {
     @ManyToOne
     private User receiver;
 
-    public Message() {
-
-    }
-
     public Long getId() {
         return id;
     }
@@ -92,5 +88,4 @@ public class Message {
     public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
-
 }
