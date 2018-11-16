@@ -1,4 +1,6 @@
-package group.ydq.model.entity.mcs;
+package group.ydq.model.entity.cs;
+
+import group.ydq.model.entity.rbac.User;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,11 +18,14 @@ public class UploadFile {
     private Long id;
 
     @ManyToOne
-    private MidCheck midCheck;
+    private CheckStage checkStage;
 
     private String name;
 
     private String url;
+
+    @ManyToOne
+    private User uploader;
 
     private String remark;
 
@@ -28,9 +33,13 @@ public class UploadFile {
 
     public void setId(Long id) { this.id = id; }
 
-    public MidCheck getMidCheck() { return midCheck; }
+    public CheckStage getCheckStage() {
+        return checkStage;
+    }
 
-    public void setMidCheck(MidCheck midCheck) { this.midCheck = midCheck; }
+    public void setCheckStage(CheckStage checkStage) {
+        this.checkStage = checkStage;
+    }
 
     public String getName() { return name; }
 
@@ -39,6 +48,14 @@ public class UploadFile {
     public String getUrl() { return url; }
 
     public void setUrl(String url) { this.url = url; }
+
+    public User getUploader() {
+        return uploader;
+    }
+
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
+    }
 
     public String getRemark() { return remark; }
 

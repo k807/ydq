@@ -1,7 +1,6 @@
-package group.ydq.model.dao.msc;
+package group.ydq.model.dao.cs;
 
-import group.ydq.model.entity.mcs.MidCheck;
-import group.ydq.model.entity.mcs.UploadFile;
+import group.ydq.model.entity.cs.UploadFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
