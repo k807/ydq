@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.Date;
 
 /**
  * author:Leo
@@ -26,6 +27,8 @@ public class UploadFile {
 
     @ManyToOne
     private User uploader;
+
+    private Date uploadTime;
 
     private String remark;
 
@@ -55,6 +58,14 @@ public class UploadFile {
 
     public void setUploader(User uploader) {
         this.uploader = uploader;
+    }
+
+    public Date getUploadTime() {
+        return uploadTime;
+    }
+
+    public void setUploadTime(Date uploadTime) {
+        this.uploadTime = uploadTime;
     }
 
     public String getRemark() { return remark; }

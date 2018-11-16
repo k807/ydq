@@ -22,7 +22,18 @@ public class CheckStage {
 
     private int stage;  //项目所处阶段（中期或者后期）
 
-    private Date time;
+    private Date startTime;
+
+    private Date endTime;
+
+    private boolean uploadStatus;   //材料是否上传
+
+    private int satus;  // 所处阶段审核状态
+
+    private String remarks; //项目上传材料说明
+
+    @OneToMany
+    private List<User> verifiers;//审核人
 
     public Long getId() {
         return id;
@@ -48,12 +59,20 @@ public class CheckStage {
         this.stage = stage;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public boolean isUploadStatus() {
@@ -88,13 +107,6 @@ public class CheckStage {
         this.verifiers = verifiers;
     }
 
-    private boolean uploadStatus;   //材料是否上传
 
-    private int satus;  // 所处阶段审核状态
-
-    private String remarks;
-
-    @OneToMany
-    private List<User> verifiers;//审核人
 
 }
