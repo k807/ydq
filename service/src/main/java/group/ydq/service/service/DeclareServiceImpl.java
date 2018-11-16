@@ -31,4 +31,14 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
     public void submit(Project project) {
 
     }
+
+    /**
+     * 查询项目详情
+     * @param projectId
+     * @return
+     */
+    @Override
+    public Project getDeclaration(long projectId) {
+        return repository.getOne(projectId);
+    }
 }

@@ -10,4 +10,6 @@ public interface DeclareService extends BaseService{
     void save(Project project);
 
     void submit(Project project);
+
+    Project getDeclaration(long projectId);
 }
