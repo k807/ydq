@@ -1,5 +1,6 @@
 package group.ydq.model.entity.finalcheckstage;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
  * @author: Natsukawamasuzu
  * @date: 2018/11/16 17:30
  */
+@Entity
 public class NotificationList {
 
     @Id
