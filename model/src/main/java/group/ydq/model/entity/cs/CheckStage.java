@@ -30,7 +30,9 @@ public class CheckStage {
 
     private int satus;  // 所处阶段审核状态
 
-    private String remarks; //项目上传材料说明
+    private String remarks; //项目上传材料要求
+
+    private  String message; //项目阶段审核建议
 
     @OneToMany
     private List<User> verifiers;//审核人
@@ -107,6 +109,11 @@ public class CheckStage {
         this.verifiers = verifiers;
     }
 
+    public String getMessage() {
+        return message;
+    }
 
-
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
