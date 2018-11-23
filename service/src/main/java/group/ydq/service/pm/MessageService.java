@@ -4,7 +4,6 @@ import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simple
@@ -20,10 +19,10 @@ public interface MessageService {
     List<Message> messageList();
 
     /*
-     *  描述：发送新的站内消息
-     *  权限：仅限超级管理员
+     *  描述：查看单个站内消息
+     *  权限：所有用户
      * */
-    Optional<Message> messageOne(Long id);
+    Message messageOne(Long id);
 
     /*
      *   描述：发送新的站内消息
@@ -41,12 +40,12 @@ public interface MessageService {
      *  描述：通过发送者id查询，参数为user.id
      *  权限：超级管理员与行政管理员
      * */
-    List<Message> findBySender(User sender);
+    List<Message> findBySender(User sender, int page, int limit);
 
     /*
      *  描述：通过接受者id查询，参数为user.id
      *  权限：超级管理员、行政管理员、申报人
      * */
-    List<Message> findByReceiver(User receiver);
+    List<Message> findByReceiver(User receiver, int page, int limit);
 
 }

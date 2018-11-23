@@ -4,15 +4,11 @@ import group.ydq.model.dao.pm.MessageRepository;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simple
@@ -21,11 +17,9 @@ import java.util.Optional;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-    @PersistenceContext
-    EntityManager em;
 
     @Autowired
-    private MessageRepository messageRepository ;
+    private MessageRepository messageRepository;
 
     @Override
     public List<Message> messageList() {
@@ -33,9 +27,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Optional<Message> messageOne(Long id) {
-        return messageRepository.findById(id);
+    public Message messageOne(Long id) {
+        return null;
     }
+
 
     @Override
     public Message sendMessage(Message newMessage) {
@@ -49,20 +44,14 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findBySender(User sender) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Message> query = builder.createQuery(Message.class);
-        Root<Message> root = query.from(Message.class);
-        query.where(builder.like(root.get("sender"), "%" + sender + "%"));
-        return em.createQuery(query.select(root)).getResultList();
+    public List<Message> findBySender(User sender, int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        return messageRepository.findBySender(sender, pageable);
     }
 
     @Override
-    public List<Message> findByReceiver(User receiver) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Message> query = builder.createQuery(Message.class);
-        Root<Message> root = query.from(Message.class);
-        query.where(builder.like(root.get("receiver"), "%" + receiver + "%"));
-        return em.createQuery(query.select(root)).getResultList();
+    public List<Message> findByReceiver(User receiver, int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        return messageRepository.findByReceiver(receiver, pageable);
     }
 }

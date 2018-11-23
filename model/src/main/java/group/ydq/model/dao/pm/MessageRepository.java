@@ -2,7 +2,9 @@ package group.ydq.model.dao.pm;
 
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +12,10 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    List<Message> findBySender(User sender);
+    @Query(value = "select m from Message m where m.sender = ?1 ORDER BY ?#{#pageable}")
+    List<Message> findBySender(User sender, Pageable pageable);
 
-    List<Message> findByReceiver(User receiver);
+
+    @Query(value = "select m from Message m where m.receiver = ?1 ORDER BY ?#{#pageable}")
+    List<Message> findByReceiver(User receiver, Pageable pageable);
 }
