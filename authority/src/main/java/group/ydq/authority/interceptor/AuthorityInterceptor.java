@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 /**
@@ -32,7 +31,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
+        String requestUrl = request.getRequestURI();
+
         // 获取handlerMethod对象
         HandlerMethod handlerMethod = null;
         if (handler instanceof HandlerMethod) {
@@ -46,18 +46,32 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             }
         }
 
-        // 2. 检查是否在配置的权限检查路径下
+        // 2. 是否是index页面，如果是则不做权限检查
+        if (requestUrl.equals(authorityManager.getIndexPath())
+                || requestUrl.equals(authorityManager.getLoginPath())
+                || requestUrl.equals(authorityManager.getLogoutPath())) {
+            return true;
+        }
+
         PatternMatcher matcher = authorityManager.getPatternMatcher();
-        String requestUrl = request.getRequestURI();
+
+        // 3. 检查是否在配置的unlimited的路径下
+        for (String path : authorityManager.getUnlimitedPath()) {
+            if (matcher.match(requestUrl, path)) {
+                return true;
+            }
+        }
+
+        // 4. 检查是否在配置的权限检查路径下
         for (String path : authorityManager.getDefaultScanPath()) {
             if (matcher.match(requestUrl, path)) {
-                // 3. 检查登陆状态
+                // 4.1 检查登陆状态
                 Subject subject = SubjectUtils.getSubject();
                 if (!SubjectUtils.isOnline(subject)) {
                     response.sendRedirect(authorityManager.getIndexPath());
                     return false;
                 }
-                // 4. 检查权限
+                // 4.2 检查权限
                 if (authorityManager.checkPermission(subject, requestUrl)) {
                     return true;
                 } else {

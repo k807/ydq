@@ -1,5 +1,6 @@
 package group.ydq.web.controller;
 
+import group.ydq.authority.annotion.Unlimited;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ public class TestController {
      * @return
      */
     @GetMapping("/hello")
-    public String hello(){
+    public String hello() {
         return "hello";
     }
 
@@ -24,8 +25,9 @@ public class TestController {
      * @param str
      * @return
      */
-    @RequestMapping("input")
-    public String input(String str){
+    @Unlimited
+    @RequestMapping("/input")
+    public String input(String str) {
         return str;
     }
 }

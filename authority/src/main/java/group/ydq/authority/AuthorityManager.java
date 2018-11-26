@@ -2,10 +2,7 @@ package group.ydq.authority;
 
 import group.ydq.authority.util.SpringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -17,12 +14,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AuthorityManager {
     private static final String DEFAULT_SCAN_PATH_KEY = "default-scan-path";
+    private static final String UNLIMITED_PATH = "unlimited-path";
     private static final String INDEX_PATH = "index-path";
-    private Map<String, Object> cofigurer = new ConcurrentHashMap<>();
+    private static final String LOGIN_PATH = "login-path";
+    private static final String LOGOUT_PATH = "logout-path";
+
+    private Map<String, Object> configurer = new ConcurrentHashMap<>();
 
     {
-        cofigurer.put(DEFAULT_SCAN_PATH_KEY, new ArrayList<String>());
-        cofigurer.put(INDEX_PATH, "index");
+        configurer.put(DEFAULT_SCAN_PATH_KEY, new ArrayList<String>());
+        configurer.put(UNLIMITED_PATH, new HashSet<String>());
+        configurer.put(INDEX_PATH, "index");
+        configurer.put(LOGIN_PATH, "index");
+        configurer.put(LOGOUT_PATH, "index");
     }
 
     private AuthorityChecker authorityChecker;
@@ -36,7 +40,7 @@ public class AuthorityManager {
 
     @SuppressWarnings("unchecked")
     public void configureDefaultScanPath(String[] path) {
-        Object defaultScanPath = cofigurer.get(DEFAULT_SCAN_PATH_KEY);
+        Object defaultScanPath = configurer.get(DEFAULT_SCAN_PATH_KEY);
 
         if (defaultScanPath instanceof List) {
             List pathList = (List) defaultScanPath;
@@ -46,15 +50,40 @@ public class AuthorityManager {
 
 
     public void configureIndexPath(String path) {
-        cofigurer.put(INDEX_PATH, path);
+        configurer.put(INDEX_PATH, path);
+    }
+
+    public void configureLoginPath(String path) {
+        configurer.put(LOGIN_PATH, path);
+    }
+
+    public void configureLogoutPath(String path) {
+        configurer.put(LOGOUT_PATH, path);
+    }
+
+    public void configureUnlimitedPath(String path) {
+        Set paths = (Set) configurer.get(UNLIMITED_PATH);
+        paths.add(path);
     }
 
     public String[] getDefaultScanPath() {
-        return (String[]) ((List) cofigurer.get(DEFAULT_SCAN_PATH_KEY)).toArray(new String[0]);
+        return (String[]) ((List) configurer.get(DEFAULT_SCAN_PATH_KEY)).toArray(new String[0]);
     }
 
     public String getIndexPath() {
-        return (String) cofigurer.get(INDEX_PATH);
+        return (String) configurer.get(INDEX_PATH);
+    }
+
+    public String getLoginPath() {
+        return (String) configurer.get(LOGOUT_PATH);
+    }
+
+    public String getLogoutPath() {
+        return (String) configurer.get(LOGOUT_PATH);
+    }
+
+    public String[] getUnlimitedPath() {
+        return (String[]) ((Set) configurer.get(UNLIMITED_PATH)).toArray(new String[0]);
     }
 
     public PatternMatcher getPatternMatcher() {
