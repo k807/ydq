@@ -2,6 +2,7 @@ package group.ydq.web.controller;
 
 import group.ydq.authority.Subject;
 import group.ydq.authority.SubjectUtils;
+import group.ydq.authority.annotion.Unlimited;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,7 @@ public class HelloController {
         return "you have not login, please login";
     }
 
+    @Unlimited
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public void login(String username, String password, HttpServletResponse response) throws IOException {
         Subject subject = SubjectUtils.getSubject();
@@ -43,6 +45,7 @@ public class HelloController {
         }
     }
 
+    @Unlimited
     @RequestMapping(value = "logout", method = RequestMethod.GET)
     public void logout(HttpServletResponse response) throws IOException {
         SubjectUtils.getSubject().logout();
