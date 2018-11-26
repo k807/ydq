@@ -75,7 +75,7 @@ public class AuthorityManager {
     }
 
     public String getLoginPath() {
-        return (String) configurer.get(LOGOUT_PATH);
+        return (String) configurer.get(LOGIN_PATH);
     }
 
     public String getLogoutPath() {
