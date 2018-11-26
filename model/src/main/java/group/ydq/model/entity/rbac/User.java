@@ -18,11 +18,11 @@ public class User {
 
     private String nick;
 
+    @Column(nullable = false, unique = true)
     private String userNumber;
 
     private String password;
 
-    @Column(nullable = false)
     private String phone;
 
     @ManyToOne

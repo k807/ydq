@@ -23,6 +23,7 @@
         <module>model</module>
         <module>service</module>
         <module>web</module>
+        <module>authority</module>
     </modules>
 
     <properties>
