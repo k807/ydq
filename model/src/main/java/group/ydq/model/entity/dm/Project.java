@@ -3,10 +3,11 @@ package group.ydq.model.entity.dm;
 import group.ydq.model.entity.rbac.User;
 
 import javax.persistence.*;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
+ * 项目实体
  * @author Daylight
  * @date 2018/11/12 16:02
  */
@@ -23,21 +24,39 @@ public class Project {
     @ManyToOne
     private User leader;
 
+    @ManyToOne
+    private User manager; //管理员
+
+    @ManyToMany
+    private List<User> experts; //分配的专家
+
     private String phone;
 
     private String email;
 
-    private String major;
+    private int major;  //专业
 
-    @ManyToMany
-    private List<Member> members;
+    private String members; //成员列表，以json数组格式存储
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition="longblob")
-    private byte[] commitment;
+    private byte[] commitment;  //承诺书图片
 
     private String filepath;
+
+    @ManyToOne
+    private DeclareRule entrance;
+
+    private int state; //项目状态
+
+    private Date createTime;    //创建时间
+
+    private Date updateTime;    //更新时间
+
+    private String remark;
+
+    private boolean submit;
 
     public Long getId() {
         return id;
@@ -87,19 +106,19 @@ public class Project {
         this.email = email;
     }
 
-    public String getMajor() {
+    public int getMajor() {
         return major;
     }
 
-    public void setMajor(String major) {
+    public void setMajor(int major) {
         this.major = major;
     }
 
-    public List<Member> getMembers() {
+    public String getMembers() {
         return members;
     }
 
-    public void setMembers(List<Member> members) {
+    public void setMembers(String members) {
         this.members = members;
     }
 
@@ -119,19 +138,67 @@ public class Project {
         this.filepath = filepath;
     }
 
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", level=" + level +
-                ", name='" + name + '\'' +
-                ", leader=" + leader +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", major='" + major + '\'' +
-                ", members=" + members +
-                ", commitment=" + Arrays.toString(commitment) +
-                ", filepath='" + filepath + '\'' +
-                '}';
+    public DeclareRule getEntrance() {
+        return entrance;
+    }
+
+    public void setEntrance(DeclareRule entrance) {
+        this.entrance = entrance;
+    }
+
+    public User getManager() {
+        return manager;
+    }
+
+    public void setManager(User manager) {
+        this.manager = manager;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public List<User> getExperts() {
+        return experts;
+    }
+
+    public void setExperts(List<User> experts) {
+        this.experts = experts;
+    }
+
+    public boolean isSubmit() {
+        return submit;
+    }
+
+    public void setSubmit(boolean submit) {
+        this.submit = submit;
     }
 }

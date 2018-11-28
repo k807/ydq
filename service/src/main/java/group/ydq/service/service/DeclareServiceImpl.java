@@ -1,10 +1,13 @@
 package group.ydq.service.service;
 
+import group.ydq.model.dao.dm.ExpertRepository;
 import group.ydq.model.dao.dm.ProjectRepository;
+import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.entity.dm.Project;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Daylight
@@ -13,14 +16,19 @@ import javax.annotation.Resource;
 @Service("declareService")
 public class DeclareServiceImpl extends BaseServiceImpl implements DeclareService {
     @Resource
-    private ProjectRepository repository;
+    private UserRepository userDao;
+    @Resource
+    private ProjectRepository projectDao;
+    @Resource
+    private ExpertRepository expertDao;
     /**
      * 项目保存操作
      * @param project
      */
     @Override
     public void save(Project project) {
-        repository.save(project);
+        project.setSubmit(false);
+        projectDao.save(project);
     }
 
     /**
@@ -29,7 +37,8 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
      */
     @Override
     public void submit(Project project) {
-
+        project.setSubmit(true);
+        projectDao.save(project);
     }
 
     /**
@@ -38,7 +47,15 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
      * @return
      */
     @Override
-    public Project getDeclaration(long projectId) {
-        return repository.getOne(projectId);
+    public Project getProject(long projectId) {
+        return projectDao.getOne(projectId);
     }
+
+    @Override
+    public void distributeExpert(long projectId, List<Long> expertIds) {
+        projectDao.getOne(projectId).setExperts(userDao.findUsersByIdIn(expertIds));
+    }
+
+
+
 }
