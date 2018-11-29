@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>项目申报</title>
+    <link rel="stylesheet" href="assets/layui/css/layui.css">
+    <link rel="stylesheet" href="assets/style/admin.css">
+    <link rel="stylesheet" href="assets/style/login.css">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layadmin-user-login-main layui-card-body" style="padding: 15px;width: 38%;">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>项目申报表</h2>
+            </div>
+            <div class="layadmin-user-login-box layadmin-user-login-body">
+                <form class="layui-form layui-form-pane">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">项目名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入项目名"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申报级别</label>
+                        <div class="layui-input-block">
+                            <select name="level" lay-verify="required">
+                                <option value="">请选择级别</option>
+                                <option value="0">校级一类</option>
+                                <option value="1">校级二类</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">负责人</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="leader" id="leader" autocomplete="off" class="layui-input"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机号码</label>
+                        <div class="layui-input-block">
+                            <input type="tel" name="phone" lay-required="phone" autocomplete="off" placeholder="请输入手机号码"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电子邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="email" name="email" lay-required="email" autocomplete="off" placeholder="请输入邮箱"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属专业</label>
+                        <div class="layui-input-block">
+                            <select name="major" lay-verify="required">
+                                <option value="">请选择专业</option>
+                                <option value="0">计算机科学与技术</option>
+                                <option value="1">电子信息工程</option>
+                                <option value="2">电子信息科学与技术</option>
+                                <option value="3">数字媒体技术</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-row">
+                            <div class="layui-col-xs10">
+                                <label class="layui-form-label">项目成员</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="member" autocomplete="off" placeholder="请添加成员"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-col-xs2">
+                                <div style="margin-left: 10px; float: right;">
+                                    <input type="button" value="添加" id="add-member" class="layui-btn">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row"  style="margin-top: 8px">
+                            <div class="layui-col-xs10">
+                                <label class="layui-form-label" style="border-width: 0; background-color: #ffffff"></label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="member" autocomplete="off" placeholder="请添加成员"
+                                           class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-col-xs2">
+                                <div style="margin-left: 10px; float: right;">
+                                    <input type="button" value="删除" id="del-member" class="layui-btn layui-btn-danger">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-upload">
+                            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                <p style="font-size: medium; margin-bottom: 15px">立项承诺书</p>
+                                <div align="center">
+                                <div class="layui-upload-drag">
+                                    <div id="upload-img" >
+                                        <i class="layui-icon" ></i>
+                                        <p>点击上传，或将文件拖拽到此处</p>
+                                    </div>
+                                </div>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申报书</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/layui/layui.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use(['jquery', 'form', 'upload'], function () {
+        var $ = layui.$;
+        var form = layui.form;
+        var upload = layui.upload;
+        var uploadInst = upload.render({
+            elem: '#upload-img'
+            , url: '/upload/'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    var box=document.getElementById('upload-img');
+                    box.innerHTML='<img class="layui-upload-img" id="commitment" width="300px" >';
+                    $("#commitment").attr('src',result);
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                // var demoText = $('#demoText');
+                // demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                // demoText.find('.demo-reload').on('click', function () {
+                //     uploadInst.upload();
+                // });
+            }
+        });
+        $("#add-member").on('click', function () {
+
+        })
+    });
+</script>
+</body>
+</html>
