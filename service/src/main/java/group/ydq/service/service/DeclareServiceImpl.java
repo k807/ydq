@@ -3,6 +3,7 @@ package group.ydq.service.service;
 import group.ydq.model.dao.dm.ExpertRepository;
 import group.ydq.model.dao.dm.ProjectRepository;
 import group.ydq.model.dao.rbac.UserRepository;
+import group.ydq.model.entity.dm.ExpertProject;
 import group.ydq.model.entity.dm.Project;
 import org.springframework.stereotype.Service;
 
@@ -53,9 +54,26 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
 
     @Override
     public void distributeExpert(long projectId, List<Long> expertIds) {
-        projectDao.getOne(projectId).setExperts(userDao.findUsersByIdIn(expertIds));
+        Project project=projectDao.getOne(projectId);
+        project.setExperts(userDao.findUsersByIdIn(expertIds));
+        projectDao.save(project);
+        for (Long id:expertIds) {
+            ExpertProject expertProject = new ExpertProject();
+            expertProject.setExpert(userDao.getOne(id));
+            expertProject.setProject(project);
+            expertDao.save(expertProject);
+        }
     }
 
+    @Override
+    public List<Project> getProjects(String userNumber) {
+        return projectDao.findProjectsByLeader(userDao.findByUserNumber(userNumber));
+    }
+
+    @Override
+    public List<Project> getProjectsOfManager(String userNumber) {
+        return projectDao.findProjectsByManagerAndSubmit(userDao.findByUserNumber(userNumber),true);
+    }
 
 
 }

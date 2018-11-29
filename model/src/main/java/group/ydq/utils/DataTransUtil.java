@@ -31,6 +31,8 @@ public class DataTransUtil {
 
     public static String managerState(int state){
         switch (state){
+            case -1:
+                return "未提交";
             case 0:
                 return "审核中";
             case 1:

@@ -16,4 +16,8 @@ public interface DeclareService extends BaseService{
     Project getProject(long projectId);
 
     void distributeExpert(long projectId, List<Long> expertIds);
+
+    List<Project> getProjects(String userNumber);
+
+    List<Project> getProjectsOfManager(String userNumber);
 }
