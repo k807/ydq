@@ -18,7 +18,9 @@ public class Message {
     @GeneratedValue
     private Long id;
 
-    private Date time;
+    private Date date;
+
+    private int type;
 
     private String title;
 
@@ -40,12 +42,20 @@ public class Message {
         this.id = id;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getTitle() {

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>站内消息测试</title>
+    <link rel="stylesheet" href="assets/layui/css/layui.css">
+    <script src="assets/layui/layui.js" charset="utf-8"></script>
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+    <legend>生成站内消息演示</legend>
+</fieldset>
+<form class="layui-form layui-form-pane" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" autocomplete="off" lay-verify="required" placeholder="请输入标题"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">发送日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="date" id="date" lay-verify="required" autocomplete="off" class="layui-input"
+                       placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">消息类型</label>
+            <div class="layui-input-block">
+                <select name="type" lay-verify="required" lay-filter="type">
+                    <option value=""></option>
+                    <option value="0" selected="">公告</option>
+                    <option value="1">私信</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">接收人</label>
+            <div class="layui-input-block">
+                <input type="text" name="receiver"
+                       autocomplete="off"
+                       placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">发送人</label>
+            <div class="layui-input-block">
+                <input type="text" name="sender"
+                       value="管理员"
+                       class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">发送文本</label>
+        <div class="layui-input-block">
+            <textarea type="text" name="content"
+                      autocomplete="off"
+                      lay-verify="required"
+                      placeholder="请输入内容"
+                      class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="remark"
+                   autocomplete="off"
+                   placeholder="请输入标题"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['form', 'jquery', 'laydate'], function () {
+        $ = layui.$ //重点处
+        var form = layui.form
+            , layer = layui.layer
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#date'
+            , type: 'datetime'
+        });
+        //监听选择器
+        form.on('select(type)', function (data) {
+            console.log(data.value); //得到被选中的值
+            switch (data.value) {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                default:
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
+
+    });
+
+    function createTime() {
+        var date = new Date();
+        var year = date.getFullYear(); //获取当前年份
+        var mon = date.getMonth() + 1; //获取当前月份
+        var day = date.getDate(); //获取当前日
+        var h = date.getHours(); //获取小时
+        var m = date.getMinutes(); //获取分钟
+        var s = date.getSeconds(); //获取秒
+        // alert(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
+        $("#date").val(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
+    }
+
+    setInterval(createTime, 1000);
+</script>
+
+</body>
+</html>

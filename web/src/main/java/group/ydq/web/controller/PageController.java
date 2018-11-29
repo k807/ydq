@@ -24,8 +24,13 @@ public class PageController {
         return "register.html";
     }
 
-    @RequestMapping("/message")
+    @RequestMapping("/pm")
     public String message() {
-        return "messageTest.html";
+        return "privateMessage.html";
+    }
+
+    @RequestMapping("/pmTest")
+    public String messageTest() {
+        return "pmTest.html";
     }
 }
