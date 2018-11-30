@@ -1,7 +1,6 @@
 package group.ydq.model.dto;
 
 import group.ydq.model.entity.dm.Project;
-import group.ydq.utils.DataTransUtil;
 
 /**
  * @author Daylight
@@ -10,7 +9,7 @@ import group.ydq.utils.DataTransUtil;
 public class ProjectDetails {
     private Long id;
 
-    private String level;
+    private int level;
 
     private String name;
 
@@ -20,22 +19,31 @@ public class ProjectDetails {
 
     private String email;
 
-    private String major;
+    private int major;
 
     private String members;
 
     private String filepath;
 
-    public ProjectDetails(Project project) {
+    private String filename;
+
+    private String commitmentId;
+
+    public ProjectDetails() {
+    }
+
+    public ProjectDetails(Project project,String filename){
         this.id=project.getId();
-        this.level= DataTransUtil.projectLevel(project.getLevel());
         this.name=project.getName();
         this.leader=project.getLeader().getNick();
         this.phone=project.getPhone();
+        this.level=project.getLevel();
         this.email=project.getEmail();
-        this.major= DataTransUtil.major(project.getMajor());
+        this.major=project.getMajor();
         this.members=project.getMembers();
         this.filepath=project.getFilepath();
+        this.filename=filename;
+        this.commitmentId=project.getCommitmentId();
     }
 
     public Long getId() {
@@ -46,11 +54,11 @@ public class ProjectDetails {
         this.id = id;
     }
 
-    public String getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 
@@ -86,11 +94,11 @@ public class ProjectDetails {
         this.email = email;
     }
 
-    public String getMajor() {
+    public int getMajor() {
         return major;
     }
 
-    public void setMajor(String major) {
+    public void setMajor(int major) {
         this.major = major;
     }
 
@@ -108,5 +116,21 @@ public class ProjectDetails {
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getCommitmentId() {
+        return commitmentId;
+    }
+
+    public void setCommitmentId(String commitmentId) {
+        this.commitmentId = commitmentId;
     }
 }

@@ -9,15 +9,7 @@ import java.util.List;
  * @date 2018/11/12 16:25
  */
 public interface DeclareService extends BaseService{
-    void save(Project project);
-
-    void submit(Project project);
-
-    Project getProject(long projectId);
-
     void distributeExpert(long projectId, List<Long> expertIds);
 
-    List<Project> getProjects(String userNumber);
 
-    List<Project> getProjectsOfManager(String userNumber);
 }

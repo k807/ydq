@@ -22,35 +22,6 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
     private ProjectRepository projectDao;
     @Resource
     private ExpertRepository expertDao;
-    /**
-     * 项目保存操作
-     * @param project
-     */
-    @Override
-    public void save(Project project) {
-        project.setSubmit(false);
-        projectDao.save(project);
-    }
-
-    /**
-     * 项目提交操作
-     * @param project
-     */
-    @Override
-    public void submit(Project project) {
-        project.setSubmit(true);
-        projectDao.save(project);
-    }
-
-    /**
-     * 查询项目详情
-     * @param projectId
-     * @return
-     */
-    @Override
-    public Project getProject(long projectId) {
-        return projectDao.getOne(projectId);
-    }
 
     @Override
     public void distributeExpert(long projectId, List<Long> expertIds) {
@@ -64,16 +35,4 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
             expertDao.save(expertProject);
         }
     }
-
-    @Override
-    public List<Project> getProjects(String userNumber) {
-        return projectDao.findProjectsByLeader(userDao.findByUserNumber(userNumber));
-    }
-
-    @Override
-    public List<Project> getProjectsOfManager(String userNumber) {
-        return projectDao.findProjectsByManagerAndSubmit(userDao.findByUserNumber(userNumber),true);
-    }
-
-
 }

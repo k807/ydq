@@ -38,16 +38,16 @@ public class Project {
 
     private String members; //成员列表，以json数组格式存储
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition="longblob")
-    private byte[] commitment;  //承诺书图片
+    private String commitmentId;  //承诺书图片路径
 
-    private String filepath;
+    private String filepath;    //申报书文件路径
 
     @ManyToOne
-    private DeclareRule entrance;
+    private DeclareRule entrance;   //申报入口
 
+    /**
+     * 状态码：0-审核中；1-初审通过；2：立项评审中；3：立项评审完成；4：已立项；5：中期检查；6：中期检查待整改；7：中期检查通过；8：结题验收；9结题验收待整改；10：已结题
+     */
     private int state; //项目状态
 
     private Date createTime;    //创建时间
@@ -122,12 +122,12 @@ public class Project {
         this.members = members;
     }
 
-    public byte[] getCommitment() {
-        return commitment;
+    public String getCommitmentId() {
+        return commitmentId;
     }
 
-    public void setCommitment(byte[] commitment) {
-        this.commitment = commitment;
+    public void setCommitmentId(String commitmentId) {
+        this.commitmentId = commitmentId;
     }
 
     public String getFilepath() {
