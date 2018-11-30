@@ -1,4 +1,4 @@
-package group.ydq.service.pm;
+package group.ydq.service.service.pm;
 
 import group.ydq.model.dao.pm.MessageRepository;
 import group.ydq.model.entity.pm.Message;
