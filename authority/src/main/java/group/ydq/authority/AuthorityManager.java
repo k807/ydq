@@ -1,5 +1,9 @@
 package group.ydq.authority;
 
+import group.ydq.authority.event.EventPublisher;
+import group.ydq.authority.event.Listener;
+import group.ydq.authority.event.ListenerRegister;
+import group.ydq.authority.event.impl.DefaultEventPublisher;
 import group.ydq.authority.util.SpringUtils;
 
 import java.util.*;
@@ -12,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @create 2018-11-25 22:27
  * =============================================
  */
-public class AuthorityManager {
+public class AuthorityManager implements ListenerRegister {
     private static final String DEFAULT_SCAN_PATH_KEY = "default-scan-path";
     private static final String UNLIMITED_PATH = "unlimited-path";
     private static final String INDEX_PATH = "index-path";
@@ -20,6 +24,7 @@ public class AuthorityManager {
     private static final String LOGOUT_PATH = "logout-path";
 
     private Map<String, Object> configurer = new ConcurrentHashMap<>();
+    private Map<String, Listener> listeners = new ConcurrentHashMap<>();
 
     {
         configurer.put(DEFAULT_SCAN_PATH_KEY, new ArrayList<String>());
@@ -31,11 +36,18 @@ public class AuthorityManager {
 
     private AuthorityChecker authorityChecker;
     private PatternMatcher patternMatcher;
-
+    private static EventPublisher publisher;
 
     public AuthorityManager(AuthorityChecker authorityChecker, PatternMatcher patternMatcher) {
         this.authorityChecker = authorityChecker;
         this.patternMatcher = patternMatcher;
+        publisher = new DefaultEventPublisher(this);
+    }
+
+    public AuthorityManager(AuthorityChecker authorityChecker, PatternMatcher patternMatcher, EventPublisher publisher) {
+        this.authorityChecker = authorityChecker;
+        this.patternMatcher = patternMatcher;
+        AuthorityManager.publisher = publisher;
     }
 
     @SuppressWarnings("unchecked")
@@ -90,6 +102,10 @@ public class AuthorityManager {
         return this.patternMatcher;
     }
 
+    public static EventPublisher getPublisher() {
+        return publisher;
+    }
+
     // 检查某个用户是否有某个url的权限
     // todo: 加缓存
     public boolean checkPermission(Subject subject, String url) {
@@ -108,4 +124,18 @@ public class AuthorityManager {
         return checker.checkPrincipal(subject);
     }
 
+    @Override
+    public List<Listener> getListeners() {
+        return new ArrayList<>(listeners.values());
+    }
+
+    @Override
+    public Listener getListenerByName(String name) {
+        return listeners.get(name);
+    }
+
+    @Override
+    public void registListener(String name, Listener listener) {
+        listeners.put(name, listener);
+    }
 }

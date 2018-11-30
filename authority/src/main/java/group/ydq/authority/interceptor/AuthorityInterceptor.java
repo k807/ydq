@@ -5,6 +5,7 @@ import group.ydq.authority.PatternMatcher;
 import group.ydq.authority.Subject;
 import group.ydq.authority.SubjectUtils;
 import group.ydq.authority.annotion.Unlimited;
+import group.ydq.authority.event.impl.AuthorityEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -69,13 +70,19 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                 Subject subject = SubjectUtils.getSubject();
                 if (!SubjectUtils.isOnline(subject)) {
                     response.sendRedirect(authorityManager.getIndexPath());
+                    AuthorityManager.getPublisher().
+                            fireAuthenticationFailEvent(new AuthorityEvent("have not login", request, request.getSession()));
                     return false;
                 }
                 // 4.2 检查权限
                 if (authorityManager.checkPermission(subject, requestUrl)) {
+                    AuthorityManager.getPublisher().
+                            fireAuthenticationSuccessEvent(new AuthorityEvent("authentication success", request, request.getSession()));
                     return true;
                 } else {
                     response.sendRedirect(authorityManager.getIndexPath());
+                    AuthorityManager.getPublisher().
+                            fireAuthenticationFailEvent(new AuthorityEvent("authentication fail", request, request.getSession()));
                     return false;
                 }
 

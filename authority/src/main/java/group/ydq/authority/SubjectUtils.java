@@ -1,5 +1,6 @@
 package group.ydq.authority;
 
+import group.ydq.authority.event.impl.LogEvent;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -87,8 +88,10 @@ public class SubjectUtils {
         }
         if (AuthorityManager.checkSubject(subject)) {
             statusMap.put(subject, LoginStatus.ONLINE);
+            AuthorityManager.getPublisher().fireLoginSuccessEvent(new LogEvent(subject, "login success"));
             return true;
         } else {
+            AuthorityManager.getPublisher().fireLoginSuccessEvent(new LogEvent(subject, "login fail"));
             return false;
         }
     }
@@ -96,6 +99,7 @@ public class SubjectUtils {
     static boolean logout(Subject subject) {
         if (isOnline(subject)) {
             statusMap.put(subject, LoginStatus.LOGOUT);
+            AuthorityManager.getPublisher().fireLogoutEvent(new LogEvent(subject, "logout"));
             return true;
         }
         return false;

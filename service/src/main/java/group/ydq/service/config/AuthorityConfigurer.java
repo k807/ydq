@@ -5,6 +5,7 @@ import group.ydq.authority.AuthorityManager;
 import group.ydq.authority.PatternMatcher;
 import group.ydq.service.authority.AuthorityCheckerImpl;
 import group.ydq.authority.matcher.RegexPatternMatcher;
+import group.ydq.service.authority.LogListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,6 +28,8 @@ public class AuthorityConfigurer {
         manager.configureLogoutPath("/user/logout");
         // 配置不受检查的路径 也可以使用@Unlimited注解
         manager.configureUnlimitedPath("/test/hello");
+        // 支持注册监听器
+        manager.registListener("logListener", new LogListener());
         return manager;
     }
 
