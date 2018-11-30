@@ -2,7 +2,7 @@ package group.ydq.web.controller;
 
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
-import group.ydq.service.pm.MessageServiceImpl;
+import group.ydq.service.service.pm.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

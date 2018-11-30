@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author Simple
+ */
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>后台管理</title>
     <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="assets/style/admin.css" media="all">
 </head>
@@ -27,11 +28,11 @@
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
                 <!--<li class="layui-nav-item">-->
-                    <!--<p id="time1" style="color: #000;"></p>-->
-                    <!--<script src="time.js"></script>-->
+                <!--<p id="time1" style="color: #000;"></p>-->
+                <!--<script src="time.js"></script>-->
                 <!--</li>-->
                 <li class="layui-nav-item" lay-unselect="" style="">
-                    <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
+                    <a lay-href="privateMessage.html" layadmin-event="message" lay-text="消息中心">
                         <i class="layui-icon layui-icon-notice"></i>
 
                         <!-- 如果有新消息，则显示小圆点 -->
@@ -54,7 +55,7 @@
                     </a>
                 </li>
                 <li class="layui-nav-item" lay-unselect="" style="">
-                    <a >
+                    <a>
                         <cite>Admin</cite>
                         <span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child layui-anim layui-anim-upbit">
@@ -93,8 +94,8 @@
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
-                            <dd data-name="console">
-                                <a lay-href="projectDeclare.html">项目申报</a>
+                            <dd data-name="console" class="layui-this">
+                                <a lay-href="privateMessage.html">站内消息管理</a>
                             </dd>
                         </dl>
                     </li>
@@ -118,7 +119,9 @@
             </div>
             <div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="userManage.html" lay-attr="userManage.html" class="layui-this" style=""><i class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>
+                    <li lay-id="userManage.html" lay-attr="userManage.html" class="layui-this" style=""><i
+                            class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>
+                    </li>
                 </ul>
             </div>
         </div>
