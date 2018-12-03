@@ -20,7 +20,7 @@ public class CheckStage {
     @ManyToOne
     private Project project;
 
-    private int stage;  //项目所处阶段（中期或者后期）
+    private int stage;  //项目所处阶段（中期或者后期）    1-中期检查    2-结题验收
 
     private Date startTime;
 
@@ -28,7 +28,7 @@ public class CheckStage {
 
     private boolean uploadStatus;   //材料是否上传
 
-    private int satus;  // 所处阶段审核状态
+    private int satus;  // 所处阶段审核状态 0-未审核   1-已通过   2-未通过
 
     private String remarks; //项目上传材料要求
 
