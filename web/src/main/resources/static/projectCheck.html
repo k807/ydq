@@ -37,7 +37,7 @@
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">审核状态:</label>
-                    <div class="layui-input-inline">
+                    <div class="layui-input-inline" >
                         <select name="status" lay-search="">
                             <option value="">请选择或输入</option>
                             <option value="0">待审核</option>
@@ -157,9 +157,9 @@
                 dataType: 'json',
                 success: function (data) {
                     if (data.state === 400) {
-                        layer.msg("状态更改失败");
+                        layer.msg("操作失败！");
                     } else {
-                        layer.msg("状态更改成功");
+                        layer.msg("操作成功！");
                         tableIns.reload();
                     }
                 }
