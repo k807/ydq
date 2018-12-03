@@ -1,4 +1,4 @@
-package group.ydq.service.service.pm;
+package group.ydq.service.service;
 
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;

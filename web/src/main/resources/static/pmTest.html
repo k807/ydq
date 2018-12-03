@@ -14,8 +14,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">消息标题</label>
         <div class="layui-input-block">
-            <input type="text" name="title" autocomplete="off" lay-verify="required" placeholder="请输入标题"
-                   class="layui-input">
+            <input type="text" name="title" autocomplete="off" lay-verify="required"
+                   placeholder="请输入标题" value="默认标题" class="layui-input">
         </div>
     </div>
 
@@ -43,6 +43,7 @@
                 <input type="text" name="receiver"
                        autocomplete="off"
                        placeholder="请输入"
+                       value="默认接收人"
                        class="layui-input">
             </div>
         </div>
@@ -61,7 +62,6 @@
         <div class="layui-input-block">
             <textarea type="text" name="content"
                       autocomplete="off"
-                      lay-verify="required"
                       placeholder="请输入内容"
                       class="layui-textarea"></textarea>
         </div>
@@ -79,7 +79,7 @@
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button class="layui-btn" type="button" lay-submit="" lay-filter="demo1">立即提交</button>
         </div>
     </div>
 </form>
@@ -113,6 +113,22 @@
             layer.alert(JSON.stringify(data.field), {
                 title: '最终的提交信息'
             })
+            var json = JSON.stringify(data.field)
+            $.ajax({
+                type: "POST",
+                url: "pm/addOne",
+                data: json,
+                dataType: "json",
+                success: function (result) {
+                    console.log(result)
+                    console.log(json)
+                },
+                error: function (result) {
+                    console.log(result)
+                    console.log(json)
+                }
+            })
+
             return false;
         });
 

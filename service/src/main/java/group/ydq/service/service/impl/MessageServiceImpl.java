@@ -1,8 +1,9 @@
-package group.ydq.service.service.pm;
+package group.ydq.service.service.impl;
 
 import group.ydq.model.dao.pm.MessageRepository;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
+import group.ydq.service.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

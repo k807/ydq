@@ -1,10 +1,11 @@
-package group.ydq.service.service;
+package group.ydq.service.service.impl;
 
 import group.ydq.model.dao.rbac.RoleRepository;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.entity.rbac.Permission;
 import group.ydq.model.entity.rbac.Role;
 import group.ydq.model.entity.rbac.User;
+import group.ydq.service.service.RBACService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

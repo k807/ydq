@@ -98,4 +98,18 @@ public class Message {
     public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", date=" + date +
+                ", type=" + type +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", remark='" + remark + '\'' +
+                ", sender=" + sender +
+                ", receiver=" + receiver +
+                '}';
+    }
 }

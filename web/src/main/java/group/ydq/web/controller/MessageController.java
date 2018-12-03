@@ -2,7 +2,7 @@ package group.ydq.web.controller;
 
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
-import group.ydq.service.service.pm.MessageServiceImpl;
+import group.ydq.service.service.impl.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 /**
  * @author Simple
  * @date on 2018/11/12 22:28
  */
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/pm")
 public class MessageController {
 
     @Autowired
@@ -48,6 +47,7 @@ public class MessageController {
      * */
     @GetMapping(value = "/addOne")
     public Message sendMessage(Message messageOne) {
+        System.out.println(messageOne);
         return messageServiceImpl.sendMessage(messageOne);
     }
 
@@ -76,10 +76,6 @@ public class MessageController {
     @GetMapping(value = "/messageByReceiver/{receiver}")
     public List<Message> findByReceiver(User receiver, int page, int limit) {
         return messageServiceImpl.findByReceiver(receiver, page, limit);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new Random().nextInt(10));
     }
 
 }

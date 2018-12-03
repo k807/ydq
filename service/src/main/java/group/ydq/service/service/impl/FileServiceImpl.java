@@ -1,7 +1,8 @@
-package group.ydq.service.service;
+package group.ydq.service.service.impl;
 
 import group.ydq.model.dao.dm.FileRepository;
 import group.ydq.model.entity.dm.ProjectFile;
+import group.ydq.service.service.FileService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
