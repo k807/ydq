@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author Daylight
@@ -28,6 +29,10 @@ public class ProjectController {
     @RequestMapping("/save")
     @ResponseBody
     private BaseResponse saveProject(@RequestBody Project project){
+        project.setState(0);
+        project.setSubmit(false);
+        project.setCreateTime(new Date());
+        project.setUpdateTime(new Date());
         projectService.save(project);
         return new BaseResponse();
     }
@@ -35,6 +40,10 @@ public class ProjectController {
     @RequestMapping("/submit")
     @ResponseBody
     private BaseResponse submitProject(@RequestBody Project project){
+        project.setState(0);
+        project.setSubmit(true);
+        project.setCreateTime(new Date());
+        project.setUpdateTime(new Date());
         projectService.submit(project);
         return new BaseResponse();
     }

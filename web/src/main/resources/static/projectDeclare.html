@@ -120,7 +120,7 @@
 <script>
     function createRandomId() {
         var data=new Date();
-        return ''+data.getDay()+data.getHours()+data.getMinutes()+data.getSeconds()+data.getMilliseconds()+Math.round(Math.random() * 1000);
+        return ''+data.getDay()+data.getHours()+data.getMinutes()+data.getSeconds()+data.getMilliseconds()+Math.round(Math.random() * 10000);
     }
 
     layui.use(['jquery', 'form', 'upload','layer'], function () {
@@ -199,56 +199,44 @@
                 })
             }
         });
-        form.on('submit(submit)',function(data){
-            var leader={
-                "id":1,
-                "nick":"honey",
-                "userNumber":"123456"
+
+        function s(action, data) {
+            var leader = {
+                "id": 1,
+                "nick": "honey",
+                "userNumber": "123456"
             };
-            var json={};
-            json.name=data.field.name;
-            json.level=data.field.level;
-            json.leader=leader;
-            json.phone=data.field.phone;
-            json.major=data.field.major;
-            json.email=data.field.email;
-            json.commitmentId=imgId;
-            json.filepath=fileId;
-            var members=[];
-            $('input[name^=members]').each(function(index,element){
+            var json = {};
+            json.name = data.field.name;
+            json.level = data.field.level;
+            json.leader = leader;
+            json.phone = data.field.phone;
+            json.major = data.field.major;
+            json.email = data.field.email;
+            json.commitmentId = imgId;
+            json.filepath = fileId;
+            var members = [];
+            $('input[name^=members]').each(function (index, element) {
                 members.push(element.value);
             });
-            json.members=JSON.stringify(members);
+            json.members = JSON.stringify(members);
             $.ajax({
                 type: "post",
-                url: "/project/submit",
-                contentType:'application/json',
+                url: "/project/" + action,
+                contentType: 'application/json',
                 data: JSON.stringify(json),
                 dataType: "json",
                 success: function (data) {
                     layer.msg(JSON.stringify(data));
                 }
             });
+        }
+        form.on('submit(submit)',function(data){
+            s('submit',data);
             return false;
         });
         form.on("submit(save)",function(data){
-            var leader={
-                "id":1,
-                "nick":"honey",
-                "userNumber":"123456"
-            };
-            var json={};
-            json.name=data.field.name;
-            json.level=data.field.level;
-            json.leader=leader;
-            json.phone=data.field.phone;
-            json.major=data.field.major;
-            json.email=data.field.email;
-            json.members=[];
-            $('input[name^=members]').each(function(index,element){
-                json.members.push(element.value);
-            });
-            console.log(fileId);
+            s('save',data);
             return false;
         })
     });
