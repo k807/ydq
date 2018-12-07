@@ -4,10 +4,7 @@ import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.impl.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +24,7 @@ public class MessageController {
      * 查询所有
      * 无参，仅供超级管理员查看
      * */
-    @GetMapping(value = "/findAll")
+    @RequestMapping(value = "/findAll",method = RequestMethod.GET)
     public List<Message> messageList() {
         return messageServiceImpl.messageList();
     }
@@ -36,7 +33,7 @@ public class MessageController {
      * 单个查询
      * 参数为message.id，仅供超级管理员查看
      * */
-    @GetMapping(value = "/messages/{id}")
+    @RequestMapping(value = "/messages/{id}")
     Optional<Message> messageOne(@PathVariable("id") Long id) {
         return null;
     }
@@ -45,7 +42,8 @@ public class MessageController {
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数
      * */
-    @GetMapping(value = "/addOne")
+    @RequestMapping(value = "addOne", method = RequestMethod.POST)
+    @ResponseBody
     public Message sendMessage(Message messageOne) {
         System.out.println(messageOne);
         return messageServiceImpl.sendMessage(messageOne);
@@ -55,8 +53,8 @@ public class MessageController {
      * 根据id删除message
      *
      * */
-    @GetMapping(value = "/deleteOne/{id}")
-    public void deleteOne(Long id) {
+    @RequestMapping(value = "/deleteOne/{id}")
+    public void deleteOne(@PathVariable("id") Long id) {
         messageServiceImpl.delete(id);
     }
 
@@ -64,7 +62,7 @@ public class MessageController {
      * 查询所有消息
      * 以寄件人为参数
      * */
-    @GetMapping(value = "/messageBySender/{sender}")
+    @RequestMapping(value = "/messageBySender/{sender}")
     public List<Message> findBySender(User sender, int page, int limit) {
         return messageServiceImpl.findBySender(sender, page, limit);
     }
@@ -73,7 +71,7 @@ public class MessageController {
      * 查询所有消息
      * 以收件人为参数
      * */
-    @GetMapping(value = "/messageByReceiver/{receiver}")
+    @RequestMapping(value = "/messageByReceiver/{receiver}")
     public List<Message> findByReceiver(User receiver, int page, int limit) {
         return messageServiceImpl.findByReceiver(receiver, page, limit);
     }

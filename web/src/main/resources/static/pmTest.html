@@ -113,10 +113,11 @@
             layer.alert(JSON.stringify(data.field), {
                 title: '最终的提交信息'
             })
-            var json = JSON.stringify(data.field)
+            var json = data.field
             $.ajax({
                 type: "POST",
                 url: "pm/addOne",
+                contentType: "application/json; charset=utf-8",
                 data: json,
                 dataType: "json",
                 success: function (result) {

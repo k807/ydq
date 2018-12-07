@@ -82,7 +82,6 @@ public class Message {
         this.remark = remark;
     }
 
-
     public User getSender() {
         return sender;
     }
@@ -93,10 +92,6 @@ public class Message {
 
     public User getReceiver() {
         return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
     }
 
     @Override
@@ -111,5 +106,9 @@ public class Message {
                 ", sender=" + sender +
                 ", receiver=" + receiver +
                 '}';
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
     }
 }

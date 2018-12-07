@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="assets/layui/css/layui.css">
     <script src="assets/layui/layui.js" charset="utf-8"></script>
 </head>
-<body>
+<body onload="getList()">
 
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
@@ -50,6 +50,17 @@
                             <br>铭记、感恩
                             <br>所有为中华民族浴血奋战的英雄将士
                             <br>永垂不朽
+                        </p>
+                    </div>
+                </li>
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">日期</h3>
+                        <p>
+                            发布人
+                            <br>内容
+                            <br>备注
                         </p>
                     </div>
                 </li>
@@ -101,19 +112,47 @@
 
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
+
+    var json
     layui.use('element', function () {
-        var $ = layui.jquery
-            , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+        var element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
         //触发事件
         var active = {
             tabChange: function () {
                 //切换到指定Tab项
-                element.tabChange('demo', '22'); //切换到：用户管理
+                // element.tabChange('demo', '22'); //切换到：用户管理
             }
         };
 
+
     });
+
+    function getList() {
+        layui.$.ajax({
+            type: "GET",
+            url: "pm/findAll",
+            dataType: "json",
+            success: function (result) {
+                json = result
+                // console.log(json)
+                initTimeLine()
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        })
+
+        function initTimeLine() {//将获取到的message表的内容填充到时间线中
+            for (var i = 0; i < json.length; i++) {
+                //result[i]表示获得第i个json对象即JSONObject
+                //result[i]通过.字段名称即可获得指定字段的值
+                console.log(json[i].title);
+                console.log(json[i].content);
+                console.log(json[i].remark);
+            }
+        }
+    }
 </script>
 
 
