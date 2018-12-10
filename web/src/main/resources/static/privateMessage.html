@@ -16,95 +16,39 @@
     <div class="layui-tab-content" style="height: 100px;">
         <!--公告，即OneToAll站内消息-->
         <div class="layui-tab-item layui-show">
-
-            <ul class="layui-timeline" style="margin:15px;padding:15px;background-color: white">
-                <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <h3 class="layui-timeline-title">8月18日</h3>
-                        <p>
-                            layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
-                            <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
-                            <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔 <i class="layui-icon"></i>
-                        </p>
-                    </div>
-                </li>
-                <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <h3 class="layui-timeline-title">8月16日</h3>
-                        <p>杜甫的思想核心是儒家的仁政思想，他有<em>“致君尧舜上，再使风俗淳”</em>的宏伟抱负。个人最爱的名篇有：</p>
-                        <ul>
-                            <li>《登高》</li>
-                            <li>《茅屋为秋风所破歌》</li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <h3 class="layui-timeline-title">8月15日</h3>
-                        <p>
-                            中国人民抗日战争胜利日
-                            <br>常常在想，尽管对这个国家有这样那样的抱怨，但我们的确生在了最好的时代
-                            <br>铭记、感恩
-                            <br>所有为中华民族浴血奋战的英雄将士
-                            <br>永垂不朽
-                        </p>
-                    </div>
-                </li>
-                <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <h3 class="layui-timeline-title">日期</h3>
-                        <p>
-                            发布人
-                            <br>内容
-                            <br>备注
-                        </p>
-                    </div>
-                </li>
-                <li class="layui-timeline-item">
-                    <i class="layui-icon layui-timeline-axis"></i>
-                    <div class="layui-timeline-content layui-text">
-                        <div class="layui-timeline-title">过去</div>
-                    </div>
-                </li>
+            <ul class="layui-timeline" id="notice" style="margin:15px;padding:15px;background-color: white">
+                <!-- <li class="layui-timeline-item">
+                     <i class="layui-icon layui-timeline-axis"></i>
+                     <div class="layui-timeline-content layui-text">
+                         <h3 class="layui-timeline-title">日期</h3>
+                         <p>
+                             发布人
+                             <br>内容
+                             <br>备注
+                         </p>
+                     </div>
+                 </li>-->
+                <!-- <li class="layui-timeline-item">
+                     <i class="layui-icon layui-timeline-axis"></i>
+                     <div class="layui-timeline-content layui-text">
+                         <div class="layui-timeline-title">过去</div>
+                     </div>
+                 </li>-->
             </ul>
         </div>
         <!--私信，即OneToOne站内消息-->
-        <div class="layui-tab-item" style="padding: 15px; background-color: #F2F2F2;">
-            <div class="layui-card">
-                <div class="layui-card-header">8月18日</div>
-                <div class="layui-card-body">
-                    <p>
-                        layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
-                        <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
-                        <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔 <i class="layui-icon"></i>
-                    </p>
-                </div>
-            </div>
-            <div class="layui-card">
-                <div class="layui-card-header">8月16日</div>
-                <div class="layui-card-body">
-                    <p>杜甫的思想核心是儒家的仁政思想，他有<em>“致君尧舜上，再使风俗淳”</em>的宏伟抱负。个人最爱的名篇有：</p>
-                    <ul>
-                        <li>《登高》</li>
-                        <li>《茅屋为秋风所破歌》</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="layui-card">
-                <div class="layui-card-header">8月15日</div>
-                <div class="layui-card-body">
-                    <p>
-                        中国人民抗日战争胜利日
-                        <br>常常在想，尽管对这个国家有这样那样的抱怨，但我们的确生在了最好的时代
-                        <br>铭记、感恩
-                        <br>所有为中华民族浴血奋战的英雄将士
-                        <br>永垂不朽
-                    </p>
-                </div>
+        <div class="layui-tab-item" style="padding: 15px;background-color: #F2F2F2">
+            <div id="message">
+                <!-- <div class="layui-card">
+                     <div class="layui-card-header">日期</div>
+                     <div class="layui-card-body">
+                         <p>标题 <em>发送人</em></p>
+                         <ul>
+                             <li>内容</li>
+                             <li>备注</li>
+                         </ul>
+                     </div>
+                 </div>-->
             </div>
         </div>
     </div>
@@ -113,17 +57,16 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
 
+
     var json
     layui.use('element', function () {
         var element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
-        //触发事件
-        var active = {
-            tabChange: function () {
-                //切换到指定Tab项
-                // element.tabChange('demo', '22'); //切换到：用户管理
-            }
-        };
+        element.on('tab(filter)', function(data){
+            console.log(this); //当前Tab标题所在的原始DOM元素
+            console.log(data.index); //得到当前Tab的所在下标
+            console.log(data.elem); //得到当前的Tab大容器
+        });
 
 
     });
@@ -137,20 +80,79 @@
                 json = result
                 // console.log(json)
                 initTimeLine()
+                initCardM()
             },
             error: function (result) {
                 console.log(result)
             }
         })
+        var monthFlag
 
         function initTimeLine() {//将获取到的message表的内容填充到时间线中
+            monthFlag = 13
             for (var i = 0; i < json.length; i++) {
                 //result[i]表示获得第i个json对象即JSONObject
                 //result[i]通过.字段名称即可获得指定字段的值
-                console.log(json[i].title);
-                console.log(json[i].content);
-                console.log(json[i].remark);
+                if (json[i].type == 0)
+                    layui.$("#notice").prepend("<li class=\"layui-timeline-item\">\n" +
+                        "                    <i class=\"layui-icon layui-timeline-axis\"></i>\n" +
+                        "                    <div class=\"layui-timeline-content layui-text\">\n" +
+                        "                        <h3 class=\"layui-timeline-title\">" + dateToStr(json[i].date) + "</h3>\n" +
+                        "                        <p>\n" +
+                        "                            发布人:" + json[i].sender + "\n" +
+                        "                            <br>" + json[i].title + "\n" +
+                        "                            <br>" + json[i].content + "\n" +
+                        "                            <br>" + json[i].remark + "\n" +
+                        "                        </p>\n" +
+                        "                    </div>\n" +
+                        "                </li>")
             }
+            layui.$("#notice").append("  <li class=\"layui-timeline-item\">\n" +
+                "                    <i class=\"layui-icon layui-timeline-axis\"></i>\n" +
+                "                    <div class=\"layui-timeline-content layui-text\">\n" +
+                "                        <div class=\"layui-timeline-title\">过去</div>\n" +
+                "                    </div>\n" +
+                "                </li>")
+        }
+
+        function initCardM() {//将获取到的message表的内容填充到时间线中
+            monthFlag = 13
+            for (var i = 0; i < json.length; i++) {
+                //result[i]表示获得第i个json对象即JSONObject
+                //result[i]通过.字段名称即可获得指定字段的值
+                if (json[i].type == 1)
+                    layui.$("#message").prepend(" <div class=\"layui-card\">\n" +
+                        "                <div class=\"layui-card-header\">" + dateToStr(json[i].date) + "</div>\n" +
+                        "                <div class=\"layui-card-body\">\n" +
+                        "                    <p>" + json[i].title + "<em>" + json[i].sender + "</em></p>\n" +
+                        "                    <ul>\n" +
+                        "                        <li>" + json[i].content + "</li>\n" +
+                        "                        <li>" + json[i].remark + "</li>\n" +
+                        "                    </ul>\n" +
+                        "                </div>\n" +
+                        "            </div>")
+            }
+        }
+
+        function dateToStr(date) {
+            var date = new Date(date);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? '0' + m : m;
+            var d = date.getDate();
+            d = d < 10 ? ("0" + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ("0" + h) : h;
+            var M = date.getMinutes();
+            M = M < 10 ? ("0" + M) : M;
+            var str;
+            if (m<monthFlag) {
+                str = y + "年" + m + "月" + d + "日" + h + ":" + M;
+                monthFlag = m;
+            }
+            if (m >= monthFlag)
+                str = m + "月" + d + "日" + h + ":" + M;
+            return str;
         }
     }
 </script>

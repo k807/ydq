@@ -3,9 +3,11 @@ package group.ydq.web.controller;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.impl.MessageServiceImpl;
+import group.ydq.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +16,7 @@ import java.util.Optional;
  * @date on 2018/11/12 22:28
  */
 @RestController
-@RequestMapping("/pm")
+@RequestMapping(value = "pm")
 public class MessageController {
 
     @Autowired
@@ -24,9 +26,10 @@ public class MessageController {
      * 查询所有
      * 无参，仅供超级管理员查看
      * */
-    @RequestMapping(value = "/findAll",method = RequestMethod.GET)
+    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
     public List<Message> messageList() {
-        return messageServiceImpl.messageList();
+        List<Message> messages = messageServiceImpl.messageList();
+        return messages;
     }
 
     /*
@@ -42,9 +45,23 @@ public class MessageController {
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数
      * */
-    @RequestMapping(value = "addOne", method = RequestMethod.POST)
+    @RequestMapping(value = "addOne")
     @ResponseBody
-    public Message sendMessage(Message messageOne) {
+    public Message sendMessage(String title, int type, String date, String sender, String receiver, String content, String remark) throws ParseException {
+        Message messageOne = new Message();
+        messageOne.setTitle(title);
+        messageOne.setType(type);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        messageOne.setDate(sdf.parse(date));
+        messageOne.setDate(DateUtil.strToDate(date));
+        User senderUser = new User();
+        senderUser.setNick(sender);
+        User receiverUser = new User();
+        receiverUser.setNick(receiver);
+        messageOne.setSender(senderUser);
+        messageOne.setReceiver(receiverUser);
+        messageOne.setContent(content);
+        messageOne.setRemark(remark);
         System.out.println(messageOne);
         return messageServiceImpl.sendMessage(messageOne);
     }
