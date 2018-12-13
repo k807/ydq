@@ -79,6 +79,7 @@ public class StageController {
     @RequestMapping("/getByConditions")
     private BaseResponse getByConditions(JSONObject object){
         String projectName = object.getString("projectName");
+        String projectLeader = object.getString("projectLeader");
         return new BaseResponse();
     }
 }
