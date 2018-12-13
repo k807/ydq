@@ -24,7 +24,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> messageList() {
-        return messageRepository.findAll();
+        return messageRepository.findAllOrderByDate();
     }
 
     @Override

@@ -23,15 +23,14 @@
         <div class="layui-inline">
             <label class="layui-form-label">发送日期</label>
             <div class="layui-input-block">
-                <input type="text" name="date" id="date" lay-verify="required" autocomplete="off" class="layui-input"
-                       placeholder="yyyy-MM-dd HH:mm:ss">
+                <input type="text" name="date" id="date" autocomplete="off" class="layui-input"
+                       placeholder="yyyy-MM-dd HH:mm:ss"disabled>
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">消息类型</label>
             <div class="layui-input-block">
                 <select name="type" lay-verify="required" lay-filter="type">
-                    <option value=""></option>
                     <option value="0" selected="">公告</option>
                     <option value="1">私信</option>
                 </select>
@@ -72,7 +71,7 @@
         <div class="layui-input-block">
             <input type="text" name="remark"
                    autocomplete="off"
-                   placeholder="请输入标题"
+                   placeholder=""
                    class="layui-input">
         </div>
     </div>
@@ -86,7 +85,7 @@
 
 <script>
     layui.use(['form', 'jquery', 'laydate'], function () {
-        $ = layui.$ //重点处
+        $ = layui.$
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate;
@@ -96,28 +95,28 @@
             elem: '#date'
             , type: 'datetime'
         });
-        //监听选择器
-        form.on('select(type)', function (data) {
-            console.log(data.value); //得到被选中的值
-            switch (data.value) {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                default:
-            }
-        });
+        // //监听选择器
+        // form.on('select(type)', function (data) {
+        //     console.log(data.value); //得到被选中的值
+        //     switch (data.value) {
+        //         case 0:
+        //             break;
+        //         case 1:
+        //             break;
+        //         default:
+        //     }
+        // });
 
         //监听提交
         form.on('submit(demo1)', function (data) {
-            layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            })
+            // layer.alert(JSON.stringify(data.field), {
+            //     title: '最终的提交信息'
+            // })
             var json = data.field
             $.ajax({
                 type: "POST",
                 url: "pm/addOne",
-                contentType: "application/json; charset=utf-8",
+                // contentType: "charset=utf-8",
                 data: json,
                 dataType: "json",
                 success: function (result) {
@@ -129,7 +128,6 @@
                     console.log(json)
                 }
             })
-
             return false;
         });
 
@@ -144,7 +142,9 @@
         var m = date.getMinutes(); //获取分钟
         var s = date.getSeconds(); //获取秒
         // alert(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
-        $("#date").val(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
+        var time = year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s;
+        $("#date").val(time);
+        return time;
     }
 
     setInterval(createTime, 1000);

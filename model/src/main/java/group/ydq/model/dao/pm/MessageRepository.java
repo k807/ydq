@@ -15,6 +15,9 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
+    @Query(value = "select m from Message m ORDER BY m.date ASC")
+    List<Message> findAllOrderByDate();
+
     @Query(value = "select m from Message m where m.sender = ?1 ORDER BY ?#{#pageable}")
     List<Message> findBySender(User sender, Pageable pageable);
 
