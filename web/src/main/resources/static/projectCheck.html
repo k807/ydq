@@ -134,9 +134,9 @@
             page: true,
             limit: 15,
             limits: [15, 30, 45, 60, 75, 90],
-            url: "#",
+            url: "/stage/getAll",
             response: {
-                statusCode: 200
+                statusCode: 200,
             },
             parseData: function (res) {
                 return {
@@ -166,15 +166,39 @@
         }
 
         form.on('submit(search)', function (data) {
+
+            /*var dataParams = {
+                'projectName' : data.field.name,
+                'projectLeader' : data.field.leader,
+                'projectState' : data.field.status,
+                'projectStartTime' : data.field.start,
+                'projectStage' : data.field.stage,
+                'studentEndTime' : data.field.end
+            };
+            $.ajax({
+                type:'POST',
+                url:'/stage/getByConditions',
+                data: JSON.stringify(dataParams),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+
+                },
+                error: function (data) {
+                    alert(data);
+                }
+            });*/
+
             tableIns.reload({
-                url: '/user/search',
+                url: '/stage/getByConditions',
                 where: {
-                    stuNumber: data.field.stuNumber,
                     name: data.field.name,
-                    state: data.field.state,
-                    channel: data.field.channel,
-                    start: data.field.start,
-                    end: data.field.end
+                    leader: data.field.leader,
+                    status: data.field.status,
+                    stage: data.field.stage,
+                    createTime: data.field.start,
+                    verifier: data.field.end
                 },
                 page: {
                     curr: 1

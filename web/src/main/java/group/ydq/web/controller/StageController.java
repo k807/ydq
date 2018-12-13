@@ -1,17 +1,18 @@
 package group.ydq.web.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.cs.CheckStage;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.CheckStageService;
 import group.ydq.service.service.FileService;
 import group.ydq.service.service.ProjectService;
+import group.ydq.utils.RetResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * author:Leo
@@ -60,6 +61,24 @@ public class StageController {
     @RequestMapping("/getAll")
     private BaseResponse getAll(){
         List<CheckStage> all =  checkStageService.findAll();
+        ArrayList<JSONObject> dataList = new ArrayList<>();
+        for (CheckStage checkStage : all) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("checkStageID", checkStage.getId());
+            jsonObject.put("projectName", checkStage.getProject().getName());
+            jsonObject.put("projectLeader", checkStage.getProject().getLeader().getNick());
+            jsonObject.put("projectStage", checkStage.getStage());
+            jsonObject.put("projectCreateTime", checkStage.getProject().getCreateTime());
+            jsonObject.put("projectStatus", checkStage.getSatus());
+            jsonObject.put("projectVerifers", checkStage.getVerifiers().getNick());
+            dataList.add(jsonObject);
+        }
+        return new BaseResponse(dataList);
+    }
+
+    @RequestMapping("/getByConditions")
+    private BaseResponse getByConditions(JSONObject object){
+        String projectName = object.getString("projectName");
         return new BaseResponse();
     }
 }

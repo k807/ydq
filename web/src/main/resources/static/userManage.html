@@ -264,29 +264,6 @@
         });
         form.on('submit(search)', function (data) {
 
-            var dataParams = {
-                'studentNumber' : data.field.stuNumber,
-                'studentName' : data.field.name,
-                'studentState' : data.field.state,
-                'studentRegisterChannel' : data.field.channel,
-                'studentStartTime' : data.field.start,
-                'studentEndTime' : data.field.end
-            };
-            $.ajax({
-                type:'POST',
-                url:'/stage/getByConditions',
-                data: JSON.stringify(dataParams),
-                contentType: 'application/json;charset=UTF-8',
-                dataType: 'json',
-                success: function (data) {
-                    alert(data);
-                },
-                error: function (data) {
-                    alert(data);
-                }
-            });
-
-
             tableIns.reload({
                 url: '/user/search',
                 where: {
