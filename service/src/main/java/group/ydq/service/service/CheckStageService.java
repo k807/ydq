@@ -10,4 +10,5 @@ import java.util.List;
 public interface CheckStageService  extends  BaseService{
     void save(CheckStage s);
     List<CheckStage> findAll();
+    /*List<CheckStage> getByConditions(String studentNumber, String )*/
 }
