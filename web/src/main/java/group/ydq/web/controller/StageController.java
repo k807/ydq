@@ -64,13 +64,13 @@ public class StageController {
         ArrayList<JSONObject> dataList = new ArrayList<>();
         for (CheckStage checkStage : all) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("checkStageID", checkStage.getId());
-            jsonObject.put("projectName", checkStage.getProject().getName());
-            jsonObject.put("projectLeader", checkStage.getProject().getLeader().getNick());
-            jsonObject.put("projectStage", checkStage.getStage());
-            jsonObject.put("projectCreateTime", checkStage.getProject().getCreateTime());
-            jsonObject.put("projectStatus", checkStage.getSatus());
-            jsonObject.put("projectVerifers", checkStage.getVerifiers().getNick());
+            jsonObject.put("id", checkStage.getId());
+            jsonObject.put("name", checkStage.getProject().getName());
+            jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
+            jsonObject.put("stage", checkStage.getStage());
+            jsonObject.put("createTime", checkStage.getProject().getCreateTime());
+            jsonObject.put("status", checkStage.getSatus());
+            jsonObject.put("verifer", checkStage.getVerifiers().getNick());
             dataList.add(jsonObject);
         }
         return new BaseResponse(dataList);
