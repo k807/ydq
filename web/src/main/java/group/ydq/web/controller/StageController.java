@@ -62,6 +62,19 @@ public class StageController {
     private BaseResponse getAll(){
         List<CheckStage> all =  checkStageService.findAll();
         ArrayList<JSONObject> dataList = new ArrayList<>();
+
+        for(int i = 0; i < all.size(); i++){
+            for (int j = i + 1; j < all.size(); j++){
+                if (all.get(i).getProject().getId().equals(all.get(j).getProject().getId())){
+                    if(all.get(i).getProject().getState() <= all.get(j).getProject().getState()){
+                        Collections.swap(all,i,j);
+                    }
+                    all.remove(j);
+                    j = j - 1;
+                }
+            }
+        }
+
         for (CheckStage checkStage : all) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", checkStage.getId());
@@ -73,6 +86,7 @@ public class StageController {
             jsonObject.put("verifer", checkStage.getVerifiers().getNick());
             dataList.add(jsonObject);
         }
+
         return new BaseResponse(dataList);
     }
 
