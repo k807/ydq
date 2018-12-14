@@ -116,16 +116,19 @@
             $.ajax({
                 type: "POST",
                 url: "pm/addOne",
-                // contentType: "charset=utf-8",
                 data: json,
                 dataType: "json",
                 success: function (result) {
                     console.log(result)
                     console.log(json)
+                    var updateTime = new Date().getTime();
+                    alert("发送成功")
+                    console.log(updateTime)
                 },
                 error: function (result) {
                     console.log(result)
                     console.log(json)
+                    alert("发送失败")
                 }
             })
             return false;

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="assets/layui/css/layui.css">
     <script src="assets/layui/layui.js" charset="utf-8"></script>
 </head>
-<body onload="getList(),getTime()">
+<body onload="getTime()">
 
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
@@ -62,7 +62,7 @@
     layui.use('element', function () {
         var element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
-        element.on('tab(filter)', function(data){
+        element.on('tab(filter)', function (data) {
             console.log(this); //当前Tab标题所在的原始DOM元素
             console.log(data.index); //得到当前Tab的所在下标
             console.log(data.elem); //得到当前的Tab大容器
@@ -143,24 +143,32 @@
             var M = date.getMinutes();
             M = M < 10 ? ("0" + M) : M;
             var str;
-            if (m<monthFlag) {
-                str = y + "年" + m + "月" + d + "日" + h + ":" + M;
-                monthFlag = m;
-            }
-            if (m >= monthFlag)
-                str = m + "月" + d + "日" + h + ":" + M;
+            str = y + "年" + m + "月" + d + "日" + h + ":" + M;
+            // str = m + "月" + d + "日" + h + ":" + M;
             return str;
         }
     }
+
     var nowTime
 
     function getTime() {
-        nowTime = new Date()
+        nowTime = new Date().getTime()
     }
-    
+
     function compareTime() {
-        var updateTime = json[0].date;
+        getList()
+        var updateTime = new Date(json[json.length-1].date).getTime();
+        console.log(updateTime)
+        console.log(nowTime)
+        if (updateTime < nowTime) {
+            alert("updateTime is older nowTime");
+        } else {
+            alert("updateTime is newer nowTime");
+        }
     }
+
+    setInterval(compareTime, 1000);
+
 </script>
 
 

@@ -16,7 +16,7 @@ import java.util.Optional;
  * @date on 2018/11/12 22:28
  */
 @RestController
-@RequestMapping(value = "pm")
+@RequestMapping(value = "/pm")
 public class MessageController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class MessageController {
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数
      * */
-    @RequestMapping(value = "addOne")
+    @RequestMapping(value = "/addOne")
     @ResponseBody
     public Message sendMessage(String title, int type, String date, String sender, String receiver, String content, String remark) throws ParseException {
         Message messageOne = new Message();
@@ -58,8 +58,8 @@ public class MessageController {
         senderUser.setNick(sender);
         User receiverUser = new User();
         receiverUser.setNick(receiver);
-        messageOne.setSender(senderUser);
-        messageOne.setReceiver(receiverUser);
+//        messageOne.setSender(senderUser);
+//        messageOne.setReceiver(receiverUser);
         messageOne.setContent(content);
         messageOne.setRemark(remark);
         System.out.println(messageOne);
