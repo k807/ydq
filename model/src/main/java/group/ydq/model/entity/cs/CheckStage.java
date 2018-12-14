@@ -34,8 +34,8 @@ public class CheckStage {
 
     private  String message; //项目阶段审核建议
 
-    @OneToMany
-    private List<User> verifiers;//审核人
+    @ManyToOne
+    private User verifiers;//审核人
 
     public Long getId() {
         return id;
@@ -101,11 +101,11 @@ public class CheckStage {
         this.remarks = remarks;
     }
 
-    public List<User> getVerifiers() {
+    public User getVerifiers() {
         return verifiers;
     }
 
-    public void setVerifiers(List<User> verifiers) {
+    public void setVerifiers(User verifiers) {
         this.verifiers = verifiers;
     }
 

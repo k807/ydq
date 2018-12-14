@@ -19,6 +19,12 @@ public class BaseResponse {
         this.msg = "请求成功";
     }
 
+    public BaseResponse(Object object){
+        this.statusCode = "200";
+        this.msg = "请求成功";
+        this.object = object;
+    }
+
     public String getStatusCode() {
         return statusCode;
     }
@@ -42,4 +48,5 @@ public class BaseResponse {
     public void setObject(Object object) {
         this.object = object;
     }
+
 }

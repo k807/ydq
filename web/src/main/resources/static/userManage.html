@@ -15,19 +15,19 @@
                     <label class="layui-form-label">学号:</label>
                     <div class="layui-input-inline">
                         <input type="text" name="stuNumber" placeholder="请输入学号" autocomplete="off"
-                               class="layui-input">
+                               class="layui-input" id="studentNumber">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">学生姓名:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                        <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input" id="studentName">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">学生状态:</label>
                     <div class="layui-input-inline">
-                        <select name="state" lay-search="">
+                        <select name="state" lay-search="" id="studentState">
                             <option value="">请选择或输入</option>
                             <option value="1">启用</option>
                             <option value="0">禁用</option>
@@ -38,7 +38,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">注册渠道:</label>
                     <div class="layui-input-inline">
-                        <select name="channel" lay-search="">
+                        <select name="channel" lay-search="" id="studentRegisterChannel">
                             <option value="">请选择或输入</option>
                             <option value="0">PC端</option>
                             <option value="1">微信端</option>
@@ -263,6 +263,7 @@
             }
         });
         form.on('submit(search)', function (data) {
+
             tableIns.reload({
                 url: '/user/search',
                 where: {

@@ -14,8 +14,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">项目名称:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入项目名称" autocomplete="off"
-                               class="layui-input">
+                        <input type="text" name="name" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -107,7 +106,7 @@
                 {field: 'leader', title: "负责人"},
                 {
                     field: 'stage', title: '所处阶段', templet: function (d) {
-                        if (d.channel === 1)
+                        if (d.stage === 1)
                             return '中期检查';
                         else
                             return '结题验收';
@@ -120,30 +119,29 @@
                     }
                 },
                 {
-                    field: 'states', title: "审核状态", templet: function (d) {
-                        if (d.state === 0)
+                    field: 'status', title: "审核状态", templet: function (d) {
+                        if (d.status === 0)
                             return '未审核';
-                        else if (d.state === 1)
+                        else if (d.status === 1)
                             return '已通过';
-                        else if (d.state === 2)
+                        else if (d.status === 2)
                             return '未通过';
                     }
                 },
-                {field: 'verifier', title: "审核人"},
+                {field: 'verifer', title: "审核人"},
                 {fixed: 'right', title: '操作', align: 'center', toolbar: '#bar'}
             ]],
             page: true,
             limit: 15,
             limits: [15, 30, 45, 60, 75, 90],
-            url: "#",
+            url: "/stage/getAll",
             response: {
-                statusCode: 200
+                statusCode: 200,
             },
             parseData: function (res) {
                 return {
-                    "code": res.state,
-                    "data": res.object.data,
-                    "count": res.object.count
+                    "code": res.statusCode,
+                    "data": res.object,
                 };
             }
         });
@@ -167,15 +165,16 @@
         }
 
         form.on('submit(search)', function (data) {
+
             tableIns.reload({
-                url: '/user/search',
+                url: '/stage/getByConditions',
                 where: {
-                    stuNumber: data.field.stuNumber,
                     name: data.field.name,
-                    state: data.field.state,
-                    channel: data.field.channel,
-                    start: data.field.start,
-                    end: data.field.end
+                    leader: data.field.leader,
+                    status: data.field.status,
+                    stage: data.field.stage,
+                    createTime: data.field.start,
+                    verifier: data.field.end
                 },
                 page: {
                     curr: 1
