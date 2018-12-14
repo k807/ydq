@@ -74,8 +74,8 @@
 
 
         <script type="text/html" id="bar">
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">查看材料</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit">审核</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="view">查看材料</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check">审 核</a>
         </script>
     </div>
 </div>
@@ -133,7 +133,7 @@
             ]],
             page: true,
             limit: 15,
-            limits: [15, 30, 45, 60, 75, 90],
+            limits: [15, 30, 45],
             url: "/stage/getAll",
             response: {
                 statusCode: 200,
@@ -146,22 +146,56 @@
             }
         });
 
-        function changeState(option) {
-            $.ajax({
-                type: 'post',
-                url: '/user/changeState',
-                contentType: 'application/json;charset=UTF-8',
-                data: JSON.stringify(option),
-                dataType: 'json',
-                success: function (data) {
-                    if (data.state === 400) {
-                        layer.msg("操作失败！");
-                    } else {
-                        layer.msg("操作成功！");
-                        tableIns.reload();
-                    }
-                }
-            });
+        table.on('tool(table)', function (obj) {
+            var data = obj.data;
+            var option = {};
+            option.id = data.id;
+            if (obj.event === 'check') {
+                layer.prompt({
+                    formType: 2,    // 弹出文本层类型
+                    title: '项目阶段检查意见',    // 标题
+                    value:'',    // 可以设置文本默认值
+                    area: ['400px', '80px'],     // 设置弹出层大小
+                    btn: ['通过', '待整改','取消'],    // 自定义设置多个按钮
+                    btn2: function(index, elem){
+                        var value = layui.jquery('#layui-layer'+index + " .layui-layer-input").val();
+                        option.msg = value;
+                        option.status = 2;
+                        changeStatus(option);
+                        layer.close(index);
+                    },
+                    btnAlign: 'c',    // 设置按钮位置
+                }, function(value, index, elem){
+                    option.msg = value;
+                    option.status = 1;
+                    changeStatus(option);
+                    layer.close(index);
+                });
+
+            } else if (obj.event === 'view') {
+                alert("~~~");
+            }
+        });
+
+        function changeStatus(option) {
+            // $.ajax({
+            //     type: 'post',
+            //     url: '/user/changeState',
+            //     contentType: 'application/json;charset=UTF-8',
+            //     data: JSON.stringify(option),
+            //     dataType: 'json',
+            //     success: function (data) {
+            //         if (data.state === 400) {
+            //             layer.msg("状态更改失败");
+            //         } else {
+            //             layer.msg("状态更改成功");
+            //             tableIns.reload();
+            //         }
+            //     }
+            // });
+            alert(option.msg);
+            alert(option.status);
+            alert(option.id)
         }
 
         form.on('submit(search)', function (data) {
