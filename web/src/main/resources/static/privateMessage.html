@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="assets/layui/css/layui.css">
     <script src="assets/layui/layui.js" charset="utf-8"></script>
 </head>
-<body onload="getList()">
+<body onload="getList(),getTime()">
 
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
@@ -86,10 +86,8 @@
                 console.log(result)
             }
         })
-        var monthFlag
 
         function initTimeLine() {//将获取到的message表的内容填充到时间线中
-            monthFlag = 13
             for (var i = 0; i < json.length; i++) {
                 //result[i]表示获得第i个json对象即JSONObject
                 //result[i]通过.字段名称即可获得指定字段的值
@@ -116,7 +114,6 @@
         }
 
         function initCardM() {//将获取到的message表的内容填充到时间线中
-            monthFlag = 13
             for (var i = 0; i < json.length; i++) {
                 //result[i]表示获得第i个json对象即JSONObject
                 //result[i]通过.字段名称即可获得指定字段的值
@@ -154,6 +151,15 @@
                 str = m + "月" + d + "日" + h + ":" + M;
             return str;
         }
+    }
+    var nowTime
+
+    function getTime() {
+        nowTime = new Date()
+    }
+    
+    function compareTime() {
+        var updateTime = json[0].date;
     }
 </script>
 

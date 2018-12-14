@@ -47,12 +47,12 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findBySender(User sender, int page, int limit) {
         Pageable pageable = new PageRequest(page - 1, limit);
-        return messageRepository.findBySender(sender, pageable);
+        return messageRepository.findBySender(sender);
     }
 
     @Override
     public List<Message> findByReceiver(User receiver, int page, int limit) {
         Pageable pageable = new PageRequest(page - 1, limit);
-        return messageRepository.findByReceiver(receiver, pageable);
+        return messageRepository.findByReceiver(receiver);
     }
 }
