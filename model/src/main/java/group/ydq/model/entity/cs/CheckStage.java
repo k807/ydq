@@ -28,7 +28,7 @@ public class CheckStage {
 
     private boolean uploadStatus;   //材料是否上传
 
-    private int satus;  // 所处阶段审核状态 0-未审核   1-已通过   2-未通过
+    private int status;  // 所处阶段审核状态 0-未审核   1-已通过   2-未通过
 
     private String remarks; //项目上传材料要求
 
@@ -85,12 +85,12 @@ public class CheckStage {
         this.uploadStatus = uploadStatus;
     }
 
-    public int getSatus() {
-        return satus;
+    public int getStatus() {
+        return status;
     }
 
-    public void setSatus(int satus) {
-        this.satus = satus;
+    public void setStatus(int satus) {
+        this.status = status;
     }
 
     public String getRemarks() {

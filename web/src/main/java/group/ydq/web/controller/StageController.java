@@ -8,8 +8,8 @@ import group.ydq.service.service.CheckStageService;
 import group.ydq.service.service.FileService;
 import group.ydq.service.service.ProjectService;
 import group.ydq.utils.RetResponse;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import group.ydq.utils.StageCheckStatusToProjStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -33,13 +33,12 @@ public class StageController {
     @RequestMapping("/startMid")
     private BaseResponse startMid(long projectId){
         CheckStage cs = new CheckStage();
-        Project p = new Project();
-        p = projectService.getProject(projectId);
+        Project p = projectService.getProject(projectId);
         cs.setProject(p);
         cs.setStartTime(new Date());
         cs.setUploadStatus(false);
         cs.setStage(1);
-        cs.setSatus(0);
+        cs.setStatus(0);
         checkStageService.save(cs);
         return new BaseResponse();
     }
@@ -47,13 +46,12 @@ public class StageController {
     @RequestMapping("/startFinal")
     private BaseResponse startFinal(long projectId){
         CheckStage cs = new CheckStage();
-        Project p = new Project();
-        p = projectService.getProject(projectId);
+        Project p = projectService.getProject(projectId);
         cs.setProject(p);
         cs.setStartTime(new Date());
         cs.setUploadStatus(false);
         cs.setStage(2);
-        cs.setSatus(0);
+        cs.setStatus(0);
         checkStageService.save(cs);
         return new BaseResponse();
     }
@@ -82,7 +80,7 @@ public class StageController {
             jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
             jsonObject.put("stage", checkStage.getStage());
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
-            jsonObject.put("status", checkStage.getSatus());
+            jsonObject.put("status", checkStage.getStatus());
             jsonObject.put("verifer", checkStage.getVerifiers().getNick());
             dataList.add(jsonObject);
         }
@@ -90,10 +88,69 @@ public class StageController {
         return new BaseResponse(dataList);
     }
 
+
+
     @RequestMapping("/getByConditions")
-    private BaseResponse getByConditions(JSONObject object){
-        String projectName = object.getString("projectName");
-        String projectLeader = object.getString("projectLeader");
+    private BaseResponse getByConditions(@RequestBody Map<String, Object> searchParamMap){
+
+        //TODO: 在这里添加service层的调用
+        System.out.println(searchParamMap);
         return new BaseResponse();
     }
+
+    @RequestMapping(value = "/denied",method = {RequestMethod.POST, RequestMethod.GET} )
+    @ResponseBody
+    //这个接口用于处理审核未通过的项目的内容
+    private BaseResponse changeToUnpassed(@RequestBody Map<String, Object> paramsMap){
+
+        /*
+        * stageCheckID --> StageCheck表中的主键ID
+        * stageStatus --> StageCheck表中的审核状态代码  1表示待整改（未通过），2表示通过
+        * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
+        * projectID --> 根据CheckStage表中的ID得出的项目ID编号
+        * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
+        *
+        * */
+        Integer tempContainer = (Integer) paramsMap.get("id");
+        Long stageCheckID = tempContainer.longValue();
+        String message = (String) paramsMap.get("msg");
+        int stageStatus = (int) paramsMap.get("status");
+        int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
+        Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
+        int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
+        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus);
+        return new BaseResponse("change success!");
+    }
+
+
+    @RequestMapping(value = "/accepted",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    //这个接口用于处理审核通过的项目
+    private BaseResponse changeToPassed(@RequestBody Map<String, Object> paramsMap){
+        /*
+         * stageCheckID --> StageCheck表中的主键ID
+         * stageStatus --> StageCheck表中的审核状态代码  1表示待整改（未通过），2表示通过
+         * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
+         * projectID --> 根据CheckStage表中的ID得出的项目ID编号
+         * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
+         *
+         * */
+        Integer tempContainer = (Integer) paramsMap.get("id");
+        Long stageCheckID = tempContainer.longValue();
+        String message = (String) paramsMap.get("msg");
+        int stageStatus = (int) paramsMap.get("status");
+        int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
+        Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
+        int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
+        if(projectStage == 1){
+            //如果项目处于中期的话，就进入结题验收阶段
+            startFinal(projectID);
+        }else if (projectStage == 2){
+            //若果项目结题验收通过
+            // TODO::更新project表中的state状态码 （改为projectStatus变量）
+
+        }
+        return new BaseResponse();
+    }
+
 }

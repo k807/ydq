@@ -150,6 +150,7 @@
             var data = obj.data;
             var option = {};
             option.id = data.id;
+            option.stage = data.stage;
             if (obj.event === 'check') {
                 layer.prompt({
                     formType: 2,    // 弹出文本层类型
@@ -178,24 +179,30 @@
         });
 
         function changeStatus(option) {
-            // $.ajax({
-            //     type: 'post',
-            //     url: '/user/changeState',
-            //     contentType: 'application/json;charset=UTF-8',
-            //     data: JSON.stringify(option),
-            //     dataType: 'json',
-            //     success: function (data) {
-            //         if (data.state === 400) {
-            //             layer.msg("状态更改失败");
-            //         } else {
-            //             layer.msg("状态更改成功");
-            //             tableIns.reload();
-            //         }
-            //     }
-            // });
-            alert(option.msg);
+            var url = null;
+            if(option.status === 1){
+                url = '/stage/accepted'
+            }else if(option.status === 2){
+                url = '/stage/denied'
+            }
+            $.ajax({
+                type: 'POST',
+                url: url,
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify(option),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.state === 400) {
+                        layer.msg("状态更改失败");
+                    } else {
+                        layer.msg("状态更改成功");
+                        tableIns.reload();
+                    }
+                }
+            });
+/*            alert(option.msg);
             alert(option.status);
-            alert(option.id)
+            alert(option.id)*/
         }
 
         form.on('submit(search)', function (data) {
