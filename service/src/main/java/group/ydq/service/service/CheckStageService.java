@@ -10,5 +10,7 @@ import java.util.List;
 public interface CheckStageService  extends  BaseService{
     void save(CheckStage s);
     List<CheckStage> findAll();
+    CheckStage findACheckStageByCheckStageID(Long stageCheckID);
+    void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus);
     /*List<CheckStage> getByConditions(String studentNumber, String )*/
 }
