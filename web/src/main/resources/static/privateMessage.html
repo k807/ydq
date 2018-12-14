@@ -59,7 +59,7 @@
 
 
     var json
-    layui.use('element', function () {
+    layui.use(['element', 'jquery'], function () {
         var element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
         element.on('tab(filter)', function (data) {
@@ -156,14 +156,17 @@
     }
 
     function compareTime() {
+        $ = layui.$
         getList()
+        // alert($(this).parent())
+
         var updateTime = new Date(json[json.length-1].date).getTime();
-        console.log(updateTime)
-        console.log(nowTime)
+        // console.log(updateTime)
+        // console.log(nowTime)
         if (updateTime < nowTime) {
-            alert("updateTime is older nowTime");
+            // alert("updateTime is older nowTime");
         } else {
-            alert("updateTime is newer nowTime");
+            // alert("updateTime is newer nowTime");
         }
     }
 
