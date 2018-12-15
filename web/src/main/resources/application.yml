@@ -4,7 +4,7 @@ server:
 spring:
     datasource:
         name: talk
-        url: jdbc:mysql://120.78.73.227:3306/ydq?useSSL=false&allowMultiQueries=true&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Hongkong&characterEncoding=utf-8
+        url: jdbc:mysql://120.78.73.227:3306/ydq?useSSL=false&characterEncoding=utf-8
         username: root
         password: lm996927@123
         driver-class-name: com.mysql.jdbc.Driver

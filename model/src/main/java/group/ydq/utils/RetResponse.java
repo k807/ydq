@@ -18,6 +18,13 @@ public class RetResponse {
         return response;
     }
 
+    public static BaseResponse error(){
+        BaseResponse response=new BaseResponse();
+        response.setStatusCode("400");
+        response.setMsg("error");
+        return response;
+    }
+
     public static BaseResponse error(String code, String msg, @Nullable Object obj){
         BaseResponse response=new BaseResponse();
         response.setStatusCode(code);

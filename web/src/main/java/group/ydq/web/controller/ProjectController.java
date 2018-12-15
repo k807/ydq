@@ -53,7 +53,7 @@ public class ProjectController {
     @RequestMapping("/getDetails/{id:.+}")
     private String getDetails(@PathVariable long id, Model model){
         Project project=projectService.getProject(id);
-        String filename=fileService.getFile(project.getFilepath()).getName();
+        ProjectFile file=project.getDeclaration();
         JSONArray array= JSON.parseArray(project.getMembers());
 
         StringBuilder members= new StringBuilder();
@@ -64,7 +64,7 @@ public class ProjectController {
 
         List<String> pics=new ArrayList<>();
         for (ProjectFile pic:project.getCommitmentPics())
-            pics.add("/upload/"+pic.getFilePath());
+            pics.add("/file/img/"+pic.getId());
 
         model.addAttribute("name",project.getName());
         model.addAttribute("leader",project.getLeader().getNick());
@@ -73,8 +73,8 @@ public class ProjectController {
         model.addAttribute("phone",project.getPhone());
         model.addAttribute("email",project.getEmail());
         model.addAttribute("members",members);
-        model.addAttribute("filename",filename);
-        model.addAttribute("filepath","/upload/"+project.getFilepath()+"/"+filename);
+        model.addAttribute("filename",file.getName());
+        model.addAttribute("filepath","/file/doc/"+file.getId());
         model.addAttribute("commitmentPics",pics);
         return "projectDetails";
     }

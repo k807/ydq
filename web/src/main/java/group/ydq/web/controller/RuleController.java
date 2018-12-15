@@ -25,7 +25,7 @@ public class RuleController {
     @Resource
     private DeclareService declareService;
 
-    @RequestMapping("/get")
+    @RequestMapping("/list")
     public String getRules(Model model){
         List<DeclareRule> rules=declareService.getRules();
         List<Map<String,Object>> list=new ArrayList<>();
@@ -42,4 +42,6 @@ public class RuleController {
         model.addAttribute("list",list);
         return "DeclareRule";
     }
+
+
 }

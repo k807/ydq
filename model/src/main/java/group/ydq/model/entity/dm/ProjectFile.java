@@ -13,7 +13,7 @@ public class ProjectFile {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String uniqueId;
+    private String uuid;
 
     private String name;
 
@@ -27,12 +27,12 @@ public class ProjectFile {
         this.id = id;
     }
 
-    public String getUniqueId() {
-        return uniqueId;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {

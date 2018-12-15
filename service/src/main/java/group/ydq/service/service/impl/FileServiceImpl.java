@@ -23,18 +23,22 @@ public class FileServiceImpl extends BaseServiceImpl implements FileService {
     }
 
     @Override
-    public ProjectFile getFile(String uniqueId) {
-        return fileRepository.getByUniqueId(uniqueId);
+    public ProjectFile getFile(String uuid) {
+        return fileRepository.getProjectFileByUuid(uuid);
     }
 
     @Override
-    public boolean isFileExist(String uniqueId) {
-        return fileRepository.existsByUniqueId(uniqueId);
+    public ProjectFile getFile(long id) {
+        return fileRepository.getOne(id);
     }
 
     @Override
-    public void deleteFile(String uniqueId) {
-        fileRepository.deleteByUniqueId(uniqueId);
-        FileUtil.delete(uniqueId);
+    public boolean isFileExist(long id) {
+        return fileRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteFile(long id) {
+        fileRepository.deleteById(id);
     }
 }

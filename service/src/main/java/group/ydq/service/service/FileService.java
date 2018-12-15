@@ -9,9 +9,11 @@ import group.ydq.model.entity.dm.ProjectFile;
 public interface FileService extends BaseService{
     void upload(ProjectFile file);
 
-    ProjectFile getFile(String uniqueId);
+    ProjectFile getFile(String uuid);
 
-    boolean isFileExist(String uniqueId);
+    ProjectFile getFile(long id);
 
-    void deleteFile(String uniqueId);
+    boolean isFileExist(long id);
+
+    void deleteFile(long id);
 }

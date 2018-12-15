@@ -41,7 +41,8 @@ public class Project {
     @OneToMany
     private List<ProjectFile> commitmentPics;  //承诺书图片ID
 
-    private String filepath;    //申报书文件路径
+    @OneToOne
+    private ProjectFile declaration;    //申报书文件路径
 
     @ManyToOne
     private DeclareRule entrance;   //申报入口
@@ -131,12 +132,12 @@ public class Project {
         this.commitmentPics = commitmentPic;
     }
 
-    public String getFilepath() {
-        return filepath;
+    public ProjectFile getDeclaration() {
+        return declaration;
     }
 
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
+    public void setDeclaration(ProjectFile declaration) {
+        this.declaration = declaration;
     }
 
     public DeclareRule getEntrance() {
