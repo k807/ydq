@@ -3,6 +3,7 @@ package group.ydq.service.service.impl;
 import group.ydq.model.dao.dm.FileRepository;
 import group.ydq.model.entity.dm.ProjectFile;
 import group.ydq.service.service.FileService;
+import group.ydq.utils.FileUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,5 +35,6 @@ public class FileServiceImpl extends BaseServiceImpl implements FileService {
     @Override
     public void deleteFile(String uniqueId) {
         fileRepository.deleteByUniqueId(uniqueId);
+        FileUtil.delete(uniqueId);
     }
 }

@@ -19,4 +19,6 @@ public interface ProjectService extends BaseService{
 
     List<Project> getProjectsOfManager(String userNumber);
 
+    void changeState(long projectId,int state);
+
 }

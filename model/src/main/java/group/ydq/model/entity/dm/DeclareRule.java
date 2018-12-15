@@ -22,6 +22,8 @@ public class DeclareRule {
     @ManyToOne
     private User publisher;
 
+    private String title;
+
     private Date startTime;
 
     private Date endTime;
@@ -44,6 +46,14 @@ public class DeclareRule {
 
     public void setPublisher(User publisher) {
         this.publisher = publisher;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Date getStartTime() {

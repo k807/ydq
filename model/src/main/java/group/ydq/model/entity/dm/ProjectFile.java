@@ -17,10 +17,7 @@ public class ProjectFile {
 
     private String name;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition="longblob")
-    private byte[] file;
+    private String filePath;
 
     public Long getId() {
         return id;
@@ -46,11 +43,11 @@ public class ProjectFile {
         this.name = name;
     }
 
-    public byte[] getFile() {
-        return file;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setFile(byte[] file) {
-        this.file = file;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

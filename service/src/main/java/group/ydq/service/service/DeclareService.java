@@ -1,5 +1,6 @@
 package group.ydq.service.service;
 
+import group.ydq.model.entity.dm.DeclareRule;
 import group.ydq.model.entity.dm.Project;
 
 import java.util.List;
@@ -11,5 +12,5 @@ import java.util.List;
 public interface DeclareService extends BaseService{
     void distributeExpert(long projectId, List<Long> expertIds);
 
-
+    List<DeclareRule> getRules();
 }

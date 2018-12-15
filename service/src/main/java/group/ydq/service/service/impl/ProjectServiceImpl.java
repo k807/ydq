@@ -60,4 +60,9 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     public List<Project> getProjectsOfManager(String userNumber) {
         return projectRepository.findProjectsByManagerAndSubmit(userRepository.findByUserNumber(userNumber),true);
     }
+
+    @Override
+    public void changeState(long projectId, int state) {
+        projectRepository.changeState(projectId, state);
+    }
 }

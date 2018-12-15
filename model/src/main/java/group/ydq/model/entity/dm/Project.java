@@ -38,7 +38,8 @@ public class Project {
 
     private String members; //成员列表，以json数组格式存储
 
-    private String commitmentId;  //承诺书图片路径
+    @OneToMany
+    private List<ProjectFile> commitmentPics;  //承诺书图片ID
 
     private String filepath;    //申报书文件路径
 
@@ -122,12 +123,12 @@ public class Project {
         this.members = members;
     }
 
-    public String getCommitmentId() {
-        return commitmentId;
+    public List<ProjectFile> getCommitmentPics() {
+        return commitmentPics;
     }
 
-    public void setCommitmentId(String commitmentId) {
-        this.commitmentId = commitmentId;
+    public void setCommitmentPics(List<ProjectFile> commitmentPic) {
+        this.commitmentPics = commitmentPic;
     }
 
     public String getFilepath() {

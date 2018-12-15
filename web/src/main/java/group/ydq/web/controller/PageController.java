@@ -11,27 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
     @RequestMapping("/")
     public String index() {
-        return "home.html";
+        return "home";
     }
 
     @RequestMapping("/login")
     public String login() {
-        return "login.html";
+        return "login";
     }
 
     @RequestMapping("/register")
     public String register() {
-        return "register.html";
-    }
-
-    @RequestMapping("/pm")
-    public String message() {
-        return "privateMessage.html";
-    }
-
-    @RequestMapping("/pmTest")
-    public String messageTest() {
-        return "pmTest.html";
+        return "register";
     }
 
 }

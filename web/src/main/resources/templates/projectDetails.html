@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>项目详情</title>
+    <link rel="stylesheet" href="/static/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/assets/style/admin.css">
+    <link rel="stylesheet" href="/static/assets/style/login.css">
+    <style type="text/css">
+        .layui-disabled,.layui-disabled:hover {
+            color: black !important;
+            cursor: not-allowed !important
+        }
+        .layui-upload-img{width: 100px; height: 100px; margin: 0 10px 0 10px;}
+    </style>
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layadmin-user-login-main layui-card-body" style="padding: 15px;width: 40%;">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>项目详情</h2>
+            </div>
+            <div class="layadmin-user-login-box layadmin-user-login-body">
+                <form class="layui-form layui-form-pane" lay-filter="projectDetails">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">项目名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" lay-verify="name" autocomplete="off" readonly class="layui-input"
+                            th:value="${name}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申报级别</label>
+                        <div class="layui-input-block">
+                            <select name="level" disabled>
+                                <option value="0" th:selected="${level==0}">校级一类</option>
+                                <option value="1" th:selected="${level==1}">校级二类</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">负责人</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="leader" id="leader" autocomplete="off" class="layui-input" readonly
+                            th:value="${leader}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机号码</label>
+                        <div class="layui-input-block">
+                            <input type="tel" name="phone" lay-required="phone" autocomplete="off" class="layui-input" readonly
+                            th:value="${phone}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电子邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="email" name="email" lay-required="email" autocomplete="off" class="layui-input" readonly
+                            th:value="${email}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属专业</label>
+                        <div class="layui-input-block">
+                            <select name="major" disabled>
+                                <option value="0" th:selected="${major==0}">计算机科学与技术</option>
+                                <option value="1" th:selected="${major==1}">电子信息工程</option>
+                                <option value="2" th:selected="${major==2}">电子信息科学与技术</option>
+                                <option value="3" th:selected="${major==3}">数字媒体技术</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" id="member-box">
+                        <label class="layui-form-label">项目成员</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="members" lay-required autocomplete="off" class="layui-input" readonly
+                            th:value="${members}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-upload">
+                            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                <p style="font-size: medium; margin-bottom: 15px">立项承诺书</p>
+                                <div class="layui-upload-list" id="img-box" >
+                                    <img th:each="url:${commitmentPics}" th:src="${url}" class="layui-upload-img" id="upload-img" style="padding: 2px">
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-row">
+                            <div class="layui-col-xs10">
+                                <label class="layui-form-label">申报书</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="filename" lay-required autocomplete="off" class="layui-input" disabled
+                                    th:value="${filename}">
+                                </div>
+                            </div>
+                            <div class="layui-col-xs2">
+                                <div style="margin-left: 10px; float: right;">
+                                    <a id="download" th:href="${filepath}"><input type="button" value="下载" class="layui-btn"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/assets/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['form','layer'],function(){
+        var form=layui.form;
+        var layer=layui.layer;
+        layer.photos({
+            photos:'#img-box',
+            anim:5
+        })
+    })
+</script>
+</body>
+</html>

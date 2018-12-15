@@ -53,7 +53,7 @@ public class MessageController {
         messageOne.setType(type);
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        messageOne.setDate(sdf.parse(date));
-        messageOne.setDate(DateUtil.strToDate(date));
+        messageOne.setDate(DateUtil.strToDate(date,DateUtil.format1));
         User senderUser = new User();
         senderUser.setNick(sender);
         User receiverUser = new User();

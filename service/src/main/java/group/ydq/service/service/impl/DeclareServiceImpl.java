@@ -1,14 +1,17 @@
 package group.ydq.service.service.impl;
 
+import group.ydq.model.dao.dm.DeclareRuleRepository;
 import group.ydq.model.dao.dm.ExpertRepository;
 import group.ydq.model.dao.dm.ProjectRepository;
 import group.ydq.model.dao.rbac.UserRepository;
+import group.ydq.model.entity.dm.DeclareRule;
 import group.ydq.model.entity.dm.ExpertProject;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.DeclareService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +26,9 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
     private ProjectRepository projectDao;
     @Resource
     private ExpertRepository expertDao;
+    @Resource
+    private DeclareRuleRepository ruleRepository;
+
 
     @Override
     public void distributeExpert(long projectId, List<Long> expertIds) {
@@ -35,5 +41,10 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
             expertProject.setProject(project);
             expertDao.save(expertProject);
         }
+    }
+
+    @Override
+    public List<DeclareRule> getRules() {
+        return ruleRepository.findDeclareRulesByEndTimeAfter(new Date());
     }
 }

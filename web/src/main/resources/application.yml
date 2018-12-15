@@ -13,4 +13,10 @@ spring:
           enabled: true
           port: 35729
         restart:
-          enabled: true
+          enabled: false
+    thymeleaf:
+      cache: false
+      encoding: UTF-8
+      servlet:
+        content-type: text/html
+

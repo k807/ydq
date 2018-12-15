@@ -9,14 +9,19 @@ import java.util.Date;
  * @date 2018/11/28 17:10
  */
 public class DateUtil {
-    public static String dateToStr(Date date){
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(date);
+    public final static String format1="yyyy-MM-dd HH:mm:ss";
+    public final static String format2="yyyy-MM-dd";
+    public static final String format3="yyyy-MM-dd HH:mm";
+
+
+    public static String dateToStr(Date date,String format){
+        SimpleDateFormat sdf=new SimpleDateFormat(format);
+        return sdf.format(date);
     }
 
-    public static Date strToDate(String str){
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static Date strToDate(String str,String format){
+        SimpleDateFormat sdf=new SimpleDateFormat(format);
         ParsePosition pst=new ParsePosition(0);
-        return format.parse(str,pst);
+        return sdf.parse(str,pst);
     }
 }

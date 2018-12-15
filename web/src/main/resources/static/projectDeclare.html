@@ -6,6 +6,23 @@
     <link rel="stylesheet" href="assets/layui/css/layui.css">
     <link rel="stylesheet" href="assets/style/admin.css">
     <link rel="stylesheet" href="assets/style/login.css">
+    <style>
+        .layui-upload-img{width: 100px; height: 100px; margin: 0 10px 10px 10px;}
+
+        .imgDiv {
+            display: inline-block;
+            position: relative;
+        }
+
+        .imgDiv .delete {
+            position: absolute;
+            top: 0;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <div class="layui-fluid">
@@ -84,15 +101,11 @@
                     <div class="layui-form-item">
                         <div class="layui-upload">
                             <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
-                                <p style="font-size: medium; margin-bottom: 15px">立项承诺书</p>
-                                <div id="img-box" align="center">
-                                    <div class="layui-upload-drag">
-                                        <div id="upload-img">
-                                            <i class="layui-icon"></i>
-                                            <p>点击上传，或将文件拖拽到此处</p>
-                                        </div>
-                                    </div>
+                                <div class="layui-row">
+                                    <span style="font-size: medium; margin-bottom: 15px" class="layui-col-md8">立项承诺书</span>
+                                    <button type="button" class="layui-btn layui-btn-sm layui-col-md2 layui-col-md-offset2" id="upload-img" >上传图片</button>
                                 </div>
+                                <div class="layui-upload-list img-list" id="img-box"></div>
                             </blockquote>
                         </div>
                     </div>
@@ -105,8 +118,8 @@
                     <div class="layui-form-item layui-layout-admin">
                         <div class="layui-input-block">
                             <div class="layui-footer" style="left: 0;">
-                                <button type="button" class="layui-btn upload" lay-submit lay-filter="submit">立即提交</button>
-                                <button class="layui-btn layui-btn-primary upload" lay-submit lay-filter="save">保存</button>
+                                <button type="button" class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                                <button class="layui-btn layui-btn-primary" lay-submit lay-filter="save">保存</button>
                             </div>
                         </div>
                     </div>
@@ -128,56 +141,45 @@
         var form = layui.form;
         var layer=layui.layer;
         var upload = layui.upload;
-        var imgId=createRandomId();
-        var fileId=createRandomId();
+
+        var pics=[];
+
+        var file={
+            'id':createRandomId(),
+            'upload':false
+        };
         var uploadInst = upload.render({
             elem: '#upload-img'
             , url: '/upload'
             ,accept: 'images'
+            ,multiple:true
             ,exts:'jpg|png|gif|bmp|jpeg'
             ,data:{
-                'uniqueId':imgId
+                'uniqueId':function(){
+                    return createRandomId()
+                }
             }
             , choose: function (obj) {
                 //预读本地文件示例，不支持ie8
                 obj.preview(function (index, file, result) {
-                    var box=document.getElementById('upload-img');
-                    box.innerHTML='<img class="layui-upload-img" id="commitment" width="400px" >';
-                    $("#commitment").attr('src',result);
+                    $('#img-box').append('<div class="imgDiv">\n' +
+                        '                     <img src="'+result+'" alt="'+file.name+'" class="layui-upload-img">\n' +
+                        '                     <img src="/static/assets/layui/images/delete.png" class="delete" />\n' +
+                        '                 </div>');
+                    deleteBtn();
                 });
             }
-            , done: function (res) {
-                var box=document.getElementById('img-box');
-                box.innerHTML+='<p id="hintText" style="margin-top: 10px"></p>';
-                var hintText = $('#hintText');
-                hintText.html('<span style="color: #000;">上传成功</span> <a class="layui-btn layui-btn-danger layui-btn-xs delete">删除</a>');
-                hintText.find('.delete').on('click', function () {
-                    $.ajax({
-                        url:'/file/delete',
-                        type:'get',
-                        data:'uniqueId='+imgId,
-                        dataType:'json',
-                        success:function(data){
-                            if (data.statusCode==="200") {
-                                var box = document.getElementById('upload-img');
-                                box.innerHTML = ' <i class="layui-icon"></i><p>点击上传，或将文件拖拽到此处</p>';
-                                var imgBox=document.getElementById('img-box');
-                                var hintText=document.getElementById('hintText');
-                                imgBox.removeChild(hintText);
-                            }
-                        }
-                    })
-                });
+            ,done:function(res){
+                if (res.statusCode==="200"){
+                    var pic={};
+                    pic.id=res.object.id;
+                    pic.uniqueId=res.object.uniqueId;
+                    pics.push(pic)
+                }
             }
-            , error: function () {
+            , error: function (index, upload) {
                 //演示失败状态，并实现重传
-                var box=document.getElementById('img-box');
-                box.innerHTML+='<p id="hintText" style="margin-top: 10px"></p>';
-                var hintText = $('#hintText');
-                hintText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs reload">重试</a>');
-                hintText.find('.reload').on('click', function () {
-                    uploadInst.upload();
-                });
+
             }
         });
         upload.render({
@@ -185,26 +187,26 @@
             url: '/upload',
             accept:'file',
             exts:'doc|docx|pdf|txt|ppt|pptx',
-            auto: false,
-            bindAction:'.upload',
             data:{
-                'uniqueId':fileId,
-                'name':function(){
-                    return $('#file').val();
-                }
+                'uniqueId':file.id
             },
             choose:function(obj){
                 obj.preview(function(index,file,result){
                     $('#file').val(file.name);
                 })
+            },
+            done:function(res){
+                if (res.statusCode==="200")
+                    file.upload = true;
             }
         });
 
         function s(action, data) {
             var leader = {
-                "id": 1,
-                "nick": "honey",
-                "userNumber": "123456"
+                "id": 1
+            };
+            var entrance={
+                "id":window.location.href.split('=')[1]
             };
             var json = {};
             json.name = data.field.name;
@@ -213,8 +215,9 @@
             json.phone = data.field.phone;
             json.major = data.field.major;
             json.email = data.field.email;
-            json.commitmentId = imgId;
-            json.filepath = fileId;
+            json.commitmentPics = pics;
+            json.filepath = file.id;
+            json.entrance=entrance;
             var members = [];
             $('input[name^=members]').each(function (index, element) {
                 members.push(element.value);
@@ -232,12 +235,45 @@
             });
         }
         form.on('submit(submit)',function(data){
-            s('submit',data);
+            if (pics.length===0)
+                layer.tips('请上传立项承诺书！！！','#upload-img',{
+                    tipsMore:true
+                });
+            if (!file.upload)
+                layer.tips('请上传申报书！！！','#file',{
+                    tipsMore:true
+                });
+            if (pics.length!==0&&file.upload)
+                s('submit',data);
             return false;
         });
         form.on("submit(save)",function(data){
             s('save',data);
             return false;
+        });
+
+        function deleteBtn(){
+            $(".imgDiv").mouseenter(function () {
+                $(this).find(".delete").show();
+            });
+
+            $(".imgDiv").mouseleave(function () {
+                $(this).find(".delete").hide();
+            });
+        }
+
+        $('body').on('click','.delete',function(e){
+            var index=$('.img-list .imgDiv').index(this.parent);
+            $(this).parent('div').remove();
+            $.ajax({
+                type:'get',
+                url:'/file/delete',
+                data:'uniqueId='+pics[index].uniqueId,
+                dataType:'json',
+                success:function(data){
+                    pics.slice(index,1);
+                }
+            })
         })
     });
 </script>
