@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="assets/layui/css/layui.css">
     <script src="assets/layui/layui.js" charset="utf-8"></script>
 </head>
-<body onload="getTime()">
+<body>
 
 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
     <ul class="layui-tab-title">
@@ -148,29 +148,6 @@
             return str;
         }
     }
-
-    var nowTime
-
-    function getTime() {
-        nowTime = new Date().getTime()
-    }
-
-    function compareTime() {
-        $ = layui.$
-        getList()
-        // alert($(this).parent())
-
-        var updateTime = new Date(json[json.length-1].date).getTime();
-        // console.log(updateTime)
-        // console.log(nowTime)
-        if (updateTime < nowTime) {
-            // alert("updateTime is older nowTime");
-        } else {
-            // alert("updateTime is newer nowTime");
-        }
-    }
-
-    setInterval(compareTime, 1000);
 
 </script>
 
