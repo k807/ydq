@@ -13,13 +13,19 @@
             <div class="layui-card-header" th:text="${rule.title}" style="font-size: medium"></div>
         </a>
         <div class="layui-card-body">
-            <p style="font-size: 14px;"><span style="color: black">所属学科：</span><span th:text="${rule.major}"></span></p>
-            <p style="font-size: 14px;"><span style="color: black">起始时间：</span><span th:text="${rule.startTime}"></span></p>
-            <p style="font-size: 14px;"><span style="color: black">截止时间：</span><span th:text="${rule.endTime}"></span></p>
-            <span style="font-size: 14px;color: black">申报规则：</span>
-            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 5px;">
-                <div th:utext="${rule.content}"></div>
-                <div th:if="${rule.content==''}"><span style="font-size: 15px;color: black">空空如也~~</span></div>
+            <blockquote class="layui-elem-quote layui-quote-nm">
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px">
+                    <span style="color: black">所属学科：</span><span th:text="${rule.major}"></span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px">
+                    <span style="color: black">起始时间：</span><span th:text="${rule.startTime}"></span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px">
+                    <span style="color: black">截止时间：</span><span th:text="${rule.endTime}"></span></p>
+                <fieldset class="layui-elem-field" style="margin-top: 10px">
+                    <legend style="color: black;font-size: 14px">申报规则</legend>
+                    <div class="layui-field-box" th:if="${rule.content!=''}" th:utext="${rule.content}"></div>
+                    <div class="layui-field-box" th:if="${rule.content==''}"><span style="color: black">空空如也~~</span>
+                    </div>
+                </fieldset>
             </blockquote>
         </div>
     </div>

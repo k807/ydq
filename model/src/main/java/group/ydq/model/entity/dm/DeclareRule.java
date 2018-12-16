@@ -75,8 +75,14 @@ public class DeclareRule {
         this.endTime = endTime;
     }
 
-    public int getMajor() {
-        return major;
+    public String getMajor() {
+        switch (this.major){
+            case 0:return "计算机科学与技术";
+            case 1:return "电子信息工程";
+            case 2:return "电子信息科学与技术";
+            case 3:return "数字媒体技术";
+            default:return "";
+        }
     }
 
     public void setMajor(int major) {
