@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新建申报规则</title>
+    <link rel="stylesheet" href="/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/assets/style/admin.css">
+    <link rel="stylesheet" href="/assets/style/login.css">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layadmin-user-login-main layui-card-body" style="padding: 15px;width: 40%;">
+            <div class="layadmin-user-login-box layadmin-user-login-body">
+                <form class="layui-form layui-form-pane">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">标题</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属专业</label>
+                        <div class="layui-input-block">
+                            <select name="major" lay-verify="required">
+                                <option value="">请选择专业</option>
+                                <option value="0">计算机科学与技术</option>
+                                <option value="1">电子信息工程</option>
+                                <option value="2">电子信息科学与技术</option>
+                                <option value="3">数字媒体技术</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">起始时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="startTime" id="start" placeholder="请选择日期" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">截止时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="endTime" id="end" placeholder="请选择日期" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">申报规则</label>
+                        <textarea name="ruleContent" id="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                    <div class="layui-form-item layui-layout-admin">
+                        <div class="layui-input-block">
+                            <div class="layui-footer" style="left: 0;">
+                                <button type="button" class="layui-btn" lay-submit lay-filter="submit">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/layui/layui.js"></script>
+<script>
+    layui.use(['form','layedit','laydate','layer','jquery'],function(){
+        var form=layui.form
+            ,layedit=layui.layedit
+            ,laydate=layui.laydate
+            ,layer=layui.layer
+            ,$=layui.$;
+
+        var index=layedit.build('content',{
+            height:150,
+            hideTool:['image']
+        });
+        layedit.sync(index);
+
+        laydate.render({
+            elem: '#start',
+            type: 'date',
+            calendar: true
+        });
+        laydate.render({
+            elem: '#end',
+            type: 'date',
+            calendar: true
+        });
+
+        form.on('submit(submit)',function(data){
+            data.field.ruleContent=layedit.getContent(index);
+            $.ajax({
+                type:'post',
+                url: '/rule/add',
+                data: JSON.stringify(data.field),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.statusCode === '200')
+                        layer.msg('添加成功')
+                }
+            });
+            return false;
+        })
+    })
+</script>
+</body>
+</html>

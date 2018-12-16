@@ -47,4 +47,11 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
     public List<DeclareRule> getRules() {
         return ruleRepository.findDeclareRulesByEndTimeAfter(new Date());
     }
+
+    @Override
+    public void addRule(DeclareRule rule) {
+        ruleRepository.save(rule);
+    }
+
+
 }

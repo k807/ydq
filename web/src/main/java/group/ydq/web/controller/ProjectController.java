@@ -64,7 +64,7 @@ public class ProjectController {
 
         List<String> pics=new ArrayList<>();
         for (ProjectFile pic:project.getCommitmentPics())
-            pics.add("/file/img/"+pic.getId());
+            pics.add("/file/"+pic.getId());
 
         model.addAttribute("name",project.getName());
         model.addAttribute("leader",project.getLeader().getNick());
@@ -74,7 +74,7 @@ public class ProjectController {
         model.addAttribute("email",project.getEmail());
         model.addAttribute("members",members);
         model.addAttribute("filename",file.getName());
-        model.addAttribute("filepath","/file/doc/"+file.getId());
+        model.addAttribute("filepath","/file/"+file.getId());
         model.addAttribute("commitmentPics",pics);
         return "projectDetails";
     }

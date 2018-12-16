@@ -1,5 +1,6 @@
 package group.ydq.model.entity.dm;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import group.ydq.model.entity.rbac.User;
 
 import javax.persistence.Entity;
@@ -24,8 +25,10 @@ public class DeclareRule {
 
     private String title;
 
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     private Date startTime;
 
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     private Date endTime;
 
     private int major;

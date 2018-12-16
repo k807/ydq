@@ -7,7 +7,9 @@ import group.ydq.utils.DateUtil;
 import group.ydq.utils.RetResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -33,15 +35,20 @@ public class RuleController {
             Map<String,Object> map=new HashMap<>();
             map.put("id",rule.getId());
             map.put("title",rule.getTitle());
-            map.put("startTime", DateUtil.dateToStr(rule.getStartTime(),DateUtil.format3));
-            map.put("endTime",DateUtil.dateToStr(rule.getEndTime(),DateUtil.format3));
+            map.put("startTime", DateUtil.dateToStr(rule.getStartTime(),DateUtil.format2));
+            map.put("endTime",DateUtil.dateToStr(rule.getEndTime(),DateUtil.format2));
             map.put("content",rule.getRuleContent());
             map.put("major",rule.getMajor());
             list.add(map);
         }
         model.addAttribute("list",list);
-        return "DeclareRule";
+        return "ruleList";
     }
 
-
+    @RequestMapping("/add")
+    @ResponseBody
+    public BaseResponse addRule(@RequestBody DeclareRule rule){
+        declareService.addRule(rule);
+        return RetResponse.success();
+    }
 }

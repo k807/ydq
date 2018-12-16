@@ -13,4 +13,6 @@ public interface DeclareService extends BaseService{
     void distributeExpert(long projectId, List<Long> expertIds);
 
     List<DeclareRule> getRules();
+
+    void addRule(DeclareRule rule);
 }
