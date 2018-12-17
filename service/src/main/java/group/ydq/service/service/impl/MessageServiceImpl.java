@@ -27,10 +27,6 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.findAllOrderByDate();
     }
 
-    @Override
-    public Message messageOne(Long id) {
-        return null;
-    }
 
 
     @Override
@@ -40,19 +36,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void delete(Long id) {
-        messageRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Message> findBySender(User sender, int page, int limit) {
-        Pageable pageable = new PageRequest(page - 1, limit);
+    public List<Message> findBySender(User sender) {
         return messageRepository.findBySender(sender);
     }
 
     @Override
-    public List<Message> findByReceiver(User receiver, int page, int limit) {
-        Pageable pageable = new PageRequest(page - 1, limit);
+    public List<Message> findByReceiver(User receiver) {
         return messageRepository.findByReceiver(receiver);
     }
 }

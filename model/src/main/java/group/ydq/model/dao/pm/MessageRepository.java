@@ -20,7 +20,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query(value = "select m from Message m where m.sender = ?1 ORDER BY m.date ASC")
     List<Message> findBySender(User sender);
 
-
     @Query(value = "select m from Message m where m.receiver = ?1 ORDER BY m.date ASC")
     List<Message> findByReceiver(User receiver);
+
 }
