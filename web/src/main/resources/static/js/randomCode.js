@@ -11,13 +11,13 @@ function randomColor(min,max){
     return "rgb("+_r+","+_g+","+_b+")";
 }
 //先阻止画布默认点击发生的行为再执行drawPic()方法
-document.getElementById("canvas").onclick = function(e){
+document.getElementById("LAY-user-get-vercode").onclick = function(e){
     e.preventDefault();
     code=drawPic();
 };
 function drawPic(){
     //获取到元素canvas
-    var $canvas = document.getElementById("canvas");
+    var $canvas = document.getElementById("LAY-user-get-vercode");
     var _str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";//设置随机数库
     var _picTxt = "";//随机数
     var _num = 4;//4个随机数字

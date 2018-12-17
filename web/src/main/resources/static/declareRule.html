@@ -88,6 +88,9 @@
 
         form.on('submit(submit)',function(data){
             data.field.ruleContent=layedit.getContent(index);
+            data.field.publisher={
+                'id':1
+            };
             $.ajax({
                 type:'post',
                 url: '/rule/add',

@@ -3,11 +3,13 @@ package group.ydq.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import group.ydq.model.dto.BaseResponse;
+import group.ydq.model.entity.dm.ExpertProject;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.dm.ProjectFile;
-import group.ydq.service.service.FileService;
 import group.ydq.service.service.ProjectService;
+import group.ydq.utils.DateUtil;
 import group.ydq.utils.RetResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,28 +27,30 @@ public class ProjectController {
     @Resource
     private ProjectService projectService;
 
-    @Resource
-    private FileService fileService;
-
     @RequestMapping("/save")
     @ResponseBody
     private BaseResponse saveProject(@RequestBody Project project){
-        project.setState(0);
-        project.setSubmit(false);
+        if (projectService.isProjectExist(project.getId())) {
+            project.setUpdateTime(new Date());
+            projectService.save(project);
+            return RetResponse.success();
+        }
+        return RetResponse.error();
+    }
+
+    @RequestMapping("/{type:.+}")
+    @ResponseBody
+    private BaseResponse saveOrSubmitProject(@PathVariable String type,@RequestBody Project project){
+        if (type.equals("save")){
+            project.setState(-1);
+            project.setSubmit(false);
+        }else{
+            project.setState(0);
+            project.setSubmit(true);
+        }
         project.setCreateTime(new Date());
         project.setUpdateTime(new Date());
         projectService.save(project);
-        return RetResponse.success();
-    }
-
-    @RequestMapping("/submit")
-    @ResponseBody
-    private BaseResponse submitProject(@RequestBody Project project){
-        project.setState(0);
-        project.setSubmit(true);
-        project.setCreateTime(new Date());
-        project.setUpdateTime(new Date());
-        projectService.submit(project);
         return RetResponse.success();
     }
 
@@ -78,4 +82,64 @@ public class ProjectController {
         model.addAttribute("commitmentPics",pics);
         return "projectDetails";
     }
+
+    @RequestMapping("/{role:.+}/list")
+    @ResponseBody
+    public BaseResponse getProjectList(@PathVariable String role, int page,int limit,String userNumber){
+        Map<String, Object> obj = new HashMap<>();
+        List<Map<String,Object>> list=new ArrayList<>();
+        if (role.equals("expert")){
+            Page<ExpertProject> projects=projectService.getProjectOfExpert(page, limit, userNumber);
+            for (ExpertProject project:projects){
+                Map<String,Object> map=new HashMap<>();
+                map.put("id",project.getId());
+                map.put("mark",project.isMark());
+                map.put("score",project.getScore());
+                map.put("remark",project.getRemark());
+                map.put("name",project.getProject().getName());
+                map.put("leader",project.getProject().getLeader().getNick());
+                map.put("major",project.getProject().getMajor());
+                map.put("createTime", DateUtil.dateToStr(project.getProject().getCreateTime(),DateUtil.format1));
+                list.add(map);
+            }
+            obj.put("count",projects.getTotalElements());
+            obj.put("data",list);
+        }else {
+            Page<Project> projects;
+            if (role.equals("teacher")) {
+                projects = projectService.getProjectsOfLeader(page, limit, userNumber);
+                for (Project project:projects){
+                    Map<String,Object> map=new HashMap<>();
+                    map.put("id",project.getId());
+                    map.put("name",project.getName());
+                    map.put("state",project.getState());
+                    map.put("major",project.getMajor());
+                    map.put("createTime",DateUtil.dateToStr(project.getCreateTime(),DateUtil.format1));
+                    map.put("updateTime",DateUtil.dateToStr(project.getUpdateTime(),DateUtil.format1));
+                    map.put("remark",project.getRemark());
+                    map.put("submit",project.isSubmit());
+                    list.add(map);
+                }
+            }else {
+                projects = projectService.getProjectsOfManager(page, limit, userNumber);
+                for (Project project:projects){
+                    Map<String,Object> map=new HashMap<>();
+                    map.put("id",project.getId());
+                    map.put("name",project.getName());
+                    map.put("leader",project.getLeader().getNick());
+                    map.put("state",project.getState());
+                    map.put("major",project.getMajor());
+                    map.put("createTime",DateUtil.dateToStr(project.getCreateTime(),DateUtil.format1));
+                    map.put("updateTime",DateUtil.dateToStr(project.getUpdateTime(),DateUtil.format1));
+                    map.put("experts",project.getExperts());
+                    map.put("remark",project.getRemark());
+                    list.add(map);
+                }
+            }
+            obj.put("count", projects.getTotalElements());
+            obj.put("data", list);
+        }
+        return RetResponse.success(obj);
+    }
+
 }

@@ -67,20 +67,22 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         },'json')
     });
 
-    function s(action, data) {
+    function saveOrSubmit(action, data) {
         var leader = {
             "id": 1
+            //todo 从session或cookie获取用户id
         };
         var json = {};
         json.name = data.field.name;
         json.level = data.field.level;
         json.leader = leader;
+        json.manager={'id':window.location.search.split('&')[1].split('=')[1]};
         json.phone = data.field.phone;
         json.major = data.field.major;
         json.email = data.field.email;
         json.commitmentPics = pics;
         json.declaration = {"id":file.id};
-        json.entrance={"id":window.location.href.split('=')[1]};
+        json.entrance={"id":window.location.search.split('&')[0].split('=')[1]};
         var members = [];
         $('input[name^=members]').each(function (index, element) {
             members.push(element.value);

@@ -39,6 +39,7 @@ public class RuleController {
             map.put("endTime",DateUtil.dateToStr(rule.getEndTime(),DateUtil.format2));
             map.put("content",rule.getRuleContent());
             map.put("major",rule.getMajor());
+            map.put("publisher",rule.getPublisher().getId());
             list.add(map);
         }
         model.addAttribute("list",list);

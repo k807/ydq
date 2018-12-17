@@ -1,5 +1,6 @@
 package group.ydq.model.entity.dm;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import group.ydq.model.entity.rbac.User;
 
 import javax.persistence.*;
@@ -48,12 +49,14 @@ public class Project {
     private DeclareRule entrance;   //申报入口
 
     /**
-     * 状态码：0-审核中；1-初审通过；2：立项评审中；3：立项评审完成；4：已立项；5：中期检查；6：中期检查待整改；7：中期检查通过；8：结题验收；9结题验收待整改；10：已结题
+     * 状态码：-1-未提交；0-审核中；1-初审通过；2：立项评审中；3：立项评审完成；4：已立项；5：中期检查；6：中期检查待整改；7：中期检查通过；8：结题验收；9结题验收待整改；10：已结题
      */
     private int state; //项目状态
 
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;    //创建时间
 
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;    //更新时间
 
     private String remark;

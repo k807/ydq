@@ -90,7 +90,12 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd data-name="console" class="layui-this">
-                                <a lay-href="userManage.html">用户信息管理</a>
+                                <a lay-href="userManager.html">用户信息管理</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="projectList.html">项目管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
@@ -137,7 +142,7 @@
         </div>
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe src="userManage.html" frameborder="0" class="layadmin-iframe"></iframe>
+                <iframe id="frame" src="userManage.html" frameborder="0" class="layadmin-iframe"></iframe>
             </div>
         </div>
         <div class="layadmin-body-shade" layadmin-event="shade"></div>
@@ -147,7 +152,7 @@
 <script src="/js/checkUpdate.js"></script>
 <script>
     layui.config({
-        base: 'assets/' //静态资源所在路径
+        base: '/assets/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
     }).use('index');
@@ -159,7 +164,7 @@
                 title: '申报入口',
                 shadeClose: true,
                 shade: 0.8,
-                area: ['30%','60%'],
+                area: ['30%','75%'],
                 content: '/rule/list'
             });
         })

@@ -40,7 +40,7 @@
                     </div>
                     <div class="layui-col-xs5">
                         <div style="margin-left: 10px;">
-                            <canvas id="canvas" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode"></canvas>
+                            <canvas class="layadmin-user-login-codeimg" id="LAY-user-get-vercode"></canvas>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
 <script src="/js/randomCode.js"></script>
 <script type="text/javascript">
     layui.config({
-        base: '/statics/' //静态资源所在路径
+        base: '/assets/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
     }).use(['index','jquery', 'form', 'layer'], function () {

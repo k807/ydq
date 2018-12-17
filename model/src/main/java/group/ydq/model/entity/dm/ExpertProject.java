@@ -20,7 +20,7 @@ public class ExpertProject {
     @ManyToOne
     private User expert;
 
-    private int state;  //专家是否给项目打分
+    private boolean mark;  //专家是否给项目打分
 
     private int score;
 
@@ -50,12 +50,12 @@ public class ExpertProject {
         this.expert = expert;
     }
 
-    public int getState() {
-        return state;
+    public boolean isMark() {
+        return mark;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setMark(boolean mark) {
+        this.mark = mark;
     }
 
     public int getScore() {

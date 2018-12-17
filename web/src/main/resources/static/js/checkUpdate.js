@@ -25,4 +25,4 @@ function checkUpdate() {
     })
 }
 
-setInterval(checkUpdate, 5000);
+// setInterval(checkUpdate, 5000);
