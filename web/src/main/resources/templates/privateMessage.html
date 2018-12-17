@@ -16,7 +16,7 @@
     <div class="layui-tab-content" style="height: 100px;">
         <!--公告，即OneToAll站内消息-->
         <div class="layui-tab-item layui-show">
-            <ul class="layui-timeline" id="notice" style="margin:15px;padding:15px;background-color: white">
+            <ul class="layui-timeline" id="noticelist" style="margin:15px;padding:15px;background-color: white">
                 <!-- <li class="layui-timeline-item">
                      <i class="layui-icon layui-timeline-axis"></i>
                      <div class="layui-timeline-content layui-text">
@@ -58,8 +58,6 @@
 
 <script>
 
-
-    var json
     layui.use(['element', 'jquery'], function () {
         var element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
 
@@ -74,27 +72,14 @@
 
     function getList() {
         layui.$.ajax({
-            type: "GET",
-            url: "pm/findAll",
-            dataType: "json",
-            success: function (result) {
-                json = result
-                console.log(json)
-                initTimeLine()
-                // initCardM()
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        })
-        layui.$.ajax({
             url: "getPMList",
             type: 'get',
             cache: false,
             dataType: 'json',//返回的数据类型
             success: function (result) {
-                console.log(result)
-                var messages = result.data;
+                var notices = result.notices;
+                var messages = result.messages;
+                initNoticeList(notices || []);
                 initMessageList(messages || []);
             },
             error: function (result) {
@@ -102,70 +87,26 @@
             }
         })
 
-        function initTimeLine() {//将获取到的message表的内容填充到时间线中
-            for (var i = 0; i < json.length; i++) {
-                //result[i]表示获得第i个json对象即JSONObject
-                //result[i]通过.字段名称即可获得指定字段的值
-                if (json[i].type == 0)
-                    layui.$("#notice").prepend("<li class=\"layui-timeline-item\">\n" +
-                        "                    <i class=\"layui-icon layui-timeline-axis\"></i>\n" +
-                        "                    <div class=\"layui-timeline-content layui-text\">\n" +
-                        "                        <h3 class=\"layui-timeline-title\">" + dateToStr(json[i].date) + "</h3>\n" +
-                        "                        <p>\n" +
-                        "                            发布人:" + json[i].sender + "\n" +
-                        "                            <br>" + json[i].title + "\n" +
-                        "                            <br>" + json[i].content + "\n" +
-                        "                            <br>" + json[i].remark + "\n" +
-                        "                        </p>\n" +
-                        "                    </div>\n" +
-                        "                </li>")
-            }
-            layui.$("#notice").append("  <li class=\"layui-timeline-item\">\n" +
+    }
+
+    function initNoticeList(list) {
+        layui.use(['laytpl'], function () {
+            var temp = noticemessage.innerHTML;
+            layui.laytpl(temp).render({list: list}, function (html) {
+                noticelist.innerHTML += html;
+            });
+            layui.$("#noticelist").append("  <li class=\"layui-timeline-item\">\n" +
                 "                    <i class=\"layui-icon layui-timeline-axis\"></i>\n" +
                 "                    <div class=\"layui-timeline-content layui-text\">\n" +
                 "                        <div class=\"layui-timeline-title\">过去</div>\n" +
                 "                    </div>\n" +
                 "                </li>")
-        }
+        });
 
-        function initCardM() {//将获取到的message表的内容填充到时间线中
-            for (var i = 0; i < json.length; i++) {
-                //result[i]表示获得第i个json对象即JSONObject
-                //result[i]通过.字段名称即可获得指定字段的值
-                if (json[i].type == 1)
-                    layui.$("#message").prepend(" <div class=\"layui-card\">\n" +
-                        "                <div class=\"layui-card-header\">" + dateToStr(json[i].date) + "</div>\n" +
-                        "                <div class=\"layui-card-body\">\n" +
-                        "                    <p>" + json[i].title + "<em>" + json[i].sender + "</em></p>\n" +
-                        "                    <ul>\n" +
-                        "                        <li>" + json[i].content + "</li>\n" +
-                        "                        <li>" + json[i].remark + "</li>\n" +
-                        "                    </ul>\n" +
-                        "                </div>\n" +
-                        "            </div>")
-            }
-        }
-
-        function dateToStr(date) {
-            var date = new Date(date);
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            m = m < 10 ? '0' + m : m;
-            var d = date.getDate();
-            d = d < 10 ? ("0" + d) : d;
-            var h = date.getHours();
-            h = h < 10 ? ("0" + h) : h;
-            var M = date.getMinutes();
-            M = M < 10 ? ("0" + M) : M;
-            var str;
-            str = y + "年" + m + "月" + d + "日" + h + ":" + M;
-            // str = m + "月" + d + "日" + h + ":" + M;
-            return str;
-        }
     }
 
     function initMessageList(list) {
-        layui.use('laytpl', function () {
+        layui.use(['laytpl', 'jquery'], function () {
             var temp = privatemessage.innerHTML;
             layui.laytpl(temp).render({list: list}, function (html) {
                 messageList.innerHTML += html;
@@ -176,7 +117,7 @@
 <script id="privatemessage" type="text/html">
     {{# layui.each(d.list,function(index,item){ }}
     <div class="layui-card">
-        <div class="layui-card-header">{dateToStr{item.date}}</div>
+        <div class="layui-card-header">{{item.date}}</div>
         <div class="layui-card-body">
             <p>{{item.title}} <em>{{item.sender}}</em></p>
             <ul>
@@ -185,6 +126,21 @@
             </ul>
         </div>
     </div>
+    {{# }); }}
+</script>
+
+<script id="noticemessage" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis"></i>
+        <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title">{{item.date}}</h3>
+            <p>{{item.title}}
+                <br>{{item.content}}
+                <br>{{item.remark}}
+            </p>
+        </div>
+    </li>
     {{# }); }}
 </script>
 

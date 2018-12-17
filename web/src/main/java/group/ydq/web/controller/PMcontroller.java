@@ -32,27 +32,14 @@ public class PMcontroller {
     @Autowired
     MessageServiceImpl messageServiceImpl;
 
-    /*
-     * 测试方法
-     * */
 
-    @GetMapping(value = "/messageList")
-    public ModelAndView toMessageList() {
-        ModelAndView mv = new ModelAndView("pm/messageList");
-        return mv;
-    }
-
-    @GetMapping(value = "/pmList")
-    public ModelAndView toUserList() {
-        ModelAndView mv = new ModelAndView("pm/pmList");
-        return mv;
-    }
 
     @GetMapping(value = "/getPMList")
     @ResponseBody
     public Map<String, Object> getUserList() {
         Map<String, Object> obj = new HashMap<>();
-        List<Map<String, Object>> list = new ArrayList<>();
+        List<Map<String, Object>> messages = new ArrayList<>();
+        List<Map<String, Object>> notices = new ArrayList<>();
         List<Message> messageList = messageServiceImpl.messageList();
         for (Message message : messageList) {
             Map<String, Object> map = new HashMap<>();
@@ -63,9 +50,14 @@ public class PMcontroller {
             map.put("date", DateUtil.dateToStr(message.getDate(), format1));
             map.put("sender", message.getSender());
             map.put("reciver", message.getReceiver());
-            list.add(map);
+            if (message.getType() == 0) {
+                notices.add(map);
+            } else {
+                messages.add(map);
+            }
         }
-        obj.put("data", list);
+        obj.put("messages", messages);
+        obj.put("notices", notices);
         return obj;
     }
 }
