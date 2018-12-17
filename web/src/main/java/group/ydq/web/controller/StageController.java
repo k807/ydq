@@ -57,7 +57,7 @@ public class StageController {
     }
 
     @RequestMapping("/getAll")
-    private BaseResponse getAll(){
+    private BaseResponse getAll() throws NullPointerException{
         List<CheckStage> all =  checkStageService.findAll();
         ArrayList<JSONObject> dataList = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class StageController {
             jsonObject.put("stage", checkStage.getStage());
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
             jsonObject.put("status", checkStage.getStatus());
-            jsonObject.put("verifer", checkStage.getVerifiers().getNick());
+            jsonObject.put("verifer", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
             dataList.add(jsonObject);
         }
 
@@ -105,7 +105,7 @@ public class StageController {
 
         /*
         * stageCheckID --> StageCheck表中的主键ID
-        * stageStatus --> StageCheck表中的审核状态代码  1表示待整改（未通过），2表示通过
+        * stageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
         * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
         * projectID --> 根据CheckStage表中的ID得出的项目ID编号
         * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
@@ -129,7 +129,7 @@ public class StageController {
     private BaseResponse changeToPassed(@RequestBody Map<String, Object> paramsMap){
         /*
          * stageCheckID --> StageCheck表中的主键ID
-         * stageStatus --> StageCheck表中的审核状态代码  1表示待整改（未通过），2表示通过
+         * stageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
          * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
          * projectID --> 根据CheckStage表中的ID得出的项目ID编号
          * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
