@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>站内消息</title>
-    <link rel="stylesheet" href="assets/layui/css/layui.css">
-    <script src="assets/layui/layui.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="../static/assets/layui/css/layui.css">
+    <script src="../static/assets/layui/layui.js" charset="utf-8"></script>
 </head>
 <body onload="getList()">
 
@@ -38,7 +38,9 @@
         </div>
         <!--私信，即OneToOne站内消息-->
         <div class="layui-tab-item" style="padding: 15px;background-color: #F2F2F2">
-            <div id="message">
+
+            <div id="messageList">
+
                 <!-- <div class="layui-card">
                      <div class="layui-card-header">日期</div>
                      <div class="layui-card-body">
@@ -79,7 +81,21 @@
                 json = result
                 console.log(json)
                 initTimeLine()
-                initCardM()
+                // initCardM()
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        })
+        layui.$.ajax({
+            url: "getPMList",
+            type: 'get',
+            cache: false,
+            dataType: 'json',//返回的数据类型
+            success: function (result) {
+                console.log(result)
+                var messages = result.data;
+                initMessageList(messages || []);
             },
             error: function (result) {
                 console.log(result)
@@ -147,27 +163,30 @@
             return str;
         }
     }
- /*   layui.use('laytpl', function(){
-        var laytpl = layui.laytpl
-        var data = json
-        var getTpl = demo.innerHTML
-            ,view = document.getElementById('notice')
-        laytpl(getTpl).render(data, function(html){
-            view.innerHTML = html;
+
+    function initMessageList(list) {
+        layui.use('laytpl', function () {
+            var temp = privatemessage.innerHTML;
+            layui.laytpl(temp).render({list: list}, function (html) {
+                messageList.innerHTML += html;
+            });
         });
-    });*/
+    }
 </script>
-<!--<script id="demo" type="text/html">
-    {{#  layui.each(d, function(index, item){ }}
-    <div class="layui-card-header">{{item.date}}</div>
-    <div class="layui-card-body">
-        <p>{{item.title}}} <em>{{item.sender}}</em></p>
-        <ul>
-            <li>{{item.content}}</li>
-            <li>{{item.remark}}</li>
-        </ul>
+<script id="privatemessage" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <div class="layui-card">
+        <div class="layui-card-header">{dateToStr{item.date}}</div>
+        <div class="layui-card-body">
+            <p>{{item.title}} <em>{{item.sender}}</em></p>
+            <ul>
+                <li>{{item.content}}</li>
+                <li>{{item.remark}}</li>
+            </ul>
+        </div>
     </div>
-</script>-->
+    {{# }); }}
+</script>
 
 </body>
 </html>

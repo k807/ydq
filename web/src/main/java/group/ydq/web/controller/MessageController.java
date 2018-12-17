@@ -33,6 +33,7 @@ public class MessageController {
         List<Message> messages = messageServiceImpl.messageList();
         return messages;
     }
+
     /*
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数
@@ -40,21 +41,7 @@ public class MessageController {
     @RequestMapping(value = "/addOne")
     @ResponseBody
     public Message sendMessage(String title, int type, String sender, String receiver, String content, String remark) throws ParseException {
-        Message messageOne = new Message();
-        messageOne.setTitle(title);
-        messageOne.setType(type);
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        messageOne.setDate(sdf.parse(date));
-        messageOne.setDate(new Date());
-        User senderUser = new User();
-        senderUser.setNick(sender);
-        User receiverUser = new User();
-        receiverUser.setNick(receiver);
-//        messageOne.setSender(senderUser);
-//        messageOne.setReceiver(receiverUser);
-        messageOne.setContent(content);
-        messageOne.setRemark(remark);
-        System.out.println(messageOne);
+        Message messageOne = new Message(new Date(), type, title, content, remark);
         return messageServiceImpl.sendMessage(messageOne);
     }
 
@@ -75,5 +62,6 @@ public class MessageController {
     public List<Message> findByReceiver(User receiver) {
         return messageServiceImpl.findByReceiver(receiver);
     }
+
 
 }
