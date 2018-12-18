@@ -12,6 +12,7 @@ import group.ydq.service.service.FileService;
 import group.ydq.service.service.MessageService;
 import group.ydq.service.service.ProjectService;
 import group.ydq.utils.DateUtil;
+import group.ydq.utils.RetResponse;
 import group.ydq.utils.StageCheckStatusToProjStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,7 +95,7 @@ public class StageController {
             jsonObject.put("stage", checkStage.getStage());
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
             jsonObject.put("status", checkStage.getStatus());
-            jsonObject.put("verifer", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
+            jsonObject.put("verifier", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
             dataList.add(jsonObject);
         }
         return new BaseResponse(dataList);
