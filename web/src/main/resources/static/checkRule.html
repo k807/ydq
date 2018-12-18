@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/assets/layui/css/layui.css">
     <link rel="stylesheet" href="/assets/style/admin.css">
     <link rel="stylesheet" href="/assets/style/login.css">
+    <script src="js/sendmessage.js"></script>
 </head>
 <body>
 <div class="layui-fluid">
@@ -87,10 +88,8 @@
                 msg.title = '结题验收说明'
             }
 
-            msg.content = '<p>开始时间：' + data.field.start + '</p>' +
-                            '<p>结束时间：' + data.field.end + '</p>' +
-                            '<p>审核人：' + data.field.verifier+ '</p>' +
-                            data.field.ruleContent;
+            msg.content = sendCheckRule(data.field.start,data.field.end,data.field.verifier,data.field.ruleContent)
+
 
             $.ajax({
                 type:'post',

@@ -16,6 +16,8 @@ public interface MessageService {
 
     Message sendMessage(Message newMessage);
 
+    void deleteMessage(Long id);
+
     List<Message> findBySender(User sender);
 
     List<Message> findByReceiver(User receiver);

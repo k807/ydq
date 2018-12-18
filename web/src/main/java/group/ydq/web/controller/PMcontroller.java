@@ -22,7 +22,7 @@ public class PMcontroller {
 
     @RequestMapping("/privatemessage")
     public String privateMessage() {
-        return "privatemessage";
+        return "privateMessage";
     }
 
     @Autowired
@@ -46,4 +46,10 @@ public class PMcontroller {
         Message messageOne = new Message(new Date(), type, title, content, remark);
         return messageServiceImpl.sendMessage(messageOne);
     }
+    @GetMapping(value = "/delete/{id}")
+    @ResponseBody
+    public void deleteMessage(Long id) {
+         messageServiceImpl.deleteMessage(id);
+    }
+
 }

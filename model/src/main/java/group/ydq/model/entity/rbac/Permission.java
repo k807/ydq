@@ -1,6 +1,11 @@
 package group.ydq.model.entity.rbac;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.util.List;
 
 /**
@@ -21,6 +26,7 @@ public class Permission {
     private String path;
 
     @ManyToMany
+    @JsonIgnore
     private List<Role> roleList;
 
     public Long getId() {

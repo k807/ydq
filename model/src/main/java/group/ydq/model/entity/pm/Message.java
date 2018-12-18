@@ -2,10 +2,7 @@ package group.ydq.model.entity.pm;
 
 import group.ydq.model.entity.rbac.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -52,6 +49,7 @@ public class Message {
      * */
     private String title;
 
+    @Column(columnDefinition="TEXT")
     private String content;
 
     private String remark;

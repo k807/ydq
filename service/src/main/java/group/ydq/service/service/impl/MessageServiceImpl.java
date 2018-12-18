@@ -1,6 +1,7 @@
 package group.ydq.service.service.impl;
 
 import group.ydq.model.dao.pm.MessageRepository;
+import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.MessageService;
@@ -24,6 +25,9 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public List<Message> messageList() {
         return messageRepository.findAllOrderByDate();
@@ -34,6 +38,11 @@ public class MessageServiceImpl implements MessageService {
     public Message sendMessage(Message newMessage) {
         messageRepository.save(newMessage);
         return newMessage;
+    }
+
+    @Override
+    public void deleteMessage(Long id) {
+        messageRepository.deleteById(id);
     }
 
     @Override
@@ -79,8 +88,12 @@ public class MessageServiceImpl implements MessageService {
             } else {
                 map.put("date", DateUtil.dateToStr(list.get(i).getDate(), DateUtil.format4));
             }
-            map.put("sender", list.get(i).getSender());
-            map.put("reciver", list.get(i).getReceiver());
+            User sender = list.get(i).getSender();
+            User receiver = list.get(i).getReceiver();
+            System.out.println(sender);
+            System.out.println(receiver);
+            map.put("sender", sender.getNick());
+            map.put("receiver", receiver.getNick());
             listMap.add(map);
         }
         return listMap;

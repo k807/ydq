@@ -102,7 +102,6 @@
                 "                    </div>\n" +
                 "                </li>")
         });
-
     }
 
     function initMessageList(list) {
@@ -113,14 +112,21 @@
             });
         });
     }
+
 </script>
+
+
 <script id="privatemessage" type="text/html">
     {{# layui.each(d.list,function(index,item){ }}
     <div class="layui-card">
-        <div class="layui-card-header">{{item.date}}
-            <button>hhh</button></div>
+        <div class="layui-card-header">
+            <!--<a  herf ="" class="layui-btn layui-btn-danger layui-btn-xs" >删除</a>-->
+            <b style="font-size:22px;color: #393D49;">{{item.title}}</b>
+            <span style="font-size:14px;color:#01AAED;margin-left:10px;">{{item.date}}</span>
+        </div>
         <div class="layui-card-body">
-            <p>{{item.title}} <em>{{item.sender}}</em></p>
+            <i class="layui-icon layui-icon-username" style="font-size: 18px; color: #FFB800;"></i>
+            {{item.sender}}
             <ul>
                 <li>{{item.content}}</li>
                 <li>{{item.remark}}</li>
@@ -128,6 +134,19 @@
         </div>
     </div>
     {{# }); }}
+    {{#  if(d.list.length === 0){ }}
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <!--<a  herf ="" class="layui-btn layui-btn-danger layui-btn-xs" >删除</a>-->
+            <b style="font-size:22px;color: #393D49;">无数据</b>
+        </div>
+        <div class="layui-card-body">
+            <ul>
+                <li>无数据</li>
+            </ul>
+        </div>
+    </div>
+    {{#  } }}
 </script>
 
 <script id="noticemessage" type="text/html">
@@ -135,14 +154,23 @@
     <li class="layui-timeline-item">
         <i class="layui-icon layui-timeline-axis"></i>
         <div class="layui-timeline-content layui-text">
-            <h3 class="layui-timeline-title">{{item.date}}</h3>
-            <p>{{item.title}}
-                <br>{{item.content}}
-                <br>{{item.remark}}
+            <h3 class="layui-timeline-title" style="font-size:20px;">{{item.date}}</h3>
+            <p>
+                <b style="font-size:22px;color:#009688;">{{item.title}}</b>
+                <br><span>{{item.content}}</span>
+                <br><span>{{item.remark}}</span>
             </p>
         </div>
     </li>
     {{# }); }}
+    {{#  if(d.list.length === 0){ }}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis"></i>
+        <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title" style="font-size:20px;">无数据</h3>
+        </div>
+    </li>
+    {{#  } }}
 </script>
 
 </body>
