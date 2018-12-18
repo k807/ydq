@@ -14,7 +14,8 @@ import java.util.Date;
 @Entity
 public class Message {
 
-    public Message(){}
+    public Message() {
+    }
 
     public Message(Date date, int type, String title, String content, String remark) {
         this.date = date;
@@ -22,6 +23,16 @@ public class Message {
         this.title = title;
         this.content = content;
         this.remark = remark;
+    }
+
+    public Message(Date date, int type, String title, String content, String remark, User sender, User receiver) {
+        this.date = date;
+        this.type = type;
+        this.title = title;
+        this.content = content;
+        this.remark = remark;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     @Id
