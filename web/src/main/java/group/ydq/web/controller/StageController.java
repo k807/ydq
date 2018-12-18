@@ -58,10 +58,10 @@ public class StageController {
 
     @RequestMapping("/getAll")
     private BaseResponse getAll() throws NullPointerException{
-        List<CheckStage> all =  checkStageService.findAll();
+        List<CheckStage> all =  checkStageService.getCheckStageByStageStatus(1);
         ArrayList<JSONObject> dataList = new ArrayList<>();
 
-        for(int i = 0; i < all.size(); i++){
+       /* for(int i = 0; i < all.size(); i++){
             for (int j = i + 1; j < all.size(); j++){
                 if (all.get(i).getProject().getId().equals(all.get(j).getProject().getId())){
                     if(all.get(i).getProject().getState() <= all.get(j).getProject().getState()){
@@ -71,7 +71,7 @@ public class StageController {
                     j = j - 1;
                 }
             }
-        }
+        }*/
 
         for (CheckStage checkStage : all) {
             JSONObject jsonObject = new JSONObject();
