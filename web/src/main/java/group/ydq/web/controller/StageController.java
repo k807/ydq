@@ -43,42 +43,27 @@ public class StageController {
 
     @RequestMapping("/startMid")
     private BaseResponse startMid(long projectId){
-        CheckStage cs = new CheckStage();
-        Project p = projectService.getProject(projectId);
-        cs.setProject(p);
-        cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(1);
-        cs.setStatus(0);
-        checkStageService.save(cs);
+        checkStageService.startMid(projectId);
         return new BaseResponse();
     }
 
     @RequestMapping("/startFinal")
     private BaseResponse startFinal(long projectId){
-        CheckStage cs = new CheckStage();
-        Project p = projectService.getProject(projectId);
-        cs.setProject(p);
-        cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(2);
-        cs.setStatus(0);
-        checkStageService.save(cs);
+        checkStageService.startFinal(projectId);
         return new BaseResponse();
     }
 
     @RequestMapping("/addRule")
     private  BaseResponse addRule(@RequestBody Map<String, Object> msg) throws ParseException,NullPointerException {
-        String start = (String) msg.get("start");
-        String end = (String) msg.get("end");
-        String verifier = (String) msg.get("verifier");
-        String content = (String) msg.get("ruleContent");
+        String title = (String) msg.get("title");
+        System.out.println(title);
+        String content = (String) msg.get("content");
         ArrayList<String> stage = (ArrayList<String>) msg.get("stage");
         Long sender = Long.parseLong((String)msg.get("sender"));
         User u1 = userRepository.getOne(sender);
         for(int i = 0 ; i<stage.size();i++){
             User u2  = checkStageService.findACheckStageByCheckStageID(Long.parseLong(stage.get(i))).getProject().getLeader();
-            Message m = new Message(new Date(),0,"中期检查说明",content,"",u1,u2);
+            Message m = new Message(new Date(),0,title,content,"",u1,u2);
             messageService.sendMessage(m);
         }
         return  RetResponse.success();

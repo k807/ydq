@@ -72,21 +72,38 @@
             return null;
         }
         var str = getQueryString('id');
+        var stageId = str.split(',');
         var sender = getQueryString('sender');
-        stageId = str.split(',');
+        var stage = parseInt(getQueryString('stage'));
         form.on('submit(sub)',function(data){
             data.field.ruleContent=layedit.getContent(index);
-            data.field.stage = stageId;
-            data.field.sender = sender;
+            var msg = {};
+            msg.stage = stageId;
+            msg.sender = sender;
+            if(stage === 1){
+                msg.title = '中期检查说明'
+            }
+            else if(stage === 2){
+                msg.title = '结题验收说明'
+            }
+
+            msg.content = '<p>开始时间：' + data.field.start + '</p>' +
+                            '<p>结束时间：' + data.field.end + '</p>' +
+                            '<p>审核人：' + data.field.verifier+ '</p>' +
+                            data.field.ruleContent;
+
             $.ajax({
                 type:'post',
                 url: '/stage/addRule',
-                data: JSON.stringify(data.field),
+                data: JSON.stringify(msg),
                 contentType: 'application/json',
                 dataType: 'json',
                 success: function (res) {
-                    if (res.statusCode === '200')
+                    if (res.statusCode === '200'){
                         layer.msg('发布成功');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        setTimeout(function(){ parent.layer.close(index); }, 2000);
+                    }
                 }
             });
             return false;
