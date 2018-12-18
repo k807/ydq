@@ -31,8 +31,6 @@ public class FileController {
     @Resource
     private FileService fileService;
 
-    private String filepath= Objects.requireNonNull(ClassUtils.getDefaultClassLoader().getResource("")).getPath()+"static/upload/";
-
     @RequestMapping("/upload")
     @ResponseBody
     public BaseResponse upload(@RequestParam("file") MultipartFile file) throws IOException {
@@ -45,8 +43,7 @@ public class FileController {
         ProjectFile projectFile = new ProjectFile();
         projectFile.setUuid(uuid);
         projectFile.setName(filename);
-        projectFile.setFilePath(filepath);
-        FileUtil.upload(file, filepath, uuid);
+        FileUtil.upload(file, uuid);
         fileService.upload(projectFile);
         return RetResponse.success(fileService.getFile(uuid));
     }
@@ -63,7 +60,7 @@ public class FileController {
             ProjectFile projectFile = fileService.getFile(id);
             String uuid = projectFile.getUuid();
             String filename = projectFile.getName();
-            File file = new File(filepath + uuid + FileUtil.getSuffix(filename));
+            File file = new File(FileUtil.filepath + uuid + FileUtil.getSuffix(filename));
             if (file.exists()) {
                 return ResponseEntity
                         .ok()
@@ -80,7 +77,7 @@ public class FileController {
     @ResponseBody
     public BaseResponse deleteFile(long id){
         ProjectFile file=fileService.getFile(id);
-        if (FileUtil.delete(filepath,file.getUuid(),FileUtil.getSuffix(file.getName()))) {
+        if (FileUtil.delete(file.getUuid(),FileUtil.getSuffix(file.getName()))) {
             fileService.deleteFile(id);
             return RetResponse.success();
         }

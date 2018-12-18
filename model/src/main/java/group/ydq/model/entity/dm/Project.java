@@ -63,6 +63,7 @@ public class Project {
 
     private boolean submit;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }

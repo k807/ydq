@@ -104,11 +104,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-form-item layui-layout-admin" id="btnDiv" th:if="${!submit}">
                         <div class="layui-input-block">
                             <div class="layui-footer" style="left: 0;">
-                                <button type="button" class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-                                <button class="layui-btn layui-btn-primary" lay-submit lay-filter="save">保存</button>
+                                <button type="button" class="layui-btn" lay-submit lay-filter="submit">提交</button>
                             </div>
                         </div>
                     </div>
@@ -119,14 +118,36 @@
 </div>
 <script type="text/javascript" src="/assets/layui/layui.js"></script>
 <script type="text/javascript">
-    layui.use(['form','layer'],function(){
+    layui.use(['form','layer','jquery'],function(){
         var form=layui.form;
         var layer=layui.layer;
+        var $=layui.$;
         layer.photos({
             photos:'#img-box',
             anim:5
+        });
+        form.on('submit(submit)',function(data){
+            var project={
+                id:window.location.href.split("/")[5],
+                submit:true,
+                state:0
+            };
+            $.ajax({
+                type:'post',
+                url:'/project/save',
+                data:JSON.stringify(project),
+                dataType:'json',
+                contentType:'application/json',
+                success:function(res){
+                    if (res.statusCode==='200'){
+                        $('#btnDiv').remove();
+                        layer.msg('提交成功');
+                    }
+                }
+            })
         })
-    })
+    });
+
 </script>
 </body>
 </html>
