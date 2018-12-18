@@ -105,17 +105,26 @@ public class StageController {
 
     @RequestMapping("/getByConditions")
     @ResponseBody
-    private BaseResponse getByConditions(@RequestParam(name = "name") String name,
-                                         @RequestParam(name = "leader") String leader,
-                                         @RequestParam(name = "status") int status,
-                                         @RequestParam(name = "stage") int stage,
-                                         @RequestParam(name = "createTime") String createTime,
-                                         @RequestParam(name = "endTime") String endTime){
-        Date createTimeStamp = DateUtil.strToDate(createTime,DateUtil.format1);
-        Date endTimeStamp = DateUtil.strToDate(endTime,DateUtil.format1);
-
-        System.out.println(name);
-        return new BaseResponse();
+    private BaseResponse getByConditions(@RequestParam(name = "name",defaultValue = "") String name,
+                                         @RequestParam(name = "leader", defaultValue = "") String leader,
+                                         @RequestParam(name = "status") String status,
+                                         @RequestParam(name = "stage", defaultValue = "1") int stage,
+                                         @RequestParam(name = "createTime",defaultValue = "1970-01-01 00:00:00") String createTime,
+                                         @RequestParam(name = "endTime",defaultValue = "2049-12-31 23:59:59") String endTime){
+        List<CheckStage> dataList = checkStageService.findByConditions(name,leader,stage,status,createTime,endTime);
+        List<JSONObject> decoratedDataList = new ArrayList<>();
+        for (CheckStage checkStage : dataList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", checkStage.getId());
+            jsonObject.put("name", checkStage.getProject().getName());
+            jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
+            jsonObject.put("stage", checkStage.getStage());
+            jsonObject.put("createTime", checkStage.getProject().getCreateTime());
+            jsonObject.put("status", checkStage.getStatus());
+            jsonObject.put("verifier", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
+            decoratedDataList.add(jsonObject);
+        }
+        return new BaseResponse(decoratedDataList);
     }
 
     @RequestMapping(value = "/denied",method = {RequestMethod.POST, RequestMethod.GET} )

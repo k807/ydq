@@ -1,6 +1,8 @@
 package group.ydq.service.service;
 
 import group.ydq.model.entity.cs.CheckStage;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,6 +16,6 @@ public interface CheckStageService  extends  BaseService{
     void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus);
     void startMid(Long projectId);
     void startFinal(Long projectId);
-    /*List<CheckStage> getByConditions(String studentNumber, String )*/
+    List<CheckStage> findByConditions(String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd);
     List<CheckStage> getCheckStageByStageStatus(int stageStatus);
 }
