@@ -23,7 +23,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">发送日期</label>
             <div class="layui-input-block">
-                <input type="text" autocomplete="off" class="layui-input"
+                <input id="date" type="text" autocomplete="off" class="layui-input"
                        placeholder="yyyy-MM-dd HH:mm:ss"disabled>
             </div>
         </div>
@@ -95,17 +95,6 @@
             elem: '#date'
             , type: 'datetime'
         });
-        // //监听选择器
-        // form.on('select(type)', function (data) {
-        //     console.log(data.value); //得到被选中的值
-        //     switch (data.value) {
-        //         case 0:
-        //             break;
-        //         case 1:
-        //             break;
-        //         default:
-        //     }
-        // });
 
         //监听提交
         form.on('submit(demo1)', function (data) {
@@ -133,24 +122,24 @@
             })
             return false;
         });
+        function createTime() {
+            var date = new Date();
+            var year = date.getFullYear(); //获取当前年份
+            var mon = date.getMonth() + 1; //获取当前月份
+            var day = date.getDate(); //获取当前日
+            var h = date.getHours(); //获取小时
+            var m = date.getMinutes(); //获取分钟
+            var s = date.getSeconds(); //获取秒
+            // alert(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
+            var time = year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s;
+            $("#date").val(time);
+            return time;
+        }
 
+        setInterval(createTime, 1000);
     });
 
-    function createTime() {
-        var date = new Date();
-        var year = date.getFullYear(); //获取当前年份
-        var mon = date.getMonth() + 1; //获取当前月份
-        var day = date.getDate(); //获取当前日
-        var h = date.getHours(); //获取小时
-        var m = date.getMinutes(); //获取分钟
-        var s = date.getSeconds(); //获取秒
-        // alert(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
-        var time = year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s;
-        $("#date").val(time);
-        return time;
-    }
 
-    setInterval(createTime, 1000);
 </script>
 
 </body>
