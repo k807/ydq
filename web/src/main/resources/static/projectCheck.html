@@ -27,7 +27,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">所处阶段:</label>
                     <div class="layui-input-inline">
-                        <select name="stage" lay-search="">
+                        <select id="stage" name="stage" lay-search="">
                             <option value="1" selected="selected">中期检查</option>
                             <option value="2">结题验收</option>
                         </select>
@@ -37,10 +37,10 @@
                     <label class="layui-form-label">审核状态:</label>
                     <div class="layui-input-inline" >
                         <select name="status" lay-search="">
-                            <option value="">请选择或输入</option>
+                            <option value="">请选择</option>
                             <option value="0">待审核</option>
                             <option value="1">已通过</option>
-                            <option value="3">未通过</option>
+                            <option value="3">待整改</option>
                         </select>
                     </div>
                 </div>
@@ -78,11 +78,11 @@
         </script>
 
         <script type="text/html" id="bar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看材料</a>
+            <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看材料</button>
             {{#  if(d.status != 1){ }}
-            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="check">审 核</a>
+            <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="check">审 核</button>
             {{#  } else { }}
-            <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="check">审 核</a>
+            <button class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="check" disabled="disabled">审 核</button>
             {{#  } }}
         </script>
     </div>
@@ -123,17 +123,17 @@
                 {
                     field: 'createTime', title: "创建时间", templet: function (d) {
                         var date = new Date(d.createTime);
-                        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() ;
                     }
                 },
                 {
                     field: 'status', title: "审核状态", templet: function (d) {
                         if (d.status === 0)
-                            return '未审核';
+                            return '待审核';
                         else if (d.status === 1)
                             return '已通过';
                         else if (d.status === 2)
-                            return '未通过';
+                            return '待整改';
                     }
                 },
                 {field: 'verifier', title: "审核人"},
@@ -156,25 +156,25 @@
 
         table.on('toolbar(table)', function (obj) {
             var stage = table.checkStatus(obj.config.id);
-            if(stage.data.length === 0){
-                layer.alert('您还未选择任何项目');
-            }
-            else{
-                var stageId = [];
-                for (var i = 0; i < stage.data.length; i++) {
-                    stageId.push(stage.data[i].id);
-                }
-                id = stageId.join(',');
-                sender = 1;
-            }
 
             if(obj.event === 'setRule'){
-                layer.open({
-                    type: 2,
-                    title: '设置阶段检查说明',
-                    content: ['/checkRule.html?id='+id+'&sender='+sender ,'no'],
-                    area: ['700px', '550px'],
-                });
+                if(stage.data.length === 0){
+                    layer.alert('您还未选择任何项目');
+                }
+                else{
+                    var stageId = [];
+                    for (var i = 0; i < stage.data.length; i++) {
+                        stageId.push(stage.data[i].id);
+                    }
+                    id = stageId.join(',');
+                    sender = 1;
+                    layer.open({
+                        type: 2,
+                        title: '设置阶段检查说明',
+                        content: ['/checkRule.html?id='+id+'&sender='+sender+'&stage='+$("#stage").val() ,'no'],
+                        area: ['700px', '550px'],
+                    });
+                }
             }
 
         });

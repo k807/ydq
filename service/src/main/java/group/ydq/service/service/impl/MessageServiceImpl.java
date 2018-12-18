@@ -49,26 +49,40 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Map<String, Object> getPMList() {
         Map<String, Object> obj = new HashMap<>();
-        List<Map<String, Object>> messages = new ArrayList<>();
-        List<Map<String, Object>> notices = new ArrayList<>();
-        List<Message> messageList = messageRepository.findAllOrderByDate();
-        for (Message message : messageList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("title", message.getTitle());
-            map.put("type", message.getType());
-            map.put("content", message.getContent());
-            map.put("remark", message.getRemark());
-            map.put("date", DateUtil.dateToStr(message.getDate(), "yyyy-MM-dd HH:mm:ss"));
-            map.put("sender", message.getSender());
-            map.put("reciver", message.getReceiver());
-            if (message.getType() == 0) {
-                notices.add(map);
+        List<Message> allList = messageRepository.findAllOrderByDate();
+        List<Message> noticeList = new ArrayList<>();
+        List<Message> messageList = new ArrayList<>();
+        for (Message m : allList) {
+            int type = m.getType();
+            if (type == 0) {
+                noticeList.add(m);
             } else {
-                messages.add(map);
+                messageList.add(m);
             }
         }
-        obj.put("messages", messages);
-        obj.put("notices", notices);
+        obj.put("notices", listToMap(noticeList));
+        obj.put("messages", listToMap(messageList));
         return obj;
+    }
+
+    private List<Map<String, Object>> listToMap(List<Message> list) {
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", list.get(i).getId());
+            map.put("title", list.get(i).getTitle());
+            map.put("type", list.get(i).getType());
+            map.put("content", list.get(i).getContent());
+            map.put("remark", list.get(i).getRemark());
+            if (i < list.size() - 1 && list.get(i).getDate().getYear() == list.get(i + 1).getDate().getYear()) {
+                map.put("date", DateUtil.dateToStr(list.get(i).getDate(), DateUtil.format5));
+            } else {
+                map.put("date", DateUtil.dateToStr(list.get(i).getDate(), DateUtil.format4));
+            }
+            map.put("sender", list.get(i).getSender());
+            map.put("reciver", list.get(i).getReceiver());
+            listMap.add(map);
+        }
+        return listMap;
     }
 }

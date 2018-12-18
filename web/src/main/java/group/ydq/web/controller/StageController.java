@@ -1,17 +1,22 @@
 package group.ydq.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.cs.CheckStage;
 import group.ydq.model.entity.dm.Project;
+import group.ydq.model.entity.pm.Message;
+import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.CheckStageService;
 import group.ydq.service.service.FileService;
+import group.ydq.service.service.MessageService;
 import group.ydq.service.service.ProjectService;
 import group.ydq.utils.DateUtil;
 import group.ydq.utils.StageCheckStatusToProjStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -30,30 +35,38 @@ public class StageController {
     @Resource
     private CheckStageService checkStageService;
 
+    @Resource
+    private MessageService messageService;
+
+    @Resource
+    private UserRepository userRepository;
+
     @RequestMapping("/startMid")
     private BaseResponse startMid(long projectId){
-        CheckStage cs = new CheckStage();
-        Project p = projectService.getProject(projectId);
-        cs.setProject(p);
-        cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(1);
-        cs.setStatus(0);
-        checkStageService.save(cs);
+        checkStageService.startMid(projectId);
         return new BaseResponse();
     }
 
     @RequestMapping("/startFinal")
     private BaseResponse startFinal(long projectId){
-        CheckStage cs = new CheckStage();
-        Project p = projectService.getProject(projectId);
-        cs.setProject(p);
-        cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(2);
-        cs.setStatus(0);
-        checkStageService.save(cs);
+        checkStageService.startFinal(projectId);
         return new BaseResponse();
+    }
+
+    @RequestMapping("/addRule")
+    private  BaseResponse addRule(@RequestBody Map<String, Object> msg) throws ParseException,NullPointerException {
+        String title = (String) msg.get("title");
+        System.out.println(title);
+        String content = (String) msg.get("content");
+        ArrayList<String> stage = (ArrayList<String>) msg.get("stage");
+        Long sender = Long.parseLong((String)msg.get("sender"));
+        User u1 = userRepository.getOne(sender);
+        for(int i = 0 ; i<stage.size();i++){
+            User u2  = checkStageService.findACheckStageByCheckStageID(Long.parseLong(stage.get(i))).getProject().getLeader();
+            Message m = new Message(new Date(),0,title,content,"",u1,u2);
+            messageService.sendMessage(m);
+        }
+        return  RetResponse.success();
     }
 
     @RequestMapping("/getAll")
