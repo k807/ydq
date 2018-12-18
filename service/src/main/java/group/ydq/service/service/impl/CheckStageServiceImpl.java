@@ -39,4 +39,9 @@ public class CheckStageServiceImpl implements CheckStageService {
     public void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus) {
         stageDao.changeProjectStatus(stageCheckID,adviceMessage,changeToThisStatus);
     }
+
+    @Override
+    public List<CheckStage> getCheckStageByStageStatus(int stageStatus) {
+        return stageDao.getCheckStagesByStageStatus(stageStatus);
+    }
 }

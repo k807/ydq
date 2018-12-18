@@ -58,10 +58,10 @@ public class StageController {
 
     @RequestMapping("/getAll")
     private BaseResponse getAll() throws NullPointerException{
-        List<CheckStage> all =  checkStageService.findAll();
+        List<CheckStage> all =  checkStageService.getCheckStageByStageStatus(1);
         ArrayList<JSONObject> dataList = new ArrayList<>();
 
-        for(int i = 0; i < all.size(); i++){
+       /* for(int i = 0; i < all.size(); i++){
             for (int j = i + 1; j < all.size(); j++){
                 if (all.get(i).getProject().getId().equals(all.get(j).getProject().getId())){
                     if(all.get(i).getProject().getState() <= all.get(j).getProject().getState()){
@@ -71,7 +71,7 @@ public class StageController {
                     j = j - 1;
                 }
             }
-        }
+        }*/
 
         for (CheckStage checkStage : all) {
             JSONObject jsonObject = new JSONObject();
@@ -81,7 +81,7 @@ public class StageController {
             jsonObject.put("stage", checkStage.getStage());
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
             jsonObject.put("status", checkStage.getStatus());
-            jsonObject.put("verifer", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
+             jsonObject.put("verifer", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
             dataList.add(jsonObject);
         }
 

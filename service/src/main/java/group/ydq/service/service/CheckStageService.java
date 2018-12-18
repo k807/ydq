@@ -13,4 +13,5 @@ public interface CheckStageService  extends  BaseService{
     CheckStage findACheckStageByCheckStageID(Long stageCheckID);
     void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus);
     /*List<CheckStage> getByConditions(String studentNumber, String )*/
+    List<CheckStage> getCheckStageByStageStatus(int stageStatus);
 }

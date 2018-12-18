@@ -19,4 +19,7 @@ public interface CheckStageRepository extends JpaRepository<CheckStage,Long> {
     void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus);
 
     CheckStage getCheckStagesById(Long checkStageID);
+
+    @Query(value = "select * from check_stage where stage = ?1",nativeQuery = true)
+    List<CheckStage> getCheckStagesByStageStatus(int stageStatus);
 }
