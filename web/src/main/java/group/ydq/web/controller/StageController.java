@@ -6,12 +6,15 @@ import group.ydq.model.entity.cs.CheckStage;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.CheckStageService;
 import group.ydq.service.service.FileService;
+import group.ydq.service.service.MessageService;
 import group.ydq.service.service.ProjectService;
+
 import group.ydq.utils.RetResponse;
 import group.ydq.utils.StageCheckStatusToProjStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -30,34 +33,39 @@ public class StageController {
     @Resource
     private CheckStageService checkStageService;
 
+    @Resource
+    private MessageService messageService;
+
     @RequestMapping("/startMid")
     private BaseResponse startMid(long projectId){
-        CheckStage cs = new CheckStage();
-        Project p = projectService.getProject(projectId);
-        cs.setProject(p);
-        cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(1);
-        cs.setStatus(0);
-        checkStageService.save(cs);
+        checkStageService.startMid(projectId);
         return new BaseResponse();
     }
 
     @RequestMapping("/startFinal")
     private BaseResponse startFinal(long projectId){
-        CheckStage cs = new CheckStage();
-        Project p = projectService.getProject(projectId);
-        cs.setProject(p);
-        cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(2);
-        cs.setStatus(0);
-        checkStageService.save(cs);
+        checkStageService.startFinal(projectId);
         return new BaseResponse();
     }
 
+    @RequestMapping("/addRule")
+    private  BaseResponse addRule(@RequestBody Map<String, Object> msg) throws ParseException {
+        String start = (String) msg.get("start");
+        String end = (String) msg.get("end");
+        String verifier = (String) msg.get("verifier");
+        String content = (String) msg.get("ruleContent");
+        ArrayList<Long> stage = (ArrayList) msg.get("stage");
+        String sender = (String) msg.get("sender");
+        for(int i = 0 ; i<stage.size();i++){
+            Long receiver = checkStageService.findACheckStageByCheckStageID(stage.get(i)).getProject().getLeader().getId();
+            //TODO  调用
+            // messageService 方法
+        }
+        return  RetResponse.success();
+    }
+
     @RequestMapping("/getAll")
-    private BaseResponse getAll() throws NullPointerException{
+    private BaseResponse getAll(){
         List<CheckStage> all =  checkStageService.findAll();
         ArrayList<JSONObject> dataList = new ArrayList<>();
 
@@ -81,7 +89,7 @@ public class StageController {
             jsonObject.put("stage", checkStage.getStage());
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
             jsonObject.put("status", checkStage.getStatus());
-            jsonObject.put("verifer", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
+            jsonObject.put("verifier", checkStage.getVerifiers().getNick());
             dataList.add(jsonObject);
         }
 
@@ -105,7 +113,7 @@ public class StageController {
 
         /*
         * stageCheckID --> StageCheck表中的主键ID
-        * stageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
+        * stageStatus --> StageCheck表中的审核状态代码  1表示待整改（未通过），2表示通过
         * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
         * projectID --> 根据CheckStage表中的ID得出的项目ID编号
         * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
@@ -129,7 +137,7 @@ public class StageController {
     private BaseResponse changeToPassed(@RequestBody Map<String, Object> paramsMap){
         /*
          * stageCheckID --> StageCheck表中的主键ID
-         * stageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
+         * stageStatus --> StageCheck表中的审核状态代码  1表示待整改（未通过），2表示通过
          * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
          * projectID --> 根据CheckStage表中的ID得出的项目ID编号
          * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
@@ -148,7 +156,6 @@ public class StageController {
         }else if (projectStage == 2){
             //若果项目结题验收通过
             // TODO::更新project表中的state状态码 （改为projectStatus变量）
-
         }
         return new BaseResponse();
     }
