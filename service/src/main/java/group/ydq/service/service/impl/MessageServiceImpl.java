@@ -33,6 +33,11 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.findAllOrderByDate();
     }
 
+    @Override
+    public Message checkUpdate() {
+        return messageRepository.findAllOrderByDate().get(0);
+    }
+
 
     @Override
     public Message sendMessage(Message newMessage) {
@@ -54,6 +59,7 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> findByReceiver(User receiver) {
         return messageRepository.findByReceiver(receiver);
     }
+
 
     @Override
     public Map<String, Object> getPMList() {

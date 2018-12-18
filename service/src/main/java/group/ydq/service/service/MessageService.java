@@ -14,6 +14,8 @@ public interface MessageService {
 
     List<Message> messageList();
 
+    Message checkUpdate();
+
     Message sendMessage(Message newMessage);
 
     void deleteMessage(Long id);
