@@ -28,8 +28,7 @@
                     <label class="layui-form-label">所处阶段:</label>
                     <div class="layui-input-inline">
                         <select name="stage" lay-search="">
-                            <option value="">请选择或输入</option>
-                            <option value="1">中期检查</option>
+                            <option value="1" selected="selected">中期检查</option>
                             <option value="2">结题验收</option>
                         </select>
                     </div>
@@ -72,17 +71,26 @@
             <table class="layui-hide" id="table" lay-filter="table"></table>
         </div>
 
+        <script type="text/html" id="toolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="setRule">设置检查规则</button>
+            </div>
+        </script>
 
         <script type="text/html" id="bar">
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="view">查看材料</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check">审 核</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看材料</a>
+            {{#  if(d.status != 1){ }}
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="check">审 核</a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="check">审 核</a>
+            {{#  } }}
         </script>
     </div>
 </div>
 
 <script src="assets/layui/layui.js"></script>
 <script>
-    layui.use(['jquery', 'table', 'laydate', 'form'], function () {
+    layui.use(['jquery', 'table', 'laydate', 'form','layer'], function () {
         var $ = layui.$;
         var table = layui.table;
         var laydate = layui.laydate;
@@ -128,7 +136,7 @@
                             return '未通过';
                     }
                 },
-                {field: 'verifer', title: "审核人"},
+                {field: 'verifier', title: "审核人"},
                 {fixed: 'right', title: '操作', align: 'center', toolbar: '#bar'}
             ]],
             page: true,
@@ -144,6 +152,31 @@
                     "data": res.object,
                 };
             }
+        });
+
+        table.on('toolbar(table)', function (obj) {
+            var stage = table.checkStatus(obj.config.id);
+            if(stage.data.length === 0){
+                layer.alert('您还未选择任何项目');
+            }
+            else{
+                var stageId = [];
+                for (var i = 0; i < stage.data.length; i++) {
+                    stageId.push(stage.data[i].id);
+                }
+                id = stageId.join(',');
+                sender = 1;
+            }
+
+            if(obj.event === 'setRule'){
+                layer.open({
+                    type: 2,
+                    title: '设置阶段检查说明',
+                    content: ['/checkRule.html?id='+id+'&sender='+sender ,'no'],
+                    area: ['700px', '550px'],
+                });
+            }
+
         });
 
         table.on('tool(table)', function (obj) {
@@ -200,9 +233,6 @@
                     }
                 }
             });
-/*            alert(option.msg);
-            alert(option.status);
-            alert(option.id)*/
         }
 
         form.on('submit(search)', function (data) {
