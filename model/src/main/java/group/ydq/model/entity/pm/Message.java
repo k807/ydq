@@ -14,21 +14,31 @@ import java.util.Date;
 @Entity
 public class Message {
 
+    public Message(){}
+
+    public Message(Date date, int type, String title, String content, String remark) {
+        this.date = date;
+        this.type = type;
+        this.title = title;
+        this.content = content;
+        this.remark = remark;
+    }
+
     @Id
     @GeneratedValue
     private Long id;
 
     private Date date;
     /*
-    * type说明站内消息类型
-    * 0代表公告类型，即所有user都见
-    * 1代表私信类型，即个别user可见
-    * */
+     * type说明站内消息类型
+     * 0代表公告类型，即所有user都见
+     * 1代表私信类型，即个别user可见
+     * */
     private int type;
 
     /*
-    * title可以用‘申报入口说明’、‘中期检查说明’等
-    * */
+     * title可以用‘申报入口说明’、‘中期检查说明’等
+     * */
     private String title;
 
     private String content;
@@ -40,6 +50,7 @@ public class Message {
 
     @ManyToOne
     private User receiver;
+
 
     public Long getId() {
         return id;

@@ -5,12 +5,8 @@ import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.impl.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,40 +19,6 @@ public class MessageController {
 
     @Autowired
     MessageServiceImpl messageServiceImpl;
-
-    /*
-     * 查询所有
-     * 无参，仅供超级管理员查看
-     * */
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public List<Message> messageList() {
-        List<Message> messages = messageServiceImpl.messageList();
-        return messages;
-    }
-    /*
-     * 新增站内消息
-     * 以title、content、time、sender、receivers、remark为参数
-     * */
-    @RequestMapping(value = "/addOne")
-    @ResponseBody
-    public Message sendMessage(String title, int type, String sender, String receiver, String content, String remark) throws ParseException {
-        Message messageOne = new Message();
-        messageOne.setTitle(title);
-        messageOne.setType(type);
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        messageOne.setDate(sdf.parse(date));
-        messageOne.setDate(new Date());
-        User senderUser = new User();
-        senderUser.setNick(sender);
-        User receiverUser = new User();
-        receiverUser.setNick(receiver);
-//        messageOne.setSender(senderUser);
-//        messageOne.setReceiver(receiverUser);
-        messageOne.setContent(content);
-        messageOne.setRemark(remark);
-        System.out.println(messageOne);
-        return messageServiceImpl.sendMessage(messageOne);
-    }
 
     /*
      * 查询所有消息
@@ -75,5 +37,6 @@ public class MessageController {
     public List<Message> findByReceiver(User receiver) {
         return messageServiceImpl.findByReceiver(receiver);
     }
+
 
 }

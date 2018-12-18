@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>站内消息</title>
+    <link rel="stylesheet" href="../static/assets/layui/css/layui.css">
+    <script src="../static/assets/layui/layui.js" charset="utf-8"></script>
+</head>
+<body onload="getList()">
+
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">公告</li>
+        <li>私信</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+        <!--公告，即OneToAll站内消息-->
+        <div class="layui-tab-item layui-show">
+            <ul class="layui-timeline" id="noticelist" style="margin:15px;padding:15px;background-color: white">
+                <!-- <li class="layui-timeline-item">
+                     <i class="layui-icon layui-timeline-axis"></i>
+                     <div class="layui-timeline-content layui-text">
+                         <h3 class="layui-timeline-title">日期</h3>
+                         <p>
+                             发布人
+                             <br>内容
+                             <br>备注
+                         </p>
+                     </div>
+                 </li>-->
+                <!-- <li class="layui-timeline-item">
+                     <i class="layui-icon layui-timeline-axis"></i>
+                     <div class="layui-timeline-content layui-text">
+                         <div class="layui-timeline-title">过去</div>
+                     </div>
+                 </li>-->
+            </ul>
+        </div>
+        <!--私信，即OneToOne站内消息-->
+        <div class="layui-tab-item" style="padding: 15px;background-color: #F2F2F2">
+
+            <div id="messageList">
+
+                <!-- <div class="layui-card">
+                     <div class="layui-card-header">日期</div>
+                     <div class="layui-card-body">
+                         <p>标题 <em>发送人</em></p>
+                         <ul>
+                             <li>内容</li>
+                             <li>备注</li>
+                         </ul>
+                     </div>
+                 </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    layui.use(['element', 'jquery'], function () {
+        var element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+        element.on('tab(filter)', function (data) {
+            console.log(this); //当前Tab标题所在的原始DOM元素
+            console.log(data.index); //得到当前Tab的所在下标
+            console.log(data.elem); //得到当前的Tab大容器
+        });
+
+
+    });
+
+    function getList() {
+        layui.$.ajax({
+            url: "getPMList",
+            type: 'get',
+            cache: false,
+            dataType: 'json',//返回的数据类型
+            success: function (result) {
+                var notices = result.notices;
+                var messages = result.messages;
+                initNoticeList(notices || []);
+                initMessageList(messages || []);
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        })
+
+    }
+
+    function initNoticeList(list) {
+        layui.use(['laytpl'], function () {
+            var temp = noticemessage.innerHTML;
+            layui.laytpl(temp).render({list: list}, function (html) {
+                noticelist.innerHTML += html;
+            });
+            layui.$("#noticelist").append("  <li class=\"layui-timeline-item\">\n" +
+                "                    <i class=\"layui-icon layui-timeline-axis\"></i>\n" +
+                "                    <div class=\"layui-timeline-content layui-text\">\n" +
+                "                        <div class=\"layui-timeline-title\">过去</div>\n" +
+                "                    </div>\n" +
+                "                </li>")
+        });
+
+    }
+
+    function initMessageList(list) {
+        layui.use(['laytpl', 'jquery'], function () {
+            var temp = privatemessage.innerHTML;
+            layui.laytpl(temp).render({list: list}, function (html) {
+                messageList.innerHTML += html;
+            });
+        });
+    }
+</script>
+<script id="privatemessage" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <div class="layui-card">
+        <div class="layui-card-header">{{item.date}}</div>
+        <div class="layui-card-body">
+            <p>{{item.title}} <em>{{item.sender}}</em></p>
+            <ul>
+                <li>{{item.content}}</li>
+                <li>{{item.remark}}</li>
+            </ul>
+        </div>
+    </div>
+    {{# }); }}
+</script>
+
+<script id="noticemessage" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis"></i>
+        <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title">{{item.date}}</h3>
+            <p>{{item.title}}
+                <br>{{item.content}}
+                <br>{{item.remark}}
+            </p>
+        </div>
+    </li>
+    {{# }); }}
+</script>
+
+</body>
+</html>
