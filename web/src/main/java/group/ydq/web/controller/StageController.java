@@ -107,7 +107,7 @@ public class StageController {
     @ResponseBody
     private BaseResponse getByConditions(@RequestParam(name = "name",defaultValue = "") String name,
                                          @RequestParam(name = "leader", defaultValue = "") String leader,
-                                         @RequestParam(name = "status") String status,
+                                         @RequestParam(name = "status", defaultValue = "") String status,
                                          @RequestParam(name = "stage", defaultValue = "1") int stage,
                                          @RequestParam(name = "createTime",defaultValue = "1970-01-01 00:00:00") String createTime,
                                          @RequestParam(name = "endTime",defaultValue = "2049-12-31 23:59:59") String endTime){
