@@ -89,7 +89,7 @@ public class CheckStage {
         return status;
     }
 
-    public void setStatus(int satus) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

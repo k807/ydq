@@ -7,7 +7,7 @@ import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.CheckStageService;
 import group.ydq.service.service.FileService;
 import group.ydq.service.service.ProjectService;
-import group.ydq.utils.RetResponse;
+import group.ydq.utils.DateUtil;
 import group.ydq.utils.StageCheckStatusToProjStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,17 +84,23 @@ public class StageController {
             jsonObject.put("verifer", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
             dataList.add(jsonObject);
         }
-
         return new BaseResponse(dataList);
     }
 
 
 
     @RequestMapping("/getByConditions")
-    private BaseResponse getByConditions(@RequestBody Map<String, Object> searchParamMap){
+    @ResponseBody
+    private BaseResponse getByConditions(@RequestParam(name = "name") String name,
+                                         @RequestParam(name = "leader") String leader,
+                                         @RequestParam(name = "status") int status,
+                                         @RequestParam(name = "stage") int stage,
+                                         @RequestParam(name = "createTime") String createTime,
+                                         @RequestParam(name = "endTime") String endTime){
+        Date createTimeStamp = DateUtil.strToDate(createTime,DateUtil.format1);
+        Date endTimeStamp = DateUtil.strToDate(endTime,DateUtil.format1);
 
-        //TODO: 在这里添加service层的调用
-        System.out.println(searchParamMap);
+        System.out.println(name);
         return new BaseResponse();
     }
 
@@ -111,8 +117,7 @@ public class StageController {
         * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
         *
         * */
-        Integer tempContainer = (Integer) paramsMap.get("id");
-        Long stageCheckID = tempContainer.longValue();
+        Long stageCheckID = ((Integer) paramsMap.get("id")).longValue();
         String message = (String) paramsMap.get("msg");
         int stageStatus = (int) paramsMap.get("status");
         int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
@@ -145,12 +150,10 @@ public class StageController {
         if(projectStage == 1){
             //如果项目处于中期的话，就进入结题验收阶段
             startFinal(projectID);
-        }else if (projectStage == 2){
-            //若果项目结题验收通过
-            // TODO::更新project表中的state状态码 （改为projectStatus变量）
-
         }
-        return new BaseResponse();
+        projectService.changeState(projectID,projectStatus);
+        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus);
+        return new BaseResponse("change success!");
     }
 
 }
