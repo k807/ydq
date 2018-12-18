@@ -22,11 +22,21 @@ public class PMcontroller {
 
     @RequestMapping("/privatemessage")
     public String privateMessage() {
-        return "privatemessage";
+        return "privateMessage";
     }
 
     @Autowired
     MessageServiceImpl messageServiceImpl;
+    /*
+     * 查询最新一条消息
+     * 比较网页登入时间和消息的发送时间
+     * 更改消息的红点提示
+     * */
+    @GetMapping(value = "/checkUpdate")
+    @ResponseBody
+    public Message checkUpdate() {
+        return messageServiceImpl.checkUpdate();
+    }
     /*
      * 查询站内消息
      * 以notices和messages分类
@@ -46,4 +56,12 @@ public class PMcontroller {
         Message messageOne = new Message(new Date(), type, title, content, remark);
         return messageServiceImpl.sendMessage(messageOne);
     }
+    @GetMapping(value = "/delete/{id}")
+    @ResponseBody
+    public void deleteMessage(Long id) {
+         messageServiceImpl.deleteMessage(id);
+    }
+
+
+
 }

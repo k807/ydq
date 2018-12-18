@@ -64,11 +64,13 @@ public class CheckStageServiceImpl implements CheckStageService {
     public void startFinal(Long projectId) {
         CheckStage cs = new CheckStage();
         Project p = projectService.getProject(projectId);
+        User u = userRepository.getOne(10000L);
         cs.setProject(p);
         cs.setStartTime(new Date());
         cs.setUploadStatus(false);
         cs.setStage(2);
         cs.setStatus(0);
+        cs.setVerifiers(u);
         save(cs);
     }
 

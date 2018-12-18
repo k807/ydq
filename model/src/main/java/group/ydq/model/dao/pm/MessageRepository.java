@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simple
@@ -23,5 +22,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query(value = "select m from Message m where m.receiver = ?1 ORDER BY m.date DESC")
     List<Message> findByReceiver(User receiver);
+
 
 }
