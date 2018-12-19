@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/assets/style/admin.css" media="all">
 </head>
-<body  class="layui-layout-body" layadmin-themealias="default">
+<body onload="getTime()" class="layui-layout-body" layadmin-themealias="default">
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
@@ -74,7 +74,7 @@
 
         <div class="layui-side layui-side-menu">
             <div class="layui-side-scroll">
-                <div class="layui-logo" lay-href="userManage.html">
+                <div class="layui-logo" lay-href="/html/userManage.html">
                     <span>layuiAdmin</span>
                 </div>
 
@@ -87,12 +87,17 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd data-name="console" class="layui-this">
-                                <a lay-href="userManager.html">用户信息管理</a>
+                                <a lay-href="/html/userManager.html">用户信息管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
                             <dd data-name="console" >
-                                <a lay-href="projectList.html">项目管理</a>
+                                <a lay-href="/html/teacher/projectList.html">项目管理</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="/html/manager/projectList.html">项目申报管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
@@ -107,7 +112,12 @@
                         </dl>
                         <dl class="layui-nav-child">
                             <dd data-name="console">
-                                <a lay-href="projectCheck.html">项目阶段检查</a>
+                                <a lay-href="pm/privatemessage">站内消息</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/html/manager/projectCheck.html">项目阶段检查</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
@@ -136,7 +146,7 @@
             </div>
             <div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="userManage.html" lay-attr="userManage.html" class="layui-this" style=""><i
+                    <li lay-id="/html/userManage.html" lay-attr="/html/userManage.html" class="layui-this" style=""><i
                             class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>
                     </li>
                 </ul>
@@ -144,14 +154,14 @@
         </div>
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe id="frame" src="userManage.html" frameborder="0" class="layadmin-iframe"></iframe>
+                <iframe id="frame" src="/html/userManage.html" frameborder="0" class="layadmin-iframe"></iframe>
             </div>
         </div>
         <div class="layadmin-body-shade" layadmin-event="shade"></div>
     </div>
 </div>
 <script src="/assets/layui/layui.js"></script>
-<script src="../static/js/checkUpdate.js"></script>
+<script src="/js/checkUpdate.js"></script>
 <script>
     layui.config({
         base: '/assets/' //静态资源所在路径

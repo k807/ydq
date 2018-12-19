@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>项目申报</title>
@@ -38,13 +38,13 @@
                         <label class="layui-form-label">项目名称</label>
                         <div class="layui-input-block">
                             <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入项目名"
-                                   class="layui-input" th:readonly="${readonly}">
+                                   class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">申报级别</label>
                         <div class="layui-input-block">
-                            <select name="level" lay-verify="required" th:disabled="${readonly}">
+                            <select name="level" lay-verify="required">
                                 <option value="">请选择级别</option>
                                 <option value="0">校级一类</option>
                                 <option value="1">校级二类</option>
@@ -54,27 +54,27 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">负责人</label>
                         <div class="layui-input-block">
-                            <input type="text" name="leader" id="leader" autocomplete="off" class="layui-input" th:readonly="${readonly}">
+                            <input type="text" name="leader" id="leader" autocomplete="off" class="layui-input" readonly>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">手机号码</label>
                         <div class="layui-input-block">
-                            <input type="tel" name="phone" lay-required="phone" autocomplete="off" placeholder="请输入手机号码" th:readonly="${readonly}"
+                            <input type="tel" name="phone" lay-required="phone" autocomplete="off" placeholder="请输入手机号码"
                                    class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">电子邮箱</label>
                         <div class="layui-input-block">
-                            <input type="email" name="email" lay-required="email" autocomplete="off" placeholder="请输入邮箱" th:readonly="${readonly}"
+                            <input type="email" name="email" lay-required="email" autocomplete="off" placeholder="请输入邮箱"
                                    class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">所属专业</label>
                         <div class="layui-input-block">
-                            <select name="major" lay-verify="required" th:disabled="${readonly}">
+                            <select name="major" lay-verify="required">
                                 <option value="">请选择专业</option>
                                 <option value="0">计算机科学与技术</option>
                                 <option value="1">电子信息工程</option>
@@ -87,7 +87,7 @@
                         <div class="layui-row">
                             <div class="layui-col-xs10">
                                 <label class="layui-form-label">项目成员</label>
-                                <div class="layui-input-block" >
+                                <div class="layui-input-block">
                                     <input type="text" name="members[]" lay-required autocomplete="off" placeholder="请输入成员名字"
                                            class="layui-input">
                                 </div>

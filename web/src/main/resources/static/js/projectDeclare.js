@@ -43,13 +43,13 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         choose:function(obj){
             obj.preview(function(index,file,result){
                 $('#file').val(file.name);
-                $('#upload-file').attr('type','hidden');
-                $('#delete-file').attr('type','button');
             })
         },
         done:function(res){
             if (res.statusCode==="200") {
                 file = res.object;
+                $('#upload-file').attr('type','hidden');
+                $('#delete-file').attr('type','button');
             }
         }
     });
@@ -67,7 +67,7 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         },'json')
     });
 
-    function saveOrSubmit(action, data) {
+    function saveOrsubmit(action, data) {
         var leader = {
             "id": 1
             //todo 从session或cookie获取用户id
@@ -90,12 +90,12 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         json.members = JSON.stringify(members);
         $.ajax({
             type: "post",
-            url: "/project/" + action,
+            url: "/project/new/" + action,
             contentType: 'application/json',
             data: JSON.stringify(json),
             dataType: "json",
-            success: function (data) {
-                layer.msg(JSON.stringify(data));
+            success: function (res) {
+                openNewTab("/project/getDetails/"+res.object,data.field.name);
             }
         });
     }
@@ -109,11 +109,20 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
                 tipsMore:true
             });
         if (pics.length!==0&&JSON.stringify(file)!=='{}')
-            s('submit',data);
+            saveOrsubmit('submit',data);
         return false;
     });
     form.on("submit(save)",function(data){
-        s('save',data);
+        if (pics.length===0)
+            layer.tips('请上传立项承诺书！！！','#upload-img',{
+                tipsMore:true
+            });
+        if (JSON.stringify(file)==='{}')
+            layer.tips('请上传申报书！！！','#upload-file',{
+                tipsMore:true
+            });
+        if (pics.length!==0&&JSON.stringify(file)!=='{}')
+            saveOrsubmit('save',data);
         return false;
     });
 
@@ -174,5 +183,13 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
             x--;
         }
         return false;
-    })
+    });
+
+    function openNewTab(url,title) {
+        if(top.layui.index){
+            top.layui.index.openInThisTab(url,title)
+        }else{
+            window.open(url)
+        }
+    }
 });

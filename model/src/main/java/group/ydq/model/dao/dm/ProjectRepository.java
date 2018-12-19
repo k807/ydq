@@ -24,4 +24,5 @@ public interface ProjectRepository extends JpaRepository<Project,Long>{
     void changeState(long id,int state);
 
     boolean existsProjectById(long id);
+
 }

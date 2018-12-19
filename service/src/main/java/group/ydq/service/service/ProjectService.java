@@ -14,7 +14,7 @@ public interface ProjectService extends BaseService{
 
     boolean isProjectExist(long projectId);
 
-    void save(Project project);
+    Project save(Project project);
 
     Page<Project> getProjectsOfLeader(int page, int limit, String userNumber);
 
@@ -24,4 +24,5 @@ public interface ProjectService extends BaseService{
 
     void changeState(long projectId,int state);
 
+    void deleteProject(long id);
 }

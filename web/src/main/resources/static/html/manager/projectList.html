@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>项目列表</title>
@@ -76,13 +76,15 @@
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-sm" lay-event="changeState">更改状态</button>
                 <button class="layui-btn layui-btn-sm" lay-event="resetPwd">重置密码</button>
-                <button class="layui-btn layui-btn-sm" lay-event="createUser">新建</button>
             </div>
         </script>
 
         <script type="text/html" id="bar">
             <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail">查看详情</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit">编辑</a>
+            {{#  if(d.state == -1){ }}
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            {{#  } }}
         </script>
     </div>
 </div>
@@ -111,6 +113,13 @@
                     {type: 'checkbox', fixed: 'left'},
                     {field: 'id',title:'ID',width:60, hide: true},
                     {field: 'name', title: "项目名称",width:150},
+                    {field:'leader',title:"负责人",width:120,sort:true},
+                    {field:'level',title:'项目级别',width:150,templet:function(d){
+                        switch (d.level){
+                            case 0:return "校级一类";
+                            case 1:return "校级二类";
+                        }
+                    }},
                     {field: 'major', title: "所属专业",width:150,sort:true,templet:function(d){
                         switch (d.major){
                             case 0:return '计算机科学与技术';
@@ -119,22 +128,26 @@
                             case 3:return '数字媒体技术';
                         }
                     }},
+                    {field:'experts',title:'分配专家',width:150,templet:function(d){
+                        if (d.experts.length===0)
+                            return "尚未分配";
+                        else{
+                            var expert;
+                            for (var i=0;i<d.experts.length-1;i++){
+                                expert+=d.experts[i].nick+"、"
+                            }
+                            expert+=d.experts[d.experts.length-1];
+                        }
+                    }},
                     {field: 'createTime', title: "创建时间",width:180,sort:true},
                     {field: 'updateTime', title: "更新时间",width:180,sort:true},
                     {field: 'state',title:'状态',width:120,sort:true,templet:function(d){
                         switch(d.state){
-                            case -1:return '未提交';
                             case 0:return '审核中';
                             case 1:return '初审通过';
                             case 2:return '立项评审中';
                             case 3:return '立项评审完成';
                             case 4:return '已立项';
-                            case 5:return '中期检查';
-                            case 6:return '中期检查待整改';
-                            case 7:return '中期检查通过';
-                            case 8:return '结题验收';
-                            case 9:return '结题验收待整改';
-                            case 10:return '已结题';
                         }
                     }},
                     {field:'remark',title:'备注'},
@@ -147,7 +160,7 @@
             page: true,
             limit: 15,
             limits: [15, 30, 45, 60, 75, 90],
-            url: "/project/teacher/list",
+            url: "/project/manager/list",
             where:{'userNumber':"123456"},
             response: {
                 statusCode: 200
@@ -164,39 +177,54 @@
         table.on('tool(table)', function (obj) {
             var data = obj.data;
             var tr=obj.tr;
+            var remark=tr.children('td').eq(8);
+            var btn=tr.children('td').eq(9).children('div').children('a').eq(1);
             if (obj.event==='detail'){
                 newTab('/project/getDetails/'+obj.data.id,obj.data.name);
             } else if (obj.event === 'del') {
-                layer.confirm('真的注销么', function (index) {
+                layer.confirm('真的删除么', function (index) {
                     layer.close(index);
                     $.ajax({
-                        type: "post",
-                        url: "/user/delete",
-                        data: JSON.stringify(obj.data),
-                        contentType: 'application/json;charset=UTF-8',
+                        type: "get",
+                        url: "/project/delete",
+                        data: {id:data.id},
                         dataType: 'json',
                         success: function (data) {
-                            if (data.state === 400) {
-                                layer.msg("注销失败");
-                            } else {
+                            if (data.statusCode === "200") {
                                 obj.del();
-                                layer.msg("注销成功");
+                                layer.msg("删除成功");
+                            } else {
+                                layer.msg("删除失败");
                             }
                         }
                     })
                 });
             } else if (obj.event === 'edit') {
-                tr.children('td').eq(7).attr("data-edit",'text');
-                tr.children('td').eq(7).unbind();
-                tr.children('td').eq(8).children('div').children('a').eq(1).text('保存');
-                tr.children('td').eq(8).children('div').children('a').eq(1).attr('lay-event','save')
+                $(remark).attr("data-edit",'text');
+                $(remark).unbind();
+                $(btn).text('保存');
+                $(btn).attr('lay-event','save')
             } else if (obj.event==='save'){
-                tr.children('td').eq(7).removeAttr("data-edit");
-                tr.children('td').eq(7).click(function(){return false});
-                tr.children('td').eq(8).children('div').children('a').eq(1).text('编辑');
-                tr.children('td').eq(8).children('div').children('a').eq(1).attr('lay-event','edit');
+                $(remark).removeAttr("data-edit");
+                $(remark).click(function(){return false});
+                $(btn).text('编辑');
+                $(btn).attr('lay-event','edit');
 
-
+                $.ajax({
+                    type:'post',
+                    url:'/project/save',
+                    data:JSON.stringify(data),
+                    dataType:'json',
+                    contentType:'application/json',
+                    success:function(res){
+                        if (res.statusCode==='200'){
+                            obj.update({
+                                updateTime:res.object
+                            });
+                            layer.msg("保存成功");
+                        }
+                    }
+                })
             }
         });
 

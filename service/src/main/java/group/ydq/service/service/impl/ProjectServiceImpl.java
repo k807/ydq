@@ -34,8 +34,8 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
      * @param project
      */
     @Override
-    public void save(Project project) {
-        projectRepository.save(project);
+    public Project save(Project project) {
+        return projectRepository.saveAndFlush(project);
     }
 
     /**
@@ -74,5 +74,10 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     @Override
     public void changeState(long projectId, int state) {
         projectRepository.changeState(projectId, state);
+    }
+
+    @Override
+    public void deleteProject(long id) {
+        projectRepository.deleteById(id);
     }
 }

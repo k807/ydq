@@ -3,9 +3,9 @@
     var e = layui.setter, i = layui.element, n = layui.admin, t = n.tabsPage, d = layui.view, l = function (a, d) {
         var l, b = r("#LAY_app_tabsheader>li"), y = a.replace(/(^http(s*):)|(\?[\s\S]*$)/g, "");
         if (b.each(function (e) {
-            var i = r(this), n = i.attr("lay-id");
-            n === a && (l = !0, t.index = e)
-        }), d = d || "新标签页", e.pageTabs) l || (r(s).append(['<div class="layadmin-tabsbody-item layui-show">', '<iframe src="' + a + '" frameborder="0" class="layadmin-iframe"></iframe>', "</div>"].join("")), t.index = b.length, i.tabAdd(o, {
+                var i = r(this), n = i.attr("lay-id");
+                n === a && (l = !0, t.index = e)
+            }), d = d || "新标签页", e.pageTabs) l || (r(s).append(['<div class="layadmin-tabsbody-item layui-show">', '<iframe src="' + a + '" frameborder="0" class="layadmin-iframe"></iframe>', "</div>"].join("")), t.index = b.length, i.tabAdd(o, {
             title: "<span>" + d + "</span>",
             id: a,
             attr: y
@@ -19,5 +19,11 @@
     n.screen() < 2 && n.sideFlexible(), layui.config({base: e.base + "modules/"}), layui.each(e.extend, function (a, i) {
         var n = {};
         n[i] = "{/}" + e.base + "lib/extend/" + i, layui.extend(n)
-    }), d().autoRender(), layui.use("common"), a("index", {openTabsPage: l})
+    }), d().autoRender(), layui.use("common"), a("index", {openTabsPage: l,openInThisTab:function(a,d){
+            r("#LAY_app_tabsheader > .layui-this").attr("lay-id",a);
+            r("#LAY_app_tabsheader > .layui-this").attr("lay-attr",a);
+            r(".layui-this > span").text(d);
+            var u = n.tabsBody(n.tabsPage.index).find(".layadmin-iframe");
+            u[0].contentWindow.location.href = a;
+            n.tabsBodyChange(t.index,{url:a,text:d})}})
 });
