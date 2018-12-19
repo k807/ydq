@@ -43,13 +43,13 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         choose:function(obj){
             obj.preview(function(index,file,result){
                 $('#file').val(file.name);
-                $('#upload-file').attr('type','hidden');
-                $('#delete-file').attr('type','button');
             })
         },
         done:function(res){
             if (res.statusCode==="200") {
                 file = res.object;
+                $('#upload-file').attr('type','hidden');
+                $('#delete-file').attr('type','button');
             }
         }
     });
@@ -67,20 +67,22 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         },'json')
     });
 
-    function s(action, data) {
+    function saveOrsubmit(action, data) {
         var leader = {
             "id": 1
+            //todo 从session或cookie获取用户id
         };
         var json = {};
         json.name = data.field.name;
         json.level = data.field.level;
         json.leader = leader;
+        json.manager={'id':window.location.search.split('&')[1].split('=')[1]};
         json.phone = data.field.phone;
         json.major = data.field.major;
         json.email = data.field.email;
         json.commitmentPics = pics;
         json.declaration = {"id":file.id};
-        json.entrance={"id":window.location.href.split('=')[1]};
+        json.entrance={"id":window.location.search.split('&')[0].split('=')[1]};
         var members = [];
         $('input[name^=members]').each(function (index, element) {
             members.push(element.value);
@@ -88,12 +90,12 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         json.members = JSON.stringify(members);
         $.ajax({
             type: "post",
-            url: "/project/" + action,
+            url: "/project/new/" + action,
             contentType: 'application/json',
             data: JSON.stringify(json),
             dataType: "json",
-            success: function (data) {
-                layer.msg(JSON.stringify(data));
+            success: function (res) {
+                openNewTab("/project/getDetails/"+res.object,data.field.name);
             }
         });
     }
@@ -107,11 +109,20 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
                 tipsMore:true
             });
         if (pics.length!==0&&JSON.stringify(file)!=='{}')
-            s('submit',data);
+            saveOrsubmit('submit',data);
         return false;
     });
     form.on("submit(save)",function(data){
-        s('save',data);
+        if (pics.length===0)
+            layer.tips('请上传立项承诺书！！！','#upload-img',{
+                tipsMore:true
+            });
+        if (JSON.stringify(file)==='{}')
+            layer.tips('请上传申报书！！！','#upload-file',{
+                tipsMore:true
+            });
+        if (pics.length!==0&&JSON.stringify(file)!=='{}')
+            saveOrsubmit('save',data);
         return false;
     });
 
@@ -172,5 +183,13 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
             x--;
         }
         return false;
-    })
+    });
+
+    function openNewTab(url,title) {
+        if(top.layui.index){
+            top.layui.index.openInThisTab(url,title)
+        }else{
+            window.open(url)
+        }
+    }
 });

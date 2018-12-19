@@ -14,13 +14,14 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    @Query(value = "select m from Message m ORDER BY m.date ASC")
+    @Query(value = "select m from Message m ORDER BY m.date DESC ")
     List<Message> findAllOrderByDate();
 
-    @Query(value = "select m from Message m where m.sender = ?1 ORDER BY m.date ASC")
+    @Query(value = "select m from Message m where m.sender = ?1 ORDER BY m.date DESC")
     List<Message> findBySender(User sender);
 
-
-    @Query(value = "select m from Message m where m.receiver = ?1 ORDER BY m.date ASC")
+    @Query(value = "select m from Message m where m.receiver = ?1 ORDER BY m.date DESC")
     List<Message> findByReceiver(User receiver);
+
+
 }

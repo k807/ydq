@@ -31,13 +31,16 @@
                 <!--<p id="time1" style="color: #000;"></p>-->
                 <!--<script src="time.js"></script>-->
                 <!--</li>-->
-                <li class="layui-nav-item" lay-unselect="" style="">
-                    <a id="red-dot" lay-href="privateMessage.html" layadmin-event="message" lay-text="消息中心">
+                <li class="layui-nav-item " lay-unselect="" style="" >
+                    <a id="red-dot" layadmin-event="more">
+                        <i class="layui-icon layui-icon-notice"></i>
+                    </a>
+                   <!-- <a id="red-dot" onclick="getNow()"lay-href="pm/privatemessage" lay-text="消息中心">
                         <i class="layui-icon layui-icon-notice"></i>
 
-                        <!-- 如果有新消息，则显示小圆点 -->
-                        <!--<span class="layui-badge-dot"></span>-->
-                    </a>
+                        &lt;!&ndash; 如果有新消息，则显示小圆点 &ndash;&gt;
+                        &lt;!&ndash;<span class="layui-badge-dot"></span>&ndash;&gt;
+                    </a>-->
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a layadmin-event="theme">
@@ -54,7 +57,7 @@
                         <i class="layui-icon layui-icon-screen-full"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item" lay-unselect="" style="">
+                <li class="layui-nav-item" lay-unselect="" style="margin-right: 30px">
                     <a>
                         <cite>Admin</cite>
                         <span class="layui-nav-more"></span></a>
@@ -66,18 +69,12 @@
                     </dl>
                 </li>
 
-                <li class="layui-nav-item layui-hide-xs" lay-unselect="" style="">
-                    <a layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
-                </li>
-                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect="">
-                    <a layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
-                </li>
             </ul>
         </div>
 
         <div class="layui-side layui-side-menu">
             <div class="layui-side-scroll">
-                <div class="layui-logo" lay-href="userManage.html">
+                <div class="layui-logo" lay-href="/html/userManage.html">
                     <span>layuiAdmin</span>
                 </div>
 
@@ -90,17 +87,37 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd data-name="console" class="layui-this">
-                                <a lay-href="userManage.html">用户信息管理</a>
+                                <a lay-href="/html/userManager.html">用户信息管理</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="/html/teacher/projectList.html">项目管理</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="/html/manager/projectList.html">项目申报管理</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="pm/messageList">站内消息</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="pm/messageTable">消息管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
                             <dd data-name="console">
-                                <a lay-href="privateMessage.html">站内消息管理</a>
+                                <a lay-href="pm/privatemessage">站内消息</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
                             <dd data-name="console">
-                                <a lay-href="projectCheck.html">项目阶段审查</a>
+                                <a lay-href="/html/manager/projectCheck.html">项目阶段检查</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
@@ -129,7 +146,7 @@
             </div>
             <div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="userManage.html" lay-attr="userManage.html" class="layui-this" style=""><i
+                    <li lay-id="/html/userManage.html" lay-attr="/html/userManage.html" class="layui-this" style=""><i
                             class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>
                     </li>
                 </ul>
@@ -137,7 +154,7 @@
         </div>
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe src="userManage.html" frameborder="0" class="layadmin-iframe"></iframe>
+                <iframe id="frame" src="/html/userManage.html" frameborder="0" class="layadmin-iframe"></iframe>
             </div>
         </div>
         <div class="layadmin-body-shade" layadmin-event="shade"></div>
@@ -147,7 +164,7 @@
 <script src="/js/checkUpdate.js"></script>
 <script>
     layui.config({
-        base: 'assets/' //静态资源所在路径
+        base: '/assets/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
     }).use('index');
@@ -159,7 +176,7 @@
                 title: '申报入口',
                 shadeClose: true,
                 shade: 0.8,
-                area: ['30%','60%'],
+                area: ['30%','75%'],
                 content: '/rule/list'
             });
         })

@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>检查阶段</title>
-    <link rel="stylesheet" href="assets/layui/css/layui.css">
-    <link rel="stylesheet" href="assets/style/admin.css">
+    <title>项目阶段检查</title>
+    <link rel="stylesheet" href="../../assets/layui/css/layui.css">
+    <link rel="stylesheet" href="../../assets/style/admin.css">
 </head>
 <body layadmin-themealias="default">
 <div class="layui-fluid">
@@ -27,9 +27,8 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">所处阶段:</label>
                     <div class="layui-input-inline">
-                        <select name="stage" lay-search="">
-                            <option value="">请选择或输入</option>
-                            <option value="1">中期检查</option>
+                        <select id="stage" name="stage" lay-search="">
+                            <option value="1" selected="selected">中期检查</option>
                             <option value="2">结题验收</option>
                         </select>
                     </div>
@@ -38,10 +37,10 @@
                     <label class="layui-form-label">审核状态:</label>
                     <div class="layui-input-inline" >
                         <select name="status" lay-search="">
-                            <option value="">请选择或输入</option>
+                            <option value="">请选择</option>
                             <option value="0">待审核</option>
                             <option value="1">已通过</option>
-                            <option value="3">未通过</option>
+                            <option value="3">待整改</option>
                         </select>
                     </div>
                 </div>
@@ -72,17 +71,26 @@
             <table class="layui-hide" id="table" lay-filter="table"></table>
         </div>
 
+        <script type="text/html" id="toolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="setRule">设置检查规则</button>
+            </div>
+        </script>
 
         <script type="text/html" id="bar">
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="view">查看材料</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check">审 核</a>
+            <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看材料</button>
+            {{#  if(d.status != 1){ }}
+            <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="check">审 核</button>
+            {{#  } else { }}
+            <button class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="check" disabled="disabled">审 核</button>
+            {{#  } }}
         </script>
     </div>
 </div>
 
-<script src="assets/layui/layui.js"></script>
+<script src="../../assets/layui/layui.js"></script>
 <script>
-    layui.use(['jquery', 'table', 'laydate', 'form'], function () {
+    layui.use(['jquery', 'table', 'laydate', 'form','layer'], function () {
         var $ = layui.$;
         var table = layui.table;
         var laydate = layui.laydate;
@@ -96,12 +104,13 @@
             type: 'datetime'
         });
         var tableIns = table.render({
+            id:'id,sex',
+            pid:'pid,sex',
             elem: '#table',
             toolbar: '#toolbar',
             height: 'full-200',
             cols: [[
                 {type: 'checkbox', fixed: 'left'},
-                {field: 'id', hide: true},
                 {field: 'name', title: "项目名称"},
                 {field: 'leader', title: "负责人"},
                 {
@@ -115,20 +124,20 @@
                 {
                     field: 'createTime', title: "创建时间", templet: function (d) {
                         var date = new Date(d.createTime);
-                        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() ;
                     }
                 },
                 {
                     field: 'status', title: "审核状态", templet: function (d) {
                         if (d.status === 0)
-                            return '未审核';
+                            return '待审核';
                         else if (d.status === 1)
                             return '已通过';
                         else if (d.status === 2)
-                            return '未通过';
+                            return '待整改';
                     }
                 },
-                {field: 'verifer', title: "审核人"},
+                {field: 'verifier', title: "审核人"},
                 {fixed: 'right', title: '操作', align: 'center', toolbar: '#bar'}
             ]],
             page: true,
@@ -146,6 +155,29 @@
             }
         });
 
+        table.on('toolbar(table)', function (obj) {
+            var stage = table.checkStatus(obj.config.id);
+            if(obj.event === 'setRule'){
+                if(stage.data.length === 0){
+                    layer.alert('您还未选择任何项目');
+                }
+                else{
+                    var stageId = [];
+                    for (var i = 0; i < stage.data.length; i++) {
+                        stageId.push(stage.data[i].id);
+                    }
+                    id = stageId.join(',');
+                    sender = 1;
+                    layer.open({
+                        type: 2,
+                        title: '设置阶段检查说明',
+                        content: ['/checkRule.html?id='+id+'&sender='+sender+'&stage='+$("#stage").val() ,'no'],
+                        area: ['700px', '550px'],
+                    });
+                }
+            }
+        });
+
         table.on('tool(table)', function (obj) {
             var data = obj.data;
             var option = {};
@@ -158,25 +190,52 @@
                     value:'',    // 可以设置文本默认值
                     area: ['400px', '80px'],     // 设置弹出层大小
                     btn: ['通过', '待整改','取消'],    // 自定义设置多个按钮
+                   yes: function(index, layero){
+                        var value = layero.find(".layui-layer-input").val();
+                        if(value===''){
+                            if(option.stage===1){
+                                value = '您的项目中期阶段检查已通过！';
+                            }
+                            else if(option.stage===2){
+                                value = '您的项目结题验收已通过！';
+                            }
+                        }
+                        option.msg = value;
+                        option.verifier = 1;
+                        option.status = 1;
+                        changeStatus(option);
+                        layer.close(index);
+                    },
                     btn2: function(index, elem){
                         var value = layui.jquery('#layui-layer'+index + " .layui-layer-input").val();
+                        if(value===''){
+                            if(option.stage===1){
+                                value = '您的项目中期阶段检查未通过，进入待整改状态，请及时处理！';
+                            }
+                            else if(option.stage===2){
+                                value = '您的项目结题验收未通过，进入待整改状态，请及时处理！';
+                            }
+                        }
                         option.msg = value;
+                        option.verifier = 1;
                         option.status = 2;
                         changeStatus(option);
                         layer.close(index);
                     },
                     btnAlign: 'c',    // 设置按钮位置
-                }, function(value, index, elem){
-                    option.msg = value;
-                    option.status = 1;
-                    changeStatus(option);
-                    layer.close(index);
                 });
-
-            } else if (obj.event === 'view') {
-                alert("~~~");
+            }
+            else if (obj.event==='view'){
+                newTab('/project/getDetails/'+obj.data.pid,obj.data.name);
             }
         });
+        function newTab(url,tit){
+            if(top.layui.index){
+                top.layui.index.openTabsPage(url,tit)
+            }else{
+                window.open(url)
+            }
+        }
 
         function changeStatus(option) {
             var url = null;
@@ -200,9 +259,6 @@
                     }
                 }
             });
-/*            alert(option.msg);
-            alert(option.status);
-            alert(option.id)*/
         }
 
         form.on('submit(search)', function (data) {
@@ -215,7 +271,7 @@
                     status: data.field.status,
                     stage: data.field.stage,
                     createTime: data.field.start,
-                    verifier: data.field.end
+                    endTime: data.field.end
                 },
                 page: {
                     curr: 1

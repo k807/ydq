@@ -1,8 +1,9 @@
 package group.ydq.service.service;
 
+import group.ydq.model.entity.dm.ExpertProject;
 import group.ydq.model.entity.dm.Project;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 /**
  * @author Daylight
@@ -11,14 +12,17 @@ import java.util.List;
 public interface ProjectService extends BaseService{
     Project getProject(long projectId);
 
-    void submit(Project project);
+    boolean isProjectExist(long projectId);
 
-    void save(Project project);
+    Project save(Project project);
 
-    List<Project> getProjectsOfLeader(String userNumber);
+    Page<Project> getProjectsOfLeader(int page, int limit, String userNumber);
 
-    List<Project> getProjectsOfManager(String userNumber);
+    Page<Project> getProjectsOfManager(int page,int limit,String userNumber);
+
+    Page<ExpertProject> getProjectOfExpert(int page,int limit,String userNumber);
 
     void changeState(long projectId,int state);
 
+    void deleteProject(long id);
 }

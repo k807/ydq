@@ -20,3 +20,9 @@ spring:
       servlet:
         content-type: text/html
       mode: LEGACYHTML5
+    servlet:
+      multipart:
+        max-file-size: 8MB
+        max-request-size: 10MB
+
+
