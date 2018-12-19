@@ -143,10 +143,12 @@ public class StageController {
         Long stageCheckID = ((Integer) paramsMap.get("id")).longValue();
         String message = (String) paramsMap.get("msg");
         int stageStatus = (int) paramsMap.get("status");
+        int verifierId = (int)paramsMap.get("verifier");
+        User verifier = userRepository.getOne((long) verifierId);
         int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
         Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
         int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
-        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus);
+        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus,verifier);
         return new BaseResponse("change success!");
     }
 
@@ -167,6 +169,8 @@ public class StageController {
         Long stageCheckID = tempContainer.longValue();
         String message = (String) paramsMap.get("msg");
         int stageStatus = (int) paramsMap.get("status");
+        int verifierId = (int)paramsMap.get("verifier");
+        User verifier = userRepository.getOne((long) verifierId);
         int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
         Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
         int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
@@ -175,7 +179,7 @@ public class StageController {
             startFinal(projectID);
         }
         projectService.changeState(projectID,projectStatus);
-        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus);
+        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus,verifier);
         return new BaseResponse("change success!");
     }
 

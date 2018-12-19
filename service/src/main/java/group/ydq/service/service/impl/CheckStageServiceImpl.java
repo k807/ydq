@@ -107,8 +107,8 @@ public class CheckStageServiceImpl implements CheckStageService {
     }
 
     @Override
-    public void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus) {
-        stageDao.changeProjectStatus(stageCheckID,adviceMessage,changeToThisStatus);
+    public void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus, User verifierId) {
+        stageDao.changeProjectStatus(stageCheckID,adviceMessage,changeToThisStatus,verifierId);
     }
 
     @Override
