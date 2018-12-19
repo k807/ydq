@@ -158,22 +158,29 @@
             var stage = table.checkStatus(obj.config.id);
 
             if(obj.event === 'setRule'){
-                if(stage.data.length === 0){
-                    layer.alert('您还未选择任何项目');
-                }
-                else{
+                if (stage.data.length !== 0) {
                     var stageId = [];
                     for (var i = 0; i < stage.data.length; i++) {
                         stageId.push(stage.data[i].id);
                     }
-                    id = stageId.join(',');
-                    sender = 1;
+                    var id = stageId.join(',');
+                    var sender = 1;
+                    var s = parseInt($("#stage").val());
+                    if(s === 1){
+                        var t = '设置中期检查规则说明';
+                    }
+                    else if(s === 2){
+                        var t = '设置结题验收规则说明';
+                    }
                     layer.open({
                         type: 2,
-                        title: '设置阶段检查说明',
-                        content: ['/checkRule.html?id='+id+'&sender='+sender+'&stage='+$("#stage").val() ,'no'],
+                        title: t,
+                        content: ['checkRule.html?id=' + id + '&sender=' + sender + '&stage=' +s , 'no'],
                         area: ['700px', '550px'],
                     });
+                }
+                else {
+                    layer.msg('您还未选择任何项目');
                 }
             }
 
@@ -195,10 +202,10 @@
                         var value = layero.find(".layui-layer-input").val();
                         if(value===''){
                             if(option.stage===1){
-                                value = '您的项目中期阶段检查已通过！';
+                                value = '您的项目中期检查已通过！请准备开展后续工作。';
                             }
                             else if(option.stage===2){
-                                value = '您的项目结题验收已通过！';
+                                value = '您的项目结题验收已通过！请准备开展后续工作。';
                             }
                         }
                         option.msg = value;

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>检查要求</title>
-    <link rel="stylesheet" href="/assets/layui/css/layui.css">
-    <link rel="stylesheet" href="/assets/style/admin.css">
-    <link rel="stylesheet" href="/assets/style/login.css">
-    <script src="js/sendmessage.js"></script>
+    <link rel="stylesheet" href="../../assets/layui/css/layui.css">
+    <link rel="stylesheet" href="../../assets/style/admin.css">
+    <link rel="stylesheet" href="../../assets/style/login.css">
+    <script src="../../js/sendmessage.js"></script>
 </head>
 <body>
 <div class="layui-fluid">
@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<script src="assets/layui/layui.js"></script>
+<script src="../../assets/layui/layui.js"></script>
 <script type="text/javascript">
     layui.use(['laydate', 'layedit', 'jquery', 'form'], function () {
         var laydate = layui.laydate
@@ -93,7 +93,6 @@
             }
 
             msg.content = sendCheckRule(data.field.start, data.field.end, data.field.verifier, data.field.ruleContent)
-
 
             $.ajax({
                 type: 'post',
