@@ -191,20 +191,40 @@
                     value:'',    // 可以设置文本默认值
                     area: ['400px', '80px'],     // 设置弹出层大小
                     btn: ['通过', '待整改','取消'],    // 自定义设置多个按钮
+                   yes: function(index, layero){
+                        var value = layero.find(".layui-layer-input").val();
+                        if(value===''){
+                            if(option.stage===1){
+                                value = '您的项目中期阶段检查已通过！';
+                            }
+                            else if(option.stage===2){
+                                value = '您的项目结题验收已通过！';
+                            }
+                        }
+                        option.msg = value;
+                        option.verifier = 1;
+                        option.status = 1;
+                        changeStatus(option);
+                        layer.close(index);
+                    },
                     btn2: function(index, elem){
                         var value = layui.jquery('#layui-layer'+index + " .layui-layer-input").val();
+                        if(value===''){
+                            if(option.stage===1){
+                                value = '您的项目中期阶段检查未通过，进入待整改状态，请及时处理！';
+                            }
+                            else if(option.stage===2){
+                                value = '您的项目结题验收未通过，进入待整改状态，请及时处理！';
+                            }
+                        }
                         option.msg = value;
+                        option.verifier = 1;
                         option.status = 2;
                         changeStatus(option);
                         layer.close(index);
                     },
                     btnAlign: 'c',    // 设置按钮位置
-                }, function(value, index, elem){
-                    option.msg = value;
-                    option.status = 1;
-                    changeStatus(option);
-                    layer.close(index);
-                });
+                },);
 
             } else if (obj.event === 'view') {
                 alert("~~~");

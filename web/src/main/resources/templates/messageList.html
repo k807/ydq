@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>站内消息</title>
+    <link rel="stylesheet" href="../static/assets/layui/css/layui.css">
+    <script src="../static/assets/layui/layui.js" charset="utf-8"></script>
+    <script src="../static/js/privateMessage.js"></script>
+</head>
+<body onload="getList()">
+
+<div class="layui-tab layui-tab-brief" style="">
+    <ul class="layui-tab-title" style="width: 100%;">
+        <li class="layui-this"><span>公告</span></li>
+        <li><span>私信</span></li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100%;">
+        <!--公告，即OneToAll站内消息-->
+        <div class="layui-tab-item layui-show">
+            <ul class="layui-timeline" id="noticelist" style="margin:15px;padding:15px;background-color: white">
+            </ul>
+        </div>
+        <!--私信，即OneToOne站内消息-->
+        <div class="layui-tab-item" style="padding: 15px;background-color: #F2F2F2">
+            <div id="messageList">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="privatemessage" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <b style="font-size:22px;color: #393D49;">{{item.title}}</b>
+            <span style="font-size:14px;color:#01AAED;margin-left:10px;">{{item.date}}</span>
+        </div>
+        <div class="layui-card-body">
+            <i class="layui-icon layui-icon-username" style="font-size: 18px; color: #FFB800;"></i>
+            {{item.sender}}
+            <ul>
+                <li>{{item.content}}</li>
+                <li>{{item.remark}}</li>
+            </ul>
+        </div>
+    </div>
+    {{# }); }}
+    {{#  if(d.list.length === 0){ }}
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <b style="font-size:22px;color: #393D49;">无数据</b>
+        </div>
+        <div class="layui-card-body">
+            <ul>
+                <li>无数据</li>
+            </ul>
+        </div>
+    </div>
+    {{#  } }}
+</script>
+
+<script id="noticemessage" type="text/html">
+    {{# layui.each(d.list,function(index,item){ }}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis"></i>
+        <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title" style="font-size:20px;">{{item.date}}</h3>
+            <p>
+                <b style="font-size:20px;color:#009688;">{{item.title}}</b>
+                <br><span>{{item.content}}</span>
+                <br><span>{{item.remark}}</span>
+            </p>
+        </div>
+    </li>
+    {{# }); }}
+    {{#  if(d.list.length === 0){ }}
+    <li class="layui-timeline-item">
+        <i class="layui-icon layui-timeline-axis"></i>
+        <div class="layui-timeline-content layui-text">
+            <h3 class="layui-timeline-title" style="font-size:20px;">无数据</h3>
+        </div>
+    </li>
+    {{#  } }}
+</script>
+
+</body>
+</html>

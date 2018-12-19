@@ -35,3 +35,4 @@ function showTime(){
     document.getElementById("time1").innerHTML =  y+"-"+m+"-"+d+"   "+h+":"+minute+":"+s+"  "+ww;
 }
 setInterval(function() {showTime()},1000);
+

@@ -14,8 +14,15 @@
     <div class="layui-form-item">
         <label class="layui-form-label">消息标题</label>
         <div class="layui-input-block">
-            <input type="text" name="title" autocomplete="off" lay-verify="required"
-                   placeholder="请输入标题" value="默认标题" class="layui-input">
+            <select name="title" lay-verify="required" lay-filter="type">
+                <option value="无标题" selected="">请选择</option>
+                <option value="申报入口开放">申报入口开放</option>
+                <option value="中期检查说明">中期检查说明</option>
+                <option value="结题验收说明">结题验收说明</option>
+                <option value="申报不合格">申报不合格</option>
+                <option value="中期检查不合格">中期检查不合格</option>
+                <option value="结题验收不合格">结题验收不合格</option>
+            </select>
         </div>
     </div>
 
@@ -24,7 +31,7 @@
             <label class="layui-form-label">发送日期</label>
             <div class="layui-input-block">
                 <input id="date" type="text" autocomplete="off" class="layui-input"
-                       placeholder="yyyy-MM-dd HH:mm:ss"disabled>
+                       placeholder="yyyy-MM-dd HH:mm:ss" disabled>
             </div>
         </div>
         <div class="layui-inline">
@@ -42,7 +49,7 @@
                 <input type="text" name="receiver"
                        autocomplete="off"
                        placeholder="请输入"
-                       value="默认接收人"
+                       value="1"
                        class="layui-input">
             </div>
         </div>
@@ -50,7 +57,7 @@
             <label class="layui-form-label">发送人</label>
             <div class="layui-input-block">
                 <input type="text" name="sender"
-                       value="管理员"
+                       value="1"
                        class="layui-input" disabled>
             </div>
         </div>
@@ -110,34 +117,49 @@
                 success: function (result) {
                     console.log(result)
                     console.log(json)
-                    var updateTime = new Date().getTime();
-                    alert("发送成功")
-                    console.log(updateTime)
+                    // layer.msg("发送成功")
                 },
                 error: function (result) {
                     console.log(result)
                     console.log(json)
-                    alert("发送失败")
+                    // layer.msg("发送失败")
                 }
             })
             return false;
         });
-        function createTime() {
-            var date = new Date();
-            var year = date.getFullYear(); //获取当前年份
-            var mon = date.getMonth() + 1; //获取当前月份
-            var day = date.getDate(); //获取当前日
-            var h = date.getHours(); //获取小时
-            var m = date.getMinutes(); //获取分钟
-            var s = date.getSeconds(); //获取秒
-            // alert(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
-            var time = year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s;
-            $("#date").val(time);
-            return time;
-        }
 
-        setInterval(createTime, 1000);
+
     });
+    setInterval(function () {
+        $("#date").val(createTimeFormat())
+    }, 1000);
+    function createTimeFormat() {
+        var date = new Date();
+        var year = date.getFullYear(); //获取当前年份
+        var mon = date.getMonth() + 1; //获取当前月份
+        if(mon<10){
+            mon = "0"+mon;
+        }
+        var day = date.getDate(); //获取当前日
+        if(day<10){
+            day = "0"+day;
+        }
+        var h = date.getHours(); //获取小时
+        if(h<10){
+            h = "0"+h;
+        }
+        var m = date.getMinutes(); //获取分钟
+        if(m<10){
+            m = "0"+m;
+        }
+        var s = date.getSeconds(); //获取秒
+        if(s<10){
+            s = "0"+s;
+        }
+        // alert(year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s);
+        var time = year + '-' + mon + '-' + day + ' ' + h + ':' + m + ':' + s;
+        return time;
+    }
 
 
 </script>

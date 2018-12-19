@@ -3,15 +3,15 @@ layui.use('jquery', function () {
     $ = layui.$;
 
     $(function () {
-        nowTime = new Date().getTime()
+        getNow()
     })
-
     function checkUpdate() {
         $.ajax({
             type: "GET",
             url: "pm/checkUpdate",
             dataType: "json",
             success: function (result) {
+
                 var updateTime = new Date(result.date).getTime();
                 // console.log(updateTime)
                 // console.log(nowTime)
@@ -28,7 +28,14 @@ layui.use('jquery', function () {
         })
     }
 
-    setInterval(checkUpdate, 5000);
+    // setInterval(checkUpdate, 5000);
 });
+
+
+function getNow() {
+    nowTime = new Date().getTime()
+    // alert(nowTime)
+}
+
 
 

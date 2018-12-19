@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.cs.CheckStage;
-import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.CheckStageService;
@@ -18,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * author:Leo
@@ -105,17 +107,26 @@ public class StageController {
 
     @RequestMapping("/getByConditions")
     @ResponseBody
-    private BaseResponse getByConditions(@RequestParam(name = "name") String name,
-                                         @RequestParam(name = "leader") String leader,
-                                         @RequestParam(name = "status") int status,
-                                         @RequestParam(name = "stage") int stage,
-                                         @RequestParam(name = "createTime") String createTime,
-                                         @RequestParam(name = "endTime") String endTime){
-        Date createTimeStamp = DateUtil.strToDate(createTime,DateUtil.format1);
-        Date endTimeStamp = DateUtil.strToDate(endTime,DateUtil.format1);
-
-        System.out.println(name);
-        return new BaseResponse();
+    private BaseResponse getByConditions(@RequestParam(name = "name",defaultValue = "") String name,
+                                         @RequestParam(name = "leader", defaultValue = "") String leader,
+                                         @RequestParam(name = "status", defaultValue = "") String status,
+                                         @RequestParam(name = "stage", defaultValue = "1") int stage,
+                                         @RequestParam(name = "createTime",defaultValue = "1970-01-01 00:00:00") String createTime,
+                                         @RequestParam(name = "endTime",defaultValue = "2049-12-31 23:59:59") String endTime){
+        List<CheckStage> dataList = checkStageService.findByConditions(name,leader,stage,status,createTime,endTime);
+        List<JSONObject> decoratedDataList = new ArrayList<>();
+        for (CheckStage checkStage : dataList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", checkStage.getId());
+            jsonObject.put("name", checkStage.getProject().getName());
+            jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
+            jsonObject.put("stage", checkStage.getStage());
+            jsonObject.put("createTime", checkStage.getProject().getCreateTime());
+            jsonObject.put("status", checkStage.getStatus());
+            jsonObject.put("verifier", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
+            decoratedDataList.add(jsonObject);
+        }
+        return new BaseResponse(decoratedDataList);
     }
 
     @RequestMapping(value = "/denied",method = {RequestMethod.POST, RequestMethod.GET} )
@@ -134,10 +145,12 @@ public class StageController {
         Long stageCheckID = ((Integer) paramsMap.get("id")).longValue();
         String message = (String) paramsMap.get("msg");
         int stageStatus = (int) paramsMap.get("status");
+        int verifierId = (int)paramsMap.get("verifier");
+        User verifier = userRepository.getOne((long) verifierId);
         int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
         Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
         int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
-        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus);
+        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus,verifier);
         return new BaseResponse("change success!");
     }
 
@@ -158,6 +171,8 @@ public class StageController {
         Long stageCheckID = tempContainer.longValue();
         String message = (String) paramsMap.get("msg");
         int stageStatus = (int) paramsMap.get("status");
+        int verifierId = (int)paramsMap.get("verifier");
+        User verifier = userRepository.getOne((long) verifierId);
         int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
         Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
         int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
@@ -166,7 +181,7 @@ public class StageController {
             startFinal(projectID);
         }
         projectService.changeState(projectID,projectStatus);
-        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus);
+        checkStageService.changeProjectStatus(stageCheckID,message,stageStatus,verifier);
         return new BaseResponse("change success!");
     }
 
