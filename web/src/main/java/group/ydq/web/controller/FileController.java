@@ -9,7 +9,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
-import java.util.Objects;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -43,9 +42,9 @@ public class FileController {
         ProjectFile projectFile = new ProjectFile();
         projectFile.setUuid(uuid);
         projectFile.setName(filename);
+        projectFile.setUploadTime(new Date());
         FileUtil.upload(file, uuid);
-        fileService.upload(projectFile);
-        return RetResponse.success(fileService.getFile(uuid));
+        return RetResponse.success(fileService.upload(projectFile));
     }
 
     @RequestMapping("/getName")

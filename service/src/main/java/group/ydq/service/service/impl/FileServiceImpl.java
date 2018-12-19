@@ -18,8 +18,8 @@ public class FileServiceImpl extends BaseServiceImpl implements FileService {
     private FileRepository fileRepository;
 
     @Override
-    public void upload(ProjectFile file) {
-        fileRepository.save(file);
+    public ProjectFile upload(ProjectFile file) {
+        return fileRepository.saveAndFlush(file);
     }
 
     @Override

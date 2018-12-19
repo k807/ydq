@@ -7,7 +7,7 @@ import group.ydq.model.entity.dm.ProjectFile;
  * @date 2018/11/30 19:57
  */
 public interface FileService extends BaseService{
-    void upload(ProjectFile file);
+    ProjectFile upload(ProjectFile file);
 
     ProjectFile getFile(String uuid);
 

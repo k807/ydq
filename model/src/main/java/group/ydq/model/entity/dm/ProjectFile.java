@@ -1,6 +1,9 @@
 package group.ydq.model.entity.dm;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author Daylight
@@ -17,6 +20,10 @@ public class ProjectFile {
 
     private String name;
 
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date uploadTime;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -39,5 +46,13 @@ public class ProjectFile {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getUploadTime() {
+        return uploadTime;
+    }
+
+    public void setUploadTime(Date uploadTime) {
+        this.uploadTime = uploadTime;
     }
 }
