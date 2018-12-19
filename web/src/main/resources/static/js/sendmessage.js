@@ -7,3 +7,10 @@ function sendCheckRule(start, end, verifier, ruleContent) {
 
     return msg
 }
+
+function sendProjectRemark() {
+    var remark
+
+    return remark
+
+}

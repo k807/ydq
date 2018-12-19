@@ -59,6 +59,16 @@ public class PMcontroller {
         return messageServiceImpl.getPMList();
     }
 
+
+    /*
+     * 显示全部站内消息
+     * */
+    @GetMapping(value = "/getPMTable")
+    @ResponseBody
+    public Map<String, Object> getPMTable(int page, int limit) {
+        return messageServiceImpl.getPMTable(page, limit);
+    }
+
     /*
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数

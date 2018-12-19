@@ -1,5 +1,6 @@
 package group.ydq.service.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import group.ydq.model.dao.pm.MessageRepository;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.entity.pm.Message;
@@ -7,6 +8,9 @@ import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.MessageService;
 import group.ydq.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,8 +32,33 @@ public class MessageServiceImpl implements MessageService {
     private UserRepository userRepository;
 
     @Override
-    public List<Message> messageList() {
-        return messageRepository.findAllOrderByDate();
+    public Map<String, Object> getPMTable(int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        Page<Message> allList = messageRepository.findAll(pageable);
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("statusCode", 200);
+        map.put("count", messageRepository.findAll().size());
+
+
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (Message message : allList) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", message.getId());
+            m.put("title", message.getTitle());
+            m.put("date", DateUtil.dateToStr(message.getDate(), DateUtil.format4));
+            m.put("type", message.getType() == 0 ? "公告" : "消息");
+            m.put("content", message.getContent());
+            User sender = message.getSender();
+            User receiver = message.getReceiver();
+            m.put("sender", sender.getNick());
+            m.put("receiver", receiver.getNick());
+            m.put("remark", message.getRemark());
+            listMap.add(m);
+        }
+        map.put("object", listMap);
+
+        return map;
     }
 
     @Override
@@ -85,7 +114,7 @@ public class MessageServiceImpl implements MessageService {
             map.put("title", list.get(i).getTitle());
             map.put("type", list.get(i).getType());
             map.put("content", list.get(i).getContent());
-            map.put("remark", list.get(i).getRemark());
+            map.put("remark", JSONObject.parseObject(list.get(i).getRemark()));
             if (i < list.size() - 1 && list.get(i).getDate().getYear() == list.get(i + 1).getDate().getYear()) {
                 map.put("date", DateUtil.dateToStr(list.get(i).getDate(), DateUtil.format5));
             } else {

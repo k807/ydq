@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public interface MessageService {
 
-    List<Message> messageList();
+    Map<String, Object> getPMTable(int page,int limit);
 
     Message checkUpdate();
 
