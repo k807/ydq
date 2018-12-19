@@ -31,13 +31,16 @@
                 <!--<p id="time1" style="color: #000;"></p>-->
                 <!--<script src="time.js"></script>-->
                 <!--</li>-->
-                <li class="layui-nav-item" lay-unselect="" style="">
-                    <a id="red-dot" lay-href="pm/privatemessage" layadmin-event="message" lay-text="消息中心">
+                <li class="layui-nav-item " lay-unselect="" style="" >
+                    <a id="red-dot" layadmin-event="more">
+                        <i class="layui-icon layui-icon-notice"></i>
+                    </a>
+                   <!-- <a id="red-dot" onclick="getNow()"lay-href="pm/privatemessage" lay-text="消息中心">
                         <i class="layui-icon layui-icon-notice"></i>
 
-                        <!-- 如果有新消息，则显示小圆点 -->
-                        <!--<span class="layui-badge-dot"></span>-->
-                    </a>
+                        &lt;!&ndash; 如果有新消息，则显示小圆点 &ndash;&gt;
+                        &lt;!&ndash;<span class="layui-badge-dot"></span>&ndash;&gt;
+                    </a>-->
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a layadmin-event="theme">
@@ -54,7 +57,7 @@
                         <i class="layui-icon layui-icon-screen-full"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item" lay-unselect="" style="">
+                <li class="layui-nav-item" lay-unselect="" style="margin-right: 30px">
                     <a>
                         <cite>Admin</cite>
                         <span class="layui-nav-more"></span></a>
@@ -66,12 +69,6 @@
                     </dl>
                 </li>
 
-                <li class="layui-nav-item layui-hide-xs" lay-unselect="" style="">
-                    <a layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
-                </li>
-                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect="">
-                    <a layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
-                </li>
             </ul>
         </div>
 
@@ -96,6 +93,16 @@
                         <dl class="layui-nav-child">
                             <dd data-name="console" >
                                 <a lay-href="projectList.html">项目管理</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="pm/messageList">站内消息</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="pm/messageTable">消息管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">

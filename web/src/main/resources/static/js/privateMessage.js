@@ -1,6 +1,6 @@
 layui.use(['element', 'jquery'], function () {
-    var element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
-
+    var element = layui.element //Tab的切换功能，切换事件监听等，需要依赖element模块
+        ,admin = layui.admin
     element.on('tab(filter)', function (data) {
         console.log(this); //当前Tab标题所在的原始DOM元素
         console.log(data.index); //得到当前Tab的所在下标

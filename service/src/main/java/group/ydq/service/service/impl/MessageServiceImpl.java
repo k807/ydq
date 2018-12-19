@@ -93,8 +93,6 @@ public class MessageServiceImpl implements MessageService {
             }
             User sender = list.get(i).getSender();
             User receiver = list.get(i).getReceiver();
-            System.out.println(sender);
-            System.out.println(receiver);
             map.put("sender", sender.getNick());
             map.put("receiver", receiver.getNick());
             listMap.add(map);
