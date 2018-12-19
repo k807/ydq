@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.cs.CheckStage;
+import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.CheckStageService;
@@ -145,12 +146,16 @@ public class StageController {
         Long stageCheckID = ((Integer) paramsMap.get("id")).longValue();
         String message = (String) paramsMap.get("msg");
         int stageStatus = (int) paramsMap.get("status");
-        int verifierId = (int)paramsMap.get("verifier");
-        User verifier = userRepository.getOne((long) verifierId);
+        int verifierID = (int)paramsMap.get("verifier");
+        User verifier = userRepository.getOne((long) verifierID);  //获取审核人
+        Project project = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject();
+        Long projectID = project.getId();
+        User projectLeader = project.getLeader();
         int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
-        Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
+        String messageTitle = projectStage==1 ? "中期检查未通过": "结题验收未通过";
         int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
         checkStageService.changeProjectStatus(stageCheckID,message,stageStatus,verifier);
+        messageService.sendMessage(new Message(new Date(),1,messageTitle,message,"<a lay-href = '/project/getDetails/" + projectID + " '>项目详情</a>",verifier,projectLeader));
         return new BaseResponse("change success!");
     }
 
@@ -167,19 +172,22 @@ public class StageController {
          * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
          *
          * */
-        Integer tempContainer = (Integer) paramsMap.get("id");
-        Long stageCheckID = tempContainer.longValue();
+        Long stageCheckID = ((Integer) paramsMap.get("id")).longValue();
         String message = (String) paramsMap.get("msg");
         int stageStatus = (int) paramsMap.get("status");
-        int verifierId = (int)paramsMap.get("verifier");
-        User verifier = userRepository.getOne((long) verifierId);
+        int verifierID = (int)paramsMap.get("verifier");
+        User verifier = userRepository.getOne((long) verifierID);
         int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
-        Long projectID = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject().getId();
+        Project project = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject();
+        Long projectID = project.getId();
+        User projectLeader = project.getLeader();
         int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage,stageStatus);
         if(projectStage == 1){
             //如果项目处于中期的话，就进入结题验收阶段
             startFinal(projectID);
         }
+        String messageTitle = projectStage==1 ? "中期检查通过": "结题验收通过";
+        messageService.sendMessage(new Message(new Date(),1,messageTitle,message,"<a lay-href = '/project/getDetails/" + projectID + " '>项目详情</a>",verifier,projectLeader));
         projectService.changeState(projectID,projectStatus);
         checkStageService.changeProjectStatus(stageCheckID,message,stageStatus,verifier);
         return new BaseResponse("change success!");
