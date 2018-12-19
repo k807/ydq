@@ -69,7 +69,18 @@ layui.use(['jquery', 'table', 'form'], function () {
             {field: 'sender', title: "发送人"},
             {field: 'receiver', title: "接收人"},
             // {field: 'remark', title: "备注"},
-            {field: 'remark', title: '备注'},
+            {
+                field: 'remark', title: '备注'
+                , templet: function (row) {
+                    var obj = JSON.parse(row.remark)
+                    if (obj.hasOwnProperty("projectId")) {
+                        var id = "项目id:" + obj.projectId
+                        var a = "<a onclick=\"newTab('/project/getDetails/'+obj.projectId,obj.projectName)\">" + id + "</a>"
+                        return a
+                    } else
+                        return row.remark
+                }
+            },
             {fixed: 'right', title: '操作', align: 'center', toolbar: '#bar'}
         ]],
         page: true,

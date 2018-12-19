@@ -3,9 +3,9 @@ package group.ydq.model.entity.cs;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.rbac.User;
 
-
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * author:Leo

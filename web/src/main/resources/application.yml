@@ -19,7 +19,6 @@ spring:
       encoding: UTF-8
       servlet:
         content-type: text/html
-      mode: LEGACYHTML5
     servlet:
       multipart:
         max-file-size: 8MB

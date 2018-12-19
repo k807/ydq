@@ -23,14 +23,11 @@ public class AuthorityConfigurer {
     public AuthorityManager authorityManager(AuthorityChecker authorityChecker, PatternMatcher patternMatcher) {
         AuthorityManager manager = new AuthorityManager(authorityChecker, patternMatcher);
         manager.configureDefaultScanPath(new String[]{".*"});
-        manager.configureIndexPath("/");
-        manager.configureLoginPath("/login");
-        manager.configureLogoutPath("/login");
+        manager.configureIndexPath("/user/index");
+        manager.configureLoginPath("/user/login");
+        manager.configureLogoutPath("/user/logout");
         // 配置不受检查的路径 也可以使用@Unlimited注解
         manager.configureUnlimitedPath("/test/hello");
-        manager.configureUnlimitedPath("/login");
-        manager.configureUnlimitedPath("/authority/login");
-        manager.configureUnlimitedPath("/authority/addUser");
         // 支持注册监听器
         manager.registListener("logListener", new LogListener());
         return manager;
