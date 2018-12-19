@@ -19,104 +19,67 @@
         </div>
         <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-cellphone"></label>
-                <input type="text" name="stuNumber" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="学号" class="layui-input">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                       for="LAY-user-login-stuNumber"></label>
+                <input type="text" name="stuNumber" id="LAY-user-login-stuNumber" lay-verify="required" placeholder="学号"
+                       class="layui-input">
             </div>
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-                <input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码" class="layui-input">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                       for="LAY-user-login-password"></label>
+                <input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码"
+                       class="layui-input">
             </div>
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-repass"></label>
-                <input type="password" name="repass" id="LAY-user-login-repass" lay-verify="required" placeholder="确认密码" class="layui-input">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                       for="LAY-user-login-repass"></label>
+                <input type="password" name="repass" id="LAY-user-login-repass" lay-verify="required" placeholder="确认密码"
+                       class="layui-input">
             </div>
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-nickname"></label>
-                <input type="text" name="nickname" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="昵称" class="layui-input">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                       for="LAY-user-login-nickname"></label>
+                <input type="text" name="nickname" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="昵称"
+                       class="layui-input">
             </div>
             <div class="layui-form-item">
                 <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
             </div>
             <div class="layui-form-item">
-                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit">注 册</button>
+                <button id="btn_regist" class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit">注
+                    册
+                </button>
             </div>
             <div class="layui-trans layui-form-item layadmin-user-login-other">
                 <a href="login.html" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
-                <a href="login.html" class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
+                <a href="login.html"
+                   class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
             </div>
         </div>
     </div>
 </div>
 
-
-<!--<div class="login-main">-->
-    <!--<header class="layui-elip">注册页</header>-->
-    <!--<form class="layui-form" id="register-form">-->
-        <!--<div class="layui-input-inline">-->
-            <!--<input type="number" name="stuNumber" required lay-verify="required" placeholder="学生学号" autocomplete="off"-->
-                   <!--class="layui-input">-->
-        <!--</div>-->
-        <!--<div class="layui-input-inline">-->
-            <!--<input type="text" name="name" required lay-verify="required" placeholder="学生姓名" autocomplete="off"-->
-                   <!--class="layui-input">-->
-        <!--</div>-->
-        <!--<div class="layui-input-inline">-->
-            <!--<input type="text" name="college" required lay-verify="required" placeholder="所属学院" autocomplete="off"-->
-                   <!--class="layui-input">-->
-        <!--</div>-->
-        <!--<div class="layui-input-inline">-->
-            <!--<input type="text" name="department" required lay-verify="required" placeholder="所属部门" autocomplete="off"-->
-                   <!--class="layui-input">-->
-        <!--</div>-->
-        <!--<div class="layui-input-inline">-->
-            <!--<input type="text" name="major" required lay-verify="required" placeholder="专业名称" autocomplete="off"-->
-                   <!--class="layui-input">-->
-        <!--</div>-->
-        <!--<div class="layui-hide">-->
-            <!--<input type="hidden" name="channel" value="0" >-->
-        <!--</div>-->
-        <!--<div class="layui-input-inline">-->
-            <!--<input type="password" id="pwd" name="password" required lay-verify="required" placeholder="登陆密码" autocomplete="off"-->
-                   <!--class="layui-input">-->
-        <!--</div>-->
-        <!--<div class="layui-input-inline">-->
-            <!--<input type="password" id="cpwd" name="checkPassword" required lay-verify="required" placeholder="确认密码" autocomplete="off"-->
-                   <!--class="layui-input">-->
-        <!--</div>-->
-        <!--&lt;!&ndash; 对号 &ndash;&gt;-->
-        <!--<div class="layui-inline">-->
-            <!--<i class="layui-icon" id="rpri" style="color: green;font-weight: bolder;" hidden></i>-->
-        <!--</div>-->
-        <!--&lt;!&ndash; 错号 &ndash;&gt;-->
-        <!--<div class="layui-inline">-->
-            <!--<i class="layui-icon" id="rpwr" style="color: red; font-weight: bolder;" hidden>ဆ</i>-->
-        <!--</div>-->
-        <!--<div class="layui-input-inline login-btn">-->
-            <!--<button type="submit" class="layui-btn" lay-submit lay-filter="register" id="submit">注册</button>-->
-        <!--</div>-->
-    <!--</form>-->
-<!--</div>-->
 <script type="text/javascript" src="/assets/layui/layui.js"></script>
 <script type="text/javascript">
-    layui.use(['jquery','form','layer'],function(){
-        var $=layui.$;
-        var form=layui.form;
-        var layer=layui.layer;
-        $('#cpwd').blur(function() {
-            if($('#pwd').val() !== $('#cpwd').val()){
+    layui.use(['jquery', 'form', 'layer'], function () {
+        var $ = layui.$;
+        var form = layui.form;
+        var layer = layui.layer;
+        $('#cpwd').blur(function () {
+            if ($('#pwd').val() !== $('#cpwd').val()) {
                 $('#rpwr').removeAttr('hidden');
-                $('#rpri').attr('hidden','hidden');
+                $('#rpri').attr('hidden', 'hidden');
                 layer.msg('两次输入密码不一致!');
-            }else {
+            } else {
                 $('#rpri').removeAttr('hidden');
-                $('#rpwr').attr('hidden','hidden');
+                $('#rpwr').attr('hidden', 'hidden');
             }
         });
-        form.on('submit(register)',function(data) {
-            if($('#pwd').val() === $('#cpwd').val()) {
+        form.on('submit(register)', function (data) {
+            if ($('#pwd').val() === $('#cpwd').val()) {
                 $.ajax({
                     type: "post",
-                    url: "/user/register",
+                    url: "/authority/addUser",
                     data: data.field,
                     dataType: "json",
                     success: function (data) {
@@ -129,8 +92,34 @@
                 });
             }
             return false;
-        })
+        });
+        $("#btn_regist").click(function () {
+                var stuNumber = $("#LAY-user-login-stuNumber").val();
+                var password = $("#LAY-user-login-password").val();
+                var rpassword = $("#LAY-user-login-repass").val();
+                var nick = $("#LAY-user-login-nickname").val();
+                var json = {
+                    "nick": nick,
+                    "userNumber": stuNumber,
+                    "password": password
+                }
+                $.ajax({
+                    type: "post",
+                    url: "/authority/addUser",
+                    dataType: "json",
+                    data: json,
+                    success: function (data) {
+                        if (data.statusCode === 400) {
+                            layer.msg("注册失败");
+                        } else {
+                            window.location.href = "/login";//需要跳转的地址
+                        }
+                    }
+                });
+            }
+        )
     });
+
 </script>
 </body>
 </html>
