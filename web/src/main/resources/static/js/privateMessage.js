@@ -62,12 +62,12 @@ layui.use(['jquery', 'table', 'form'], function () {
         cols: [[
             // {type: 'checkbox', fixed: 'left'},
             // {field: 'id', hide: true},
-            {field: 'title', title: "标题"},
-            {field: 'type', title: "消息类型"},
-            {field: 'date', title: "发送日期"},
+            {field: 'title', title: "标题", sort: true},
+            {field: 'type', title: "消息类型", sort: true},
+            {field: 'date', title: "发送日期", sort: true},
             {field: 'content', title: "消息内容"},
-            {field: 'sender', title: "发送人"},
-            {field: 'receiver', title: "接收人"},
+            {field: 'sender', title: "发送人", sort: true},
+            {field: 'receiver', title: "接收人", sort: true},
             // {field: 'remark', title: "备注"},
             {
                 field: 'remark', title: '备注'
@@ -104,23 +104,24 @@ layui.use(['jquery', 'table', 'form'], function () {
         }
     });
     table.on('tool(table)', function (obj) {
+        var data = obj.data;
         if (obj.event === 'del') {
             layer.confirm('真的删除么', function (index) {
-                // layer.close(index);
-                // $.ajax({
-                //     type: "get",
-                //     url: "/project/delete",
-                //     data: {id: data.id},
-                //     dataType: 'json',
-                //     success: function (data) {
-                //         if (data.statusCode === "200") {
-                //             obj.del();
-                //             layer.msg("删除成功");
-                //         } else {
-                //             layer.msg("删除失败");
-                //         }
-                //     }
-                // })
+                layer.close(index);
+                $.ajax({
+                    type: "get",
+                    url: "/pm/delete",
+                    data: {id: data.id},
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.statusCode === "200") {
+                            obj.del();
+                            layer.msg("删除成功");
+                        } else {
+                            layer.msg("删除失败");
+                        }
+                    }
+                })
             });
         }
     });

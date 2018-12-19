@@ -73,6 +73,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public boolean isMsgExist(Long projectId) {
+        return messageRepository.existsById(projectId);
+    }
+
+
+    @Override
     public void deleteMessage(Long id) {
         messageRepository.deleteById(id);
     }

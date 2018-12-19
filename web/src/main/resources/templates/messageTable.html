@@ -8,16 +8,52 @@
     <script src="../static/js/privateMessage.js"></script>
 </head>
 <body>
-<div class="layui-fluid">
+<div style="padding: 15px">
     <div class="layui-card">
+        <div style="padding: 15px">
+            <form class="layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">标题:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">接收人:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="leader" placeholder="" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">消息类型:</label>
+                        <div class="layui-input-inline">
+                            <select id="stage" name="stage" lay-search>
+                                <option value="" selected="selected">请选择</option>
+                                <option value="0">公告</option>
+                                <option value="1">私信</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button type="submit" class="layui-btn" lay-submit lay-filter="search" id="submit">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
         <div class="layui-card-body">
             <table class="layui-hide" id="table" lay-filter="table"></table>
         </div>
+        <script type="text/html" id="bar">
+            <b style="text-decoration:underline;color:#01AAED" lay-event="del">删除</b>
+        </script>
     </div>
 </div>
-<script type="text/html" id="bar">
-    <b style="text-decoration:underline;color:#01AAED" lay-event="del">删除</b>
-</script>
+
 
 </body>
 </html>
