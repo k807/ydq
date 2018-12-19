@@ -41,18 +41,6 @@ public class StageController {
     @Resource
     private UserRepository userRepository;
 
-    @RequestMapping("/startMid")
-    private BaseResponse startMid(long projectId) {
-        checkStageService.startMid(projectId);
-        return new BaseResponse();
-    }
-
-    @RequestMapping("/startFinal")
-    private BaseResponse startFinal(long projectId) {
-        checkStageService.startFinal(projectId);
-        return new BaseResponse();
-    }
-
     @RequestMapping("/addRule")
     private BaseResponse addRule(@RequestBody Map<String, Object> msg) throws ParseException, NullPointerException {
         String title = (String) msg.get("title");
@@ -74,21 +62,10 @@ public class StageController {
         List<CheckStage> all = checkStageService.getCheckStageByStageStatus(1);
         ArrayList<JSONObject> dataList = new ArrayList<>();
 
-       /* for(int i = 0; i < all.size(); i++){
-            for (int j = i + 1; j < all.size(); j++){
-                if (all.get(i).getProject().getId().equals(all.get(j).getProject().getId())){
-                    if(all.get(i).getProject().getState() <= all.get(j).getProject().getState()){
-                        Collections.swap(all,i,j);
-                    }
-                    all.remove(j);
-                    j = j - 1;
-                }
-            }
-        }*/
-
         for (CheckStage checkStage : all) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", checkStage.getId());
+            jsonObject.put("pid", checkStage.getProject().getId());
             jsonObject.put("name", checkStage.getProject().getName());
             jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
             jsonObject.put("stage", checkStage.getStage());
@@ -182,7 +159,7 @@ public class StageController {
         int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage, stageStatus);
         if (projectStage == 1) {
             //如果项目处于中期的话，就进入结题验收阶段
-            startFinal(projectID);
+            checkStageService.startStage(projectID,projectStage);
         }
         String messageTitle = projectStage == 1 ? "中期检查通过" : "结题验收通过";
         Map remark = new HashMap();
