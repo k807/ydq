@@ -12,11 +12,13 @@ import java.util.Map;
  */
 public interface MessageService {
 
-    Map<String, Object> getPMTable(int page,int limit);
+    Map<String, Object> getPMTable(int page, int limit);
 
     Message checkUpdate();
 
     Message sendMessage(Message newMessage);
+
+    boolean isMsgExist(Long projectId);
 
     void deleteMessage(Long id);
 
