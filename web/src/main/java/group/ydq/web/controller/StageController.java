@@ -93,6 +93,7 @@ public class StageController {
         for (CheckStage checkStage : all) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", checkStage.getId());
+            jsonObject.put("pid", checkStage.getProject().getId());
             jsonObject.put("name", checkStage.getProject().getName());
             jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
             jsonObject.put("stage", checkStage.getStage());
