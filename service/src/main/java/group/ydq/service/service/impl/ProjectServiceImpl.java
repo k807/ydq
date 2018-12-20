@@ -3,7 +3,7 @@ package group.ydq.service.service.impl;
 import group.ydq.model.dao.dm.ExpertRepository;
 import group.ydq.model.dao.dm.ProjectRepository;
 import group.ydq.model.dao.rbac.UserRepository;
-import group.ydq.model.entity.dm.ExpertProject;
+import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.ProjectService;
 import org.springframework.data.domain.Page;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,22 +63,48 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     @Override
     public Page<Project> getProjectsOfManager(int page, int limit,String userNumber) {
         Pageable pageable= PageRequest.of(page-1,limit);
-        return projectRepository.findProjectsByManagerAndSubmit(pageable,userRepository.findByUserNumber(userNumber),true);
+        return projectRepository.findProjectsByManagerAndSubmitTrue(pageable,userRepository.findByUserNumber(userNumber));
     }
 
     @Override
-    public Page<ExpertProject> getProjectOfExpert(int page, int limit, String userNumber) {
+    public Page<Project> getProjectsOfManagerInDeclareStage(int page, int limit, String userNumber) {
+        Pageable pageable= PageRequest.of(page-1,limit);
+        return projectRepository.findProjectsByManagerAndSubmitTrueAndStateBetween(pageable,userRepository.findByUserNumber(userNumber),0,6);
+    }
+
+    @Override
+    public Page<ExpertReview> getProjectOfExpert(int page, int limit, String userNumber) {
         Pageable pageable=PageRequest.of(page-1,limit);
         return expertRepository.findExpertProjectsByExpert(pageable,userRepository.findByUserNumber(userNumber));
     }
 
     @Override
     public void changeState(long projectId, int state) {
-        projectRepository.changeState(projectId, state);
+        projectRepository.changeState(projectId, state,new Date());
     }
 
     @Override
     public void deleteProject(long id) {
         projectRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ExpertReview> getExpertReviews(long projectId) {
+        return expertRepository.findExpertReviewsByProject(projectRepository.getOne(projectId));
+    }
+
+    @Override
+    public ExpertReview getExpertReview(long id) {
+        return expertRepository.getOne(id);
+    }
+
+    @Override
+    public boolean isAllExpertsMarked(long projectId) {
+        return expertRepository.existsExpertReviewByProjectAndMarkTrue(projectRepository.getOne(projectId));
+    }
+
+    @Override
+    public void saveReview(ExpertReview review) {
+        expertRepository.save(review);
     }
 }

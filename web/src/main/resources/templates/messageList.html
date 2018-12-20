@@ -40,10 +40,15 @@
             {{item.sender}}
             <ul>
                 <li>{{item.content}}</li>
-                <li>{{item.remark}}</li>
+                {{# if(item.remark !=null&&item.remark.hasOwnProperty("projectId")) { }}
+                <li>
+                    <a onclick="newTab('/project/getDetails/{{item.remark.projectId}}','{{item.remark.projectName}}')">项目详情</a>
+                </li>
+                {{# } }}
             </ul>
         </div>
     </div>
+
     {{# }); }}
     {{#  if(d.list.length === 0){ }}
     <div class="layui-card">
@@ -68,7 +73,7 @@
             <p>
                 <b style="font-size:20px;color:#009688;">{{item.title}}</b>
                 <br><span>{{item.content}}</span>
-                <br><span>{{item.remark}}</span>
+
             </p>
         </div>
     </li>
@@ -83,5 +88,14 @@
     {{#  } }}
 </script>
 
+<script>
+    function newTab(url, tit) {
+        if (top.layui.index) {
+            top.layui.index.openTabsPage(url, tit)
+        } else {
+            window.open(url)
+        }
+    }
+</script>
 </body>
 </html>

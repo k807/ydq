@@ -7,6 +7,7 @@ import group.ydq.utils.DateUtil;
 import group.ydq.utils.RetResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,6 +45,19 @@ public class RuleController {
         }
         model.addAttribute("list",list);
         return "ruleList";
+    }
+
+    @RequestMapping("/get/{id:.+}")
+    public String getRule(@PathVariable long id, Model model){
+        DeclareRule rule=declareService.getRule(id);
+        model.addAttribute("id",rule.getId());
+        model.addAttribute("title",rule.getTitle());
+        model.addAttribute("startTime", DateUtil.dateToStr(rule.getStartTime(),DateUtil.format2));
+        model.addAttribute("endTime",DateUtil.dateToStr(rule.getEndTime(),DateUtil.format2));
+        model.addAttribute("content",rule.getRuleContent());
+        model.addAttribute("major",rule.getMajor());
+        model.addAttribute("publisher",rule.getPublisher().getId());
+        return "ruleContent";
     }
 
     @RequestMapping("/add")

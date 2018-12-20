@@ -3,9 +3,9 @@ package group.ydq.model.entity.cs;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.rbac.User;
 
-
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * author:Leo
@@ -25,8 +25,6 @@ public class CheckStage {
     private Date startTime;
 
     private Date endTime;
-
-    private boolean uploadStatus;   //材料是否上传
 
     private int status;  // 所处阶段审核状态 0-未审核   1-已通过   2-未通过
 
@@ -75,14 +73,6 @@ public class CheckStage {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
-    }
-
-    public boolean isUploadStatus() {
-        return uploadStatus;
-    }
-
-    public void setUploadStatus(boolean uploadStatus) {
-        this.uploadStatus = uploadStatus;
     }
 
     public int getStatus() {

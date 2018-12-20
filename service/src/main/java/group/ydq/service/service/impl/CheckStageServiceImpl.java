@@ -58,32 +58,18 @@ public class CheckStageServiceImpl implements CheckStageService {
     }
 
     @Override
-    public void startMid(Long projectId) {
+    public void startStage(Long projectId,int stage) {
         CheckStage cs = new CheckStage();
         Project p = projectService.getProject(projectId);
         User u = userRepository.getOne(10000L);
         cs.setProject(p);
         cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(1);
+        cs.setStage(stage);
         cs.setStatus(0);
         cs.setVerifiers(u);
         save(cs);
     }
 
-    @Override
-    public void startFinal(Long projectId) {
-        CheckStage cs = new CheckStage();
-        Project p = projectService.getProject(projectId);
-        User u = userRepository.getOne(10000L);
-        cs.setProject(p);
-        cs.setStartTime(new Date());
-        cs.setUploadStatus(false);
-        cs.setStage(2);
-        cs.setStatus(0);
-        cs.setVerifiers(u);
-        save(cs);
-    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -107,8 +93,8 @@ public class CheckStageServiceImpl implements CheckStageService {
     }
 
     @Override
-    public void changeProjectStatus(Long stageCheckID, String adviceMessage, int changeToThisStatus, User verifierId) {
-        stageDao.changeProjectStatus(stageCheckID,adviceMessage,changeToThisStatus,verifierId);
+    public void changeVerifyMessage(Long stageCheckID, String adviceMessage, int changeToThisStatus, User verifierId, Date endTime) {
+        stageDao.changeVerifyMessage(stageCheckID,adviceMessage,changeToThisStatus,verifierId,endTime);
     }
 
     @Override
