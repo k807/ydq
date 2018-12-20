@@ -61,7 +61,6 @@ public class StageController {
     private BaseResponse getAll() throws NullPointerException {
         List<CheckStage> all = checkStageService.getCheckStageByStageStatus(1);
         ArrayList<JSONObject> dataList = new ArrayList<>();
-
         for (CheckStage checkStage : all) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", checkStage.getId());
@@ -71,7 +70,11 @@ public class StageController {
             jsonObject.put("stage", checkStage.getStage());
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
             jsonObject.put("status", checkStage.getStatus());
-            jsonObject.put("verifier", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
+            if(null == checkStage.getVerifiers()){
+                jsonObject.put("verifier", "暂时还没有人审核");
+            }else{
+                jsonObject.put("verifier", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
+            }
             dataList.add(jsonObject);
         }
         return new BaseResponse(dataList);
@@ -102,74 +105,59 @@ public class StageController {
         return new BaseResponse(decoratedDataList);
     }
 
-    @RequestMapping(value = "/denied", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping("/changeState")
     @ResponseBody
-    //这个接口用于处理审核未通过的项目的内容
-    private BaseResponse changeToUnpassed(@RequestBody Map<String, Object> paramsMap) {
-
+    //这个接口用于并处理接收审核的数据
+    private BaseResponse changeState(@RequestBody Map<String, Object> paramsMap){
         /*
-         * stageCheckID --> StageCheck表中的主键ID
-         * stageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
-         * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
-         * projectID --> 根据CheckStage表中的ID得出的项目ID编号
-         * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
+         * checkStageID --> StageCheck表中的主键ID
+         * checkStageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
+         * checkStageCode --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
+         * checkMessage --> 将要写入数据库中的审核消息
+         * beingVerifiedProjStatusCode --> Project表中的项目状态代码，共11种，可以由checkStageStatus和checkStageCode共同得出
+         * messageTitle --> 发送的消息的标题
          *
          * */
-        Long stageCheckID = ((Integer) paramsMap.get("id")).longValue();
-        String message = (String) paramsMap.get("msg");
-        int stageStatus = (int) paramsMap.get("status");
-        int verifierID = (int) paramsMap.get("verifier");
-        User verifier = userRepository.getOne((long) verifierID);  //获取审核人
-        Project project = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject();
-        User projectLeader = project.getLeader();
-        int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
-        String messageTitle = projectStage == 1 ? "中期检查未通过" : "结题验收未通过";
-        int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage, stageStatus);
-        checkStageService.changeProjectStatus(stageCheckID, message, stageStatus, verifier);
-        Map remark = new HashMap();
-        remark.put("projectId", project.getId());
-        remark.put("projectName", project.getName());
-        String remarkJson = JSONObject.toJSON(remark).toString();
-        messageService.sendMessage(new Message(new Date(), 1, messageTitle, message, remarkJson, verifier, projectLeader));
-        return new BaseResponse("change success!");
-    }
 
-
-    @RequestMapping(value = "/accepted", method = {RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
-    //这个接口用于处理审核通过的项目
-    private BaseResponse changeToPassed(@RequestBody Map<String, Object> paramsMap) {
-        /*
-         * stageCheckID --> StageCheck表中的主键ID
-         * stageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
-         * projectStage --> StageCheck表中的阶段代码  1表示中期，2表示结题验收
-         * projectID --> 根据CheckStage表中的ID得出的项目ID编号
-         * projectStatus --> Project表中的项目状态代码，共11种，可以由projectStage和stageStatus共同得出
-         *
-         * */
-        Long stageCheckID = ((Integer) paramsMap.get("id")).longValue();
-        String message = (String) paramsMap.get("msg");
-        int stageStatus = (int) paramsMap.get("status");
-        int verifierID = (int) paramsMap.get("verifier");
-        User verifier = userRepository.getOne((long) verifierID);
-        int projectStage = (int) paramsMap.get("stage");//审核没有通过不必更改项目所处的阶段，但是留着这个可能还会有用……
-        Project project = checkStageService.findACheckStageByCheckStageID(stageCheckID).getProject();
-        Long projectID = project.getId();
-        User projectLeader = project.getLeader();
-        int projectStatus = StageCheckStatusToProjStatus.changeToProjectStatus(projectStage, stageStatus);
-        if (projectStage == 1) {
-            //如果项目处于中期的话，就进入结题验收阶段
-            checkStageService.startStage(projectID,projectStage);
+        Long checkStageID = ((Integer)paramsMap.get("id")).longValue();
+        String checkMessage = (String) paramsMap.get("msg");
+        int checkStageCode = (int) paramsMap.get("stage");
+        int checkStageStatus = (int) paramsMap.get("status");
+        Long verifierID = ((Integer) paramsMap.get("verifier")).longValue();
+        String messageTitle = null;
+        CheckStage toBeChangedCheckStage = checkStageService.findACheckStageByCheckStageID(checkStageID);
+        Project project = toBeChangedCheckStage.getProject();
+        User verifier = userRepository.getOne(verifierID);
+        int beingVerifiedProjStatusCode = StageCheckStatusToProjStatus.changeToProjectStatus(checkStageCode,checkStageStatus);
+        Date endTime = null;
+        switch (beingVerifiedProjStatusCode){
+            case 7:
+                messageTitle = "中期审核未通过！";
+                break;
+            case 8:
+                messageTitle = "中期审核已经通过！";
+                endTime = new Date(System.currentTimeMillis());
+                checkStageService.startStage(project.getId(),2);
+                break;
+            case 9:
+                messageTitle = "结题验收未通过！";
+                break;
+            case 10:
+                endTime = new Date(System.currentTimeMillis());
+                messageTitle = "结题验收已经通过！";
+                break;
+            default:
+                messageTitle = "未定义的项目状态！";
+                break;
         }
-        String messageTitle = projectStage == 1 ? "中期检查通过" : "结题验收通过";
-        Map remark = new HashMap();
-        remark.put("projectId", project.getId());
-        remark.put("projectName", project.getName());
-        String remarkJson = JSONObject.toJSON(remark).toString();
-        messageService.sendMessage(new Message(new Date(), 1, messageTitle, message, remarkJson, verifier, projectLeader));
-        projectService.changeState(projectID, projectStatus);
-        checkStageService.changeProjectStatus(stageCheckID, message, stageStatus, verifier);
-        return new BaseResponse("change success!");
+        projectService.changeState(project.getId(), beingVerifiedProjStatusCode);
+        checkStageService.changeVerifyMessage(checkStageID, checkMessage, checkStageStatus, verifier,endTime);
+        JSONObject remarkJson = new JSONObject();
+        remarkJson.put("projectId", project.getId());
+        remarkJson.put("projectName", project.getName());
+        messageService.sendMessage(new Message(new Date(), 1, messageTitle, checkMessage, JSONObject.toJSONString(remarkJson), verifier, project.getLeader()));
+        //System.out.println(checkStageID + checkMessage + checkStageCode + checkStageStatus + verifierID);
+        return new BaseResponse("Change success!");
     }
 
 }

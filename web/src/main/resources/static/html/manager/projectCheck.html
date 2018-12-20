@@ -245,15 +245,9 @@
         }
 
         function changeStatus(option) {
-            var url = null;
-            if(option.status === 1){
-                url = '/stage/accepted'
-            }else if(option.status === 2){
-                url = '/stage/denied'
-            }
             $.ajax({
                 type: 'POST',
-                url: url,
+                url: '/stage/changeState',
                 contentType: 'application/json;charset=UTF-8',
                 data: JSON.stringify(option),
                 dataType: 'json',
