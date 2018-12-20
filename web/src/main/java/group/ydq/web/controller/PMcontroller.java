@@ -1,9 +1,11 @@
 package group.ydq.web.controller;
 
 import group.ydq.model.dao.rbac.UserRepository;
+import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.impl.MessageServiceImpl;
+import group.ydq.utils.RetResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +61,16 @@ public class PMcontroller {
         return messageServiceImpl.getPMList();
     }
 
+
+    /*
+     * 显示全部站内消息
+     * */
+    @GetMapping(value = "/getPMTable")
+    @ResponseBody
+    public Map<String, Object> getPMTable(int page, int limit) {
+        return messageServiceImpl.getPMTable(page, limit);
+    }
+
     /*
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数
@@ -73,11 +85,14 @@ public class PMcontroller {
         return messageServiceImpl.sendMessage(messageOne);
     }
 
-    @GetMapping(value = "/delete/{id}")
+    @GetMapping(value = "/delete")
     @ResponseBody
-    public void deleteMessage(Long id) {
-        messageServiceImpl.deleteMessage(id);
+    public BaseResponse deleteProject(Long id) {
+        if (messageServiceImpl.isMsgExist(id)) {
+            messageServiceImpl.deleteMessage(id);
+            return RetResponse.success();
+        }
+        return RetResponse.error();
     }
-
 
 }
