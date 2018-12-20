@@ -31,16 +31,16 @@
                 <!--<p id="time1" style="color: #000;"></p>-->
                 <!--<script src="time.js"></script>-->
                 <!--</li>-->
-                <li class="layui-nav-item " lay-unselect="" style="" >
+                <li class="layui-nav-item " lay-unselect="" style="">
                     <a id="red-dot" layadmin-event="more">
                         <i class="layui-icon layui-icon-notice"></i>
                     </a>
-                   <!-- <a id="red-dot" onclick="getNow()"lay-href="pm/privatemessage" lay-text="消息中心">
-                        <i class="layui-icon layui-icon-notice"></i>
+                    <!-- <a id="red-dot" onclick="getNow()"lay-href="pm/privatemessage" lay-text="消息中心">
+                         <i class="layui-icon layui-icon-notice"></i>
 
-                        &lt;!&ndash; 如果有新消息，则显示小圆点 &ndash;&gt;
-                        &lt;!&ndash;<span class="layui-badge-dot"></span>&ndash;&gt;
-                    </a>-->
+                         &lt;!&ndash; 如果有新消息，则显示小圆点 &ndash;&gt;
+                         &lt;!&ndash;<span class="layui-badge-dot"></span>&ndash;&gt;
+                     </a>-->
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a layadmin-event="theme">
@@ -91,22 +91,22 @@
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
-                            <dd data-name="console" >
+                            <dd data-name="console">
                                 <a lay-href="/html/teacher/projectList.html">项目管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
-                            <dd data-name="console" >
+                            <dd data-name="console">
                                 <a lay-href="/html/manager/projectList.html">项目申报管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
-                            <dd data-name="console" >
+                            <dd data-name="console">
                                 <a lay-href="pm/messageList">站内消息</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
-                            <dd data-name="console" >
+                            <dd data-name="console">
                                 <a lay-href="pm/messageTable">消息管理</a>
                             </dd>
                         </dl>
@@ -123,6 +123,11 @@
                         <dl class="layui-nav-child">
                             <dd data-name="console">
                                 <a href="javascript:openEntrance()">项目申报</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/html/rbac/rbac.html">权限管理</a>
                             </dd>
                         </dl>
                     </li>
@@ -168,6 +173,7 @@
     }).extend({
         index: 'lib/index' //主入口模块
     }).use('index');
+
     function openEntrance() {
         layui.use(['layer'], function () {
             var layer = layui.layer;
@@ -176,7 +182,7 @@
                 title: '申报入口',
                 shadeClose: true,
                 shade: 0.8,
-                area: ['30%','75%'],
+                area: ['30%', '75%'],
                 content: '/rule/list'
             });
         })

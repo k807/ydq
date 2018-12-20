@@ -1,6 +1,7 @@
 package group.ydq.model.entity.rbac;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * =============================================
@@ -73,8 +74,29 @@ public class User {
                 ", nick='" + nick + '\'' +
                 ", userNumber='" + userNumber + '\'' +
                 ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
                 ", role=" + role +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(nick, user.nick) &&
+                Objects.equals(userNumber, user.userNumber) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(role, user.role);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, nick, userNumber, password, role);
     }
 }

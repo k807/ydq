@@ -1,12 +1,9 @@
 package group.ydq.model.entity.rbac;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * =============================================
@@ -24,10 +21,6 @@ public class Permission {
     private String name;
 
     private String path;
-
-    @ManyToMany
-    @JsonIgnore
-    private List<Role> roleList;
 
     public Long getId() {
         return id;
@@ -53,11 +46,24 @@ public class Permission {
         this.path = path;
     }
 
-    public List<Role> getRoleList() {
-        return roleList;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Permission that = (Permission) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(path, that.path);
     }
 
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, path);
     }
 }

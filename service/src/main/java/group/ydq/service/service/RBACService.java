@@ -4,10 +4,14 @@ import group.ydq.model.entity.rbac.Permission;
 import group.ydq.model.entity.rbac.Role;
 import group.ydq.model.entity.rbac.User;
 
+import java.util.List;
+
 public interface RBACService extends BaseService {
     Permission[] getPermissionByRoleName(String roleName);
 
-    User getRoleByUserNumber(String userNumber);
+    Role getRoleByUserNumber(String userNumber);
+
+    Role getRoleByRoleName(String roleName);
 
     void addRole(Role role);
 
@@ -21,9 +25,25 @@ public interface RBACService extends BaseService {
 
     void updateUser(User user);
 
+    void updateUserExcludeRole(User user);
+
     void deleteUser(User user);
 
     void deleteRole(Role role);
 
     void deletePermission(Permission permission);
+
+    User getUserByUserNumber(String userNumber);
+
+    Role getRoleById(Long id);
+
+    Permission getPermssionById(Long id);
+
+    Permission getPermissionByPermissionName(String name);
+
+    List<User> getUsersByRole(Role role);
+
+    List<Role> getAllRoles();
+
+    List<Permission> getAllPermissions();
 }

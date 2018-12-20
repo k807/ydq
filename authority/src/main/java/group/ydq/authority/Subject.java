@@ -2,6 +2,8 @@ package group.ydq.authority;
 
 import group.ydq.authority.exception.ModifyIllegalException;
 
+import java.util.Objects;
+
 /**
  * =============================================
  *
@@ -64,5 +66,31 @@ public class Subject {
         if (isLogin) {
             throw new ModifyIllegalException();
         }
+    }
+
+    @Override
+    public int hashCode() {
+        if (Objects.isNull(this.getPrincipal())) {
+            return super.hashCode();
+        }
+        return this.getPrincipal().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Subject) {
+            Subject other = (Subject) obj;
+            if (this == obj) {
+                return true;
+            }
+            if (Objects.isNull(this.getPrincipal())) {
+                return super.equals(obj);
+            }
+            if (Objects.isNull(other.getPrincipal())) {
+                return false;
+            }
+            return this.getPrincipal().equals(other.getPrincipal());
+        }
+        return false;
     }
 }
