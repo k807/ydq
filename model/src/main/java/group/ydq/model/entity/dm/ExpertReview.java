@@ -9,7 +9,7 @@ import javax.persistence.*;
  * @date 2018/11/28 18:26
  */
 @Entity
-public class ExpertProject {
+public class ExpertReview {
     @Id
     @GeneratedValue
     private Long id;

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>规则详情</title>
+    <link rel="stylesheet" href="/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/assets/style/admin.css">
+</head>
+<body>
+<div style="padding: 10px">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <blockquote class="layui-elem-quote layui-quote-nm" th:switch="${major}">
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px" th:case="0">
+                    <span style="color: black">所属学科：</span><span>计算机科学与技术</span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px" th:case="1">
+                    <span style="color: black">所属学科：</span><span>电子信息工程</span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px" th:case="2">
+                    <span style="color: black">所属学科：</span><span>电子信息科学与技术</span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px" th:case="3">
+                    <span style="color: black">所属学科：</span><span>数字媒体技术</span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px">
+                    <span style="color: black">起始时间：</span><span th:text="${startTime}"></span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px">
+                    <span style="color: black">截止时间：</span><span th:text="${endTime}"></span></p>
+                <fieldset class="layui-elem-field" style="margin-top: 10px">
+                    <legend style="color: black;font-size: 14px">申报规则</legend>
+                    <div class="layui-field-box" th:if="${content!=''}" th:utext="${content}"></div>
+                    <div class="layui-field-box" th:if="${content==''}"><span style="color: black">空空如也~~</span>
+                    </div>
+                </fieldset>
+            </blockquote>
+        </div>
+    </div>
+</div>
+<script src="/assets/layui/layui.js"></script>
+<script>
+    layui.use('layer',function(){
+        var layer=layui.layer;
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.iframeAuto(index);
+    })
+</script>
+</body>

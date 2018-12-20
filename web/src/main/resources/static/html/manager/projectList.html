@@ -81,20 +81,29 @@
 
         <script type="text/html" id="bar">
             <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail">查看详情</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit">编辑</a>
-            {{#  if(d.state == -1){ }}
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            {{#  if(d.state == 0){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="verify">审核</a>
+            {{# }else if (d.state==1){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="distribute">分配专家</a>
+            {{# }else if (d.state==4){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="approval">立项</a>
             {{#  } }}
         </script>
     </div>
 </div>
 <script src="/assets/layui/layui.js"></script>
 <script>
-    layui.use(['table','layer','laydate','jquery'],function(){
+    layui.config({
+        base:'/assets/'
+    }).extend({
+        selectPlus:'lib/selectPlus'
+    }).use(['table','layer','laydate','jquery','selectPlus'],function(){
         var $ = layui.$;
         var table = layui.table;
         var laydate = layui.laydate;
-        var form = layui.form;
+        var layer=layui.layer;
+        var selectPlus=layui.selectPlus;
+
         laydate.render({
             elem: '#start',
             type: 'datetime'
@@ -104,6 +113,8 @@
             type: 'datetime'
         });
 
+
+
         var tableIns = table.render({
             elem: '#table',
             toolbar: '#toolbar',
@@ -111,16 +122,18 @@
             cols: [
                 [
                     {type: 'checkbox', fixed: 'left'},
-                    {field: 'id',title:'ID',width:60, hide: true},
-                    {field: 'name', title: "项目名称",width:150},
-                    {field:'leader',title:"负责人",width:120,sort:true},
-                    {field:'level',title:'项目级别',width:150,templet:function(d){
+                    {field: 'id',title:'ID',width:60, sort:true,hide: true},
+                    {field: 'name', title: "项目名称"},
+                    {field:'leader',title:"负责人",width:120,sort:true,templet:function (d) {
+                            return d.leader.nick
+                        }},
+                    {field:'level',title:'项目级别',width:100,templet:function(d){
                         switch (d.level){
                             case 0:return "校级一类";
                             case 1:return "校级二类";
                         }
                     }},
-                    {field: 'major', title: "所属专业",width:150,sort:true,templet:function(d){
+                    {field: 'major', title: "所属专业",width:180,sort:true,templet:function(d){
                         switch (d.major){
                             case 0:return '计算机科学与技术';
                             case 1:return '电子信息工程';
@@ -128,30 +141,32 @@
                             case 3:return '数字媒体技术';
                         }
                     }},
-                    {field:'experts',title:'分配专家',width:150,templet:function(d){
+                    {field:'experts',title:'分配专家',templet: function(d){
                         if (d.experts.length===0)
                             return "尚未分配";
                         else{
-                            var expert;
+                            var expert='';
                             for (var i=0;i<d.experts.length-1;i++){
                                 expert+=d.experts[i].nick+"、"
                             }
-                            expert+=d.experts[d.experts.length-1];
-                        }
-                    }},
-                    {field: 'createTime', title: "创建时间",width:180,sort:true},
-                    {field: 'updateTime', title: "更新时间",width:180,sort:true},
+                            expert+=d.experts[d.experts.length-1].nick;
+                            return expert;
+                        }}
+                    },
+                    {field: 'createTime', title: "创建时间",width:170,sort:true},
+                    {field: 'updateTime', title: "更新时间",width:170,sort:true},
                     {field: 'state',title:'状态',width:120,sort:true,templet:function(d){
                         switch(d.state){
                             case 0:return '审核中';
                             case 1:return '初审通过';
-                            case 2:return '立项评审中';
-                            case 3:return '立项评审完成';
-                            case 4:return '已立项';
+                            case 2:return '初审未通过';
+                            case 3:return '立项评审中';
+                            case 4:return '立项评审完成';
+                            case 5:return '已立项';
+                            case 6:return '不立项';
                         }
                     }},
-                    {field:'remark',title:'备注'},
-                    {fixed: 'right', title: '操作',width:200, align: 'center', toolbar: '#bar'}
+                    {title: '操作', toolbar: '#bar',width:160}
                 ]
             ],
             text: {
@@ -176,57 +191,53 @@
 
         table.on('tool(table)', function (obj) {
             var data = obj.data;
-            var tr=obj.tr;
-            var remark=tr.children('td').eq(8);
-            var btn=tr.children('td').eq(9).children('div').children('a').eq(1);
-            if (obj.event==='detail'){
-                newTab('/project/getDetails/'+obj.data.id,obj.data.name);
-            } else if (obj.event === 'del') {
-                layer.confirm('真的删除么', function (index) {
-                    layer.close(index);
-                    $.ajax({
-                        type: "get",
-                        url: "/project/delete",
-                        data: {id:data.id},
-                        dataType: 'json',
-                        success: function (data) {
-                            if (data.statusCode === "200") {
-                                obj.del();
-                                layer.msg("删除成功");
-                            } else {
-                                layer.msg("删除失败");
-                            }
-                        }
-                    })
-                });
-            } else if (obj.event === 'edit') {
-                $(remark).attr("data-edit",'text');
-                $(remark).unbind();
-                $(btn).text('保存');
-                $(btn).attr('lay-event','save')
-            } else if (obj.event==='save'){
-                $(remark).removeAttr("data-edit");
-                $(remark).click(function(){return false});
-                $(btn).text('编辑');
-                $(btn).attr('lay-event','edit');
 
-                $.ajax({
-                    type:'post',
-                    url:'/project/save',
-                    data:JSON.stringify(data),
-                    dataType:'json',
-                    contentType:'application/json',
-                    success:function(res){
-                        if (res.statusCode==='200'){
-                            obj.update({
-                                updateTime:res.object
-                            });
-                            layer.msg("保存成功");
-                        }
+            if (obj.event==='detail'){
+                newTab('/project/getDetails/'+data.id,data.name);
+            } else if (obj.event === 'distribute'){
+                layer.open({
+                    type: 2,
+                    title: '分配专家',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['30%', '75%'],
+                    content: '/rule/list'
+                });
+            } else if (obj.event==='verify'){
+                layer.confirm('是否通过审核？', {
+                    btn: ['通过', '不通过', '取消'] //可以无限个按钮
+                    ,btn3: function(index, layero){
+                        layer.close(index);
                     }
-                })
+                }, function(index, layero){
+                    changeState(data.id,1);
+                    layer.close(index);
+                }, function(index){
+                    changeState(data.id,2);
+                    layer.close(index);
+                });
+            } else if (obj.event==='approval'){
+                layer.confirm('是否立项？', {
+                    btn: ['立项', '不立项', '取消'] //可以无限个按钮
+                    ,btn3: function(index, layero){
+                        layer.close(index);
+                    }
+                }, function(index, layero){
+                    changeState(data.id,5);
+                    layer.close(index);
+                }, function(index){
+                    changeState(data.id,6);
+                    layer.close(index);
+                });
             }
         });
+
+        function changeState(id,state){
+            $.get('/project/changeState',{projectId:id,state:state},function (res) {
+                tableIns.reload();
+                layer.msg('操作成功',{icon:1});
+            },'json');
+        }
 
         function newTab(url,tit){
             if(top.layui.index){

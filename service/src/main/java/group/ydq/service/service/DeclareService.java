@@ -14,5 +14,7 @@ public interface DeclareService extends BaseService{
 
     List<DeclareRule> getRules();
 
+    DeclareRule getRule(long id);
+
     void addRule(DeclareRule rule);
 }

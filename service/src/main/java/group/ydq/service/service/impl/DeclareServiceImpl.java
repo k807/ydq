@@ -5,7 +5,7 @@ import group.ydq.model.dao.dm.ExpertRepository;
 import group.ydq.model.dao.dm.ProjectRepository;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.entity.dm.DeclareRule;
-import group.ydq.model.entity.dm.ExpertProject;
+import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.DeclareService;
 import org.springframework.stereotype.Service;
@@ -36,16 +36,21 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
         project.setExperts(userDao.findUsersByIdIn(expertIds));
         projectDao.save(project);
         for (Long id:expertIds) {
-            ExpertProject expertProject = new ExpertProject();
-            expertProject.setExpert(userDao.getOne(id));
-            expertProject.setProject(project);
-            expertDao.save(expertProject);
+            ExpertReview expertReview = new ExpertReview();
+            expertReview.setExpert(userDao.getOne(id));
+            expertReview.setProject(project);
+            expertDao.save(expertReview);
         }
     }
 
     @Override
     public List<DeclareRule> getRules() {
         return ruleRepository.findDeclareRulesByEndTimeAfter(new Date());
+    }
+
+    @Override
+    public DeclareRule getRule(long id) {
+        return ruleRepository.getOne(id);
     }
 
     @Override

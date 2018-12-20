@@ -2,6 +2,9 @@ package group.ydq.model.entity.dm;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import group.ydq.model.entity.rbac.User;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,6 +16,7 @@ import java.util.List;
  * @date 2018/11/12 16:02
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Project {
     @Id
     @GeneratedValue
@@ -45,21 +49,27 @@ public class Project {
     @OneToOne
     private ProjectFile declaration;    //申报书文件路径
 
+    @OneToMany
+    private List<ProjectFile> midCheckFiles;
+
+    @OneToMany
+    private List<ProjectFile> finalCheckFiles;
+
     @ManyToOne
     private DeclareRule entrance;   //申报入口
 
     /**
-     * 状态码：-1-未提交；0-审核中；1-初审通过；2：立项评审中；3：立项评审完成；4：已立项；5：中期检查；6：中期检查待整改；7：中期检查通过；8：结题验收；9结题验收待整改；10：已结题
+     * 状态码：-1-未提交；0-审核中；1-初审通过；2-初审未通过；3：立项评审中；4：立项评审完成；5：已立项；6：不立项；7：中期检查待整改；8：中期检查通过；9：结题验收待整改；10：已结题
      */
     private int state; //项目状态
 
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreatedDate
     private Date createTime;    //创建时间
 
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @LastModifiedDate
     private Date updateTime;    //更新时间
-
-    private String remark;
 
     private boolean submit;
 
@@ -184,14 +194,6 @@ public class Project {
         this.updateTime = updateTime;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
     public List<User> getExperts() {
         return experts;
     }
@@ -206,5 +208,21 @@ public class Project {
 
     public void setSubmit(boolean submit) {
         this.submit = submit;
+    }
+
+    public List<ProjectFile> getMidCheckFiles() {
+        return midCheckFiles;
+    }
+
+    public void setMidCheckFiles(List<ProjectFile> midCheckFiles) {
+        this.midCheckFiles = midCheckFiles;
+    }
+
+    public List<ProjectFile> getFinalCheckFiles() {
+        return finalCheckFiles;
+    }
+
+    public void setFinalCheckFiles(List<ProjectFile> finalCheckFiles) {
+        this.finalCheckFiles = finalCheckFiles;
     }
 }

@@ -104,23 +104,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-form-item">
-                        <div class="layui-upload">
-                            <div class="layui-upload-list">
-                                <table class="layui-table">
-                                    <thead>
-                                    <tr><th>文件名</th>
-                                        <th>大小</th>
-                                        <th>状态</th>
-                                        <th>操作</th>
-                                    </tr></thead>
-                                    <tbody id="demoList"></tbody>
-                                </table>
-                            </div>
-                            <button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
-                            <button type="button" class="layui-btn" id="testListAction">开始上传</button>
-                        </div>
-                    </div>
                     <div class="layui-form-item layui-layout-admin" id="btnDiv" th:if="${!submit}">
                         <div class="layui-input-block">
                             <div class="layui-footer" style="left: 0;">
@@ -131,13 +114,75 @@
                 </form>
             </div>
         </div>
+        <hr class="layui-bg-gray">
+        <input id="stage" type="hidden" th:value="${stage}">
+        <div class="layadmin-user-login-main layui-card-body" style="padding-bottom: 60px;width: 50%;" th:if="${state==3||state==4}">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>专家评审</h2>
+            </div>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>专家</th>
+                    <th>评分</th>
+                    <th>评语</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="tr" th:each="review:${reviews}">
+                    <td th:text="${review.expertName}"></td>
+                    <td th:text="${review.score}"></td>
+                    <td th:text="${review.remark}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="layadmin-user-login-box layadmin-user-login-header" style="padding: 5px" th:if="${#lists.isEmpty(reviews)}">
+                <p>暂无数据</p>
+            </div>
+        </div>
+        <div class="layadmin-user-login-main layui-card-body" style="padding-bottom: 60px;width: 60%;" th:if="${stage!=0}">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>项目文件</h2>
+            </div>
+            <div class="layui-upload">
+                <div class="layui-upload-list">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>文件名</th>
+                            <th>所属阶段</th>
+                            <th>上传时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody" id="fileList">
+                        <tr class="tr" th:each="file:${uploadFiles}">
+                            <td th:text="${file.name}"></td>
+                            <td th:text="${file.stage}"></td>
+                            <td th:text="${file.uploadTime}"></td>
+                            <td>已上传</td>
+                            <td align="center"><a class="layui-btn layui-btn-xs" th:href="'/file/'+${file.id}">下载</a>
+                                <button th:if="${state!=10}" class="layui-btn layui-btn-xs layui-btn-danger file-delete" th:id="${file.id}">删除</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layadmin-user-login-box layadmin-user-login-header" th:if="${#lists.isEmpty(uploadFiles)}">
+                    <p>暂无数据</p>
+                </div>
+                <button th:if="${state!=10}" type="button" class="layui-btn layui-btn-normal" style="float: right" id="upload-file">上传文件</button>
+            </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="/assets/layui/layui.js"></script>
+<script src="/js/time.js"></script>
 <script type="text/javascript">
-    layui.use(['form','layer','jquery'],function(){
+    layui.use(['form','layer','jquery','upload'],function(){
         var form=layui.form;
         var layer=layui.layer;
+        var upload=layui.upload;
         var $=layui.$;
         layer.photos({
             photos:'#img-box',
@@ -162,7 +207,98 @@
                     }
                 }
             })
-        })
+        });
+
+        var stage=$("#stage").val();
+        var stageStr;
+        if (stage==="1")
+            stageStr="中期检查";
+        else if (stage==="2")
+            stageStr="结题验收";
+
+        var demoListView = $('#fileList')
+            ,uploadListIns = upload.render({
+            elem: '#upload-file'
+            ,url: '/file/upload'
+            ,accept: 'file'
+            ,multiple: true
+            ,choose: function(obj){
+                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                //读取本地文件
+                obj.preview(function(index, file, result){
+                    var time=new Date().Format("yyyy-MM-dd HH:mm:ss");
+                    var tr = $(['<tr class="tr" id="upload-'+ index +'">'
+                        ,'<td>'+ file.name +'</td>'
+                        ,'<td>'+stageStr+'</td>'
+                        ,'<td>'+ time+'</td>'
+                        ,'<td>正在上传</td>'
+                        ,'<td align="center">'
+                        ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                        ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                        ,'</td>'
+                        ,'</tr>'].join(''));
+
+                    //单个重传
+                    tr.find('.demo-reload').on('click', function(){
+                        obj.upload(index, file);
+                    });
+
+                    //删除
+                    tr.find('.demo-delete').on('click', function(){
+
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                    });
+
+                    demoListView.append(tr);
+                });
+            }
+            ,done: function(res, index, upload){
+                if(res.statusCode === '200'){ //上传成功
+                    var url;
+                    if (stage==='1')
+                        url='/project/mid/uploadFile';
+                    else if (stage==='2')
+                        url='/project/final/uploadFile';
+
+                    $.get(url,{projectId:window.location.href.split("/")[5],fileId:res.object.id});
+
+                    var tr = demoListView.find('tr#upload-'+ index)
+                        ,tds = tr.children();
+                    tds.eq(2).html('<span>'+res.object.uploadTime+'</span>');
+                    tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
+                    tds.eq(4).html('<a class="layui-btn layui-btn-xs" href="/file/'+res.object.id+'">下载</a>\n' +
+                        '<button class="layui-btn layui-btn-xs layui-btn-danger file-delete" id="'+res.object.id+'">删除</button>');
+                    return delete this.files[index]; //删除文件队列已经上传成功的文件
+                }
+                this.error(index, upload);
+            }
+            ,error: function(index, upload){
+                var tr = demoListView.find('tr#upload-'+ index)
+                    ,tds = tr.children();
+                tds.eq(3).html('<span style="color: #FF5722;">上传失败</span>');
+                tds.eq(4).find('.demo-reload').removeClass('layui-hide'); //显示重传
+            }
+        });
+
+        var body=$('body');
+
+        $(body).on('click','.file-delete',function(e){
+            var tr=$(this).parent('td').parent('tr');
+            $.ajax({
+                type:'get',
+                url:'/file/delete',
+                data:'id='+$(this).attr('id'),
+                dataType:'json',
+                success:function(data){
+                    if (data.statusCode==='200')
+                        $(tr).remove();
+                    else
+                        layer.msg(data.msg);
+                }
+            })
+        });
     });
 
 </script>
