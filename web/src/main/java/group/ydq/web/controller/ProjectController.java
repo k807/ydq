@@ -77,7 +77,7 @@ public class ProjectController {
         if (projectService.isProjectExist(projectId)){
             projectService.changeState(projectId, state);
             if (state==5)
-                stageService.startMid(projectId);
+                stageService.startStage(projectId,1);
             return RetResponse.success(DateUtil.dateToStr(new Date(),DateUtil.format1));
         }
         return RetResponse.error();

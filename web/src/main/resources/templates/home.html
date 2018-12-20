@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/assets/style/admin.css" media="all">
 </head>
-<body onload="getTime()" class="layui-layout-body" layadmin-themealias="default">
+<body onload="getNow()" class="layui-layout-body" layadmin-themealias="default">
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
@@ -103,6 +103,11 @@
                         <dl class="layui-nav-child">
                             <dd data-name="console" >
                                 <a lay-href="/html/manager/projectList.html">项目申报管理</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" >
+                                <a lay-href="/html/manager/declareRule.html">申报规则管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
