@@ -2,14 +2,13 @@ package group.ydq.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import group.ydq.authority.SubjectUtils;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.dm.ProjectFile;
 import group.ydq.model.entity.rbac.User;
-import group.ydq.service.service.CheckStageService;
-import group.ydq.service.service.FileService;
-import group.ydq.service.service.ProjectService;
+import group.ydq.service.service.*;
 import group.ydq.utils.DateUtil;
 import group.ydq.utils.FileUtil;
 import group.ydq.utils.RetResponse;
@@ -20,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -35,6 +33,12 @@ public class ProjectController {
 
     @Resource
     private CheckStageService stageService;
+
+    @Resource
+    private DeclareService declareService;
+
+    @Resource
+    private RBACService rbacService;
 
     @Resource
     private FileService fileService;
@@ -106,8 +110,8 @@ public class ProjectController {
 
     @RequestMapping("/new/{type:.+}")
     @ResponseBody
-    public BaseResponse saveOrSubmitProject(@PathVariable String type,@RequestBody Project project,HttpServletRequest request){
-        project.setLeader((User)request.getSession().getAttribute("user"));
+    public BaseResponse saveOrSubmitProject(@PathVariable String type,@RequestBody Project project){
+        project.setLeader(((User)SubjectUtils.getSubject().getBindMap("user")));
         if (type.equals("save")){
             project.setState(-1);
             project.setSubmit(false);
@@ -206,13 +210,14 @@ public class ProjectController {
         model.addAttribute("stage",stage);
         model.addAttribute("state",project.getState());
         model.addAttribute("uploadFiles",uploadFiles);
+        model.addAttribute("user",SubjectUtils.getSubject().getBindMap("user"));
         return "projectDetails";
     }
 
     @RequestMapping("/{role:.+}/list")
     @ResponseBody
-    public BaseResponse getProjectList(@PathVariable String role, int page, int limit, HttpServletRequest request){
-        String userNumber=((User)request.getSession().getAttribute("user")).getUserNumber();
+    public BaseResponse getProjectList(@PathVariable String role, int page, int limit){
+        String userNumber= ((User)SubjectUtils.getSubject().getBindMap("user")).getUserNumber();
         Map<String, Object> obj = new HashMap<>();
         List<Map<String,Object>> list=new ArrayList<>();
         if (role.equals("expert")){
@@ -274,8 +279,31 @@ public class ProjectController {
         return RetResponse.success(obj);
     }
 
+    @RequestMapping("/expertList")
+    @ResponseBody
+    public BaseResponse getExperts(){
+        //todo change "admin" to "expert"
+        List<User> experts=rbacService.getUsersByRole(rbacService.getRoleByRoleName("admin"));
+        Map<String,Object> map=new HashMap<>();
+        map.put("data",experts);
+        map.put("count",experts.size());
+        return RetResponse.success(map);
+    }
+
+    @RequestMapping("/distributeExperts")
+    @ResponseBody
+    public BaseResponse distributeExperts(long projectId,@RequestBody List<Long> ids){
+        if (ids!=null&&ids.size()!=0) {
+            declareService.distributeExpert(projectId, ids);
+            changeState(projectId,3);
+            return RetResponse.success();
+        }
+        return RetResponse.error();
+    }
+
     @RequestMapping("/declare.htm")
-    public String declarePage(){
+    public String declarePage(Model model){
+        model.addAttribute("user",(User) SubjectUtils.getSubject().getBindMap("user"));
         return "/projectDeclare";
     }
 

@@ -1,5 +1,6 @@
 package group.ydq.web.controller;
 
+import group.ydq.authority.SubjectUtils;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.dm.DeclareRule;
 import group.ydq.model.entity.rbac.User;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -80,8 +80,8 @@ public class RuleController {
 
     @RequestMapping("/add")
     @ResponseBody
-    public BaseResponse addRule(@RequestBody DeclareRule rule, HttpServletRequest request){
-        rule.setPublisher(((User)request.getSession().getAttribute("user")));
+    public BaseResponse addRule(@RequestBody DeclareRule rule){
+        rule.setPublisher(((User) SubjectUtils.getSubject().getBindMap("user")));
         declareService.addRule(rule);
         return RetResponse.success();
     }

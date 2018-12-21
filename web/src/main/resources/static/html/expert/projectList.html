@@ -21,7 +21,8 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">学生姓名:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input" id="studentName">
+                        <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input"
+                               id="studentName">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -91,14 +92,14 @@
 <script src="/assets/layui/layui.js"></script>
 <script>
     layui.config({
-        base:'/assets/'
+        base: '/assets/'
     }).extend({
-        selectPlus:'lib/selectPlus'
-    }).use(['table','layer','laydate','jquery','selectPlus'],function(){
+        selectPlus: 'lib/selectPlus'
+    }).use(['table', 'layer', 'laydate', 'jquery', 'selectPlus'], function () {
         var $ = layui.$;
         var table = layui.table;
         var laydate = layui.laydate;
-        var selectPlus=layui.selectPlus;
+        var selectPlus = layui.selectPlus;
 
         laydate.render({
             elem: '#start',
@@ -110,52 +111,69 @@
         });
 
 
-
         var tableIns = table.render({
             elem: '#table',
             toolbar: '#toolbar',
             height: 'full-200',
-            projectId:'projectId,sex',
+            projectId: 'projectId,sex',
             cols: [
                 [
                     {type: 'checkbox', fixed: 'left'},
-                    {field: 'id',title:'ID',width:60, sort:true,hide: true},
-                    {field: 'name', title: "项目名称",width:150},
-                    {field:'leader',title:"负责人",width:100,sort:true,templet:function (d) {
+                    {field: 'id', title: 'ID', width: 60, sort: true, hide: true},
+                    {field: 'name', title: "项目名称", width: 150},
+                    {
+                        field: 'leader', title: "负责人", width: 100, sort: true, templet: function (d) {
                             return d.leader.nick
-                        }},
-                    {field:'level',title:'项目级别',width:100,templet:function(d){
-                        switch (d.level){
-                            case 0:return "校级一类";
-                            case 1:return "校级二类";
                         }
-                    }},
-                    {field: 'major', title: "所属专业",width:170,sort:true,templet:function(d){
-                        switch (d.major){
-                            case 0:return '计算机科学与技术';
-                            case 1:return '电子信息工程';
-                            case 2:return '电子信息科学与技术';
-                            case 3:return '数字媒体技术';
+                    },
+                    {
+                        field: 'level', title: '项目级别', width: 100, templet: function (d) {
+                            switch (d.level) {
+                                case 0:
+                                    return "校级一类";
+                                case 1:
+                                    return "校级二类";
+                            }
                         }
-                    }},
-                    {field:'manager',title:'管理员',sort:true,width:100,templet:function (d) {
+                    },
+                    {
+                        field: 'major', title: "所属专业", width: 170, sort: true, templet: function (d) {
+                            switch (d.major) {
+                                case 0:
+                                    return '计算机科学与技术';
+                                case 1:
+                                    return '电子信息工程';
+                                case 2:
+                                    return '电子信息科学与技术';
+                                case 3:
+                                    return '数字媒体技术';
+                            }
+                        }
+                    },
+                    {
+                        field: 'manager', title: '管理员', sort: true, width: 100, templet: function (d) {
                             return d.manager.nick;
-                        }},
-                    {field: 'createTime', title: "创建时间",width:170,sort:true},
-                    {field: 'mark',title:'状态',width:100,sort:true,templet:function(d){
-                        if (d.mark)
-                            return '已评分';
-                        else
-                            return '未评分';
-                    }},
-                    {field:'score',title:'评分',width:90,sort:true,templet:function (d) {
+                        }
+                    },
+                    {field: 'createTime', title: "创建时间", width: 170, sort: true},
+                    {
+                        field: 'mark', title: '状态', width: 100, sort: true, templet: function (d) {
+                            if (d.mark)
+                                return '已评分';
+                            else
+                                return '未评分';
+                        }
+                    },
+                    {
+                        field: 'score', title: '评分', width: 90, align: 'center', sort: true, templet: function (d) {
                             if (!d.mark)
                                 return '尚未评分';
                             else
-                                return d.score+'分';
-                        }},
-                    {field:'remark',title:'评语'},
-                    {title: '操作', align: 'center',width:190, toolbar: '#bar'}
+                                return d.score + '分';
+                        }
+                    },
+                    {field: 'remark', title: '评语'},
+                    {title: '操作', align: 'center', width: 190, toolbar: '#bar'}
                 ]
             ],
             text: {
@@ -179,20 +197,21 @@
 
         table.on('tool(table)', function (obj) {
             var data = obj.data;
-            var tr=obj.tr;
-            var remark=tr.children('td').eq(10);
-            var btn=tr.children('td').eq(11).children('div').children('a').eq(1);
-            var cancel=tr.children('td').eq(11).children('div').children('a').eq(2);
-            if (obj.event==='detail'){
-                newTab('/project/getDetails/'+obj.data.projectId,obj.data.name);
-            }  else if (obj.event === 'edit') {
-                $(remark).attr("data-edit",'text');
+            var tr = obj.tr;
+            var remark = tr.children('td').eq(10);
+            var btn = tr.children('td').eq(11).children('div').children('a').eq(1);
+            var cancel = tr.children('td').eq(11).children('div').children('a').eq(2);
+            var score = tr.children('td').eq(9);
+            if (obj.event === 'detail') {
+                newTab('/project/getDetails/' + obj.data.projectId, obj.data.name);
+            } else if (obj.event === 'edit') {
+                $(remark).attr("data-edit", 'text');
                 $(remark).unbind();
                 $(btn).text('保存');
-                $(btn).attr('lay-event','save');
+                $(btn).attr('lay-event', 'save');
                 $(cancel).removeAttr('style');
-                tr.children('td').eq(9).children('div').attr('style','display:none');
-                tr.children('td').eq(9).append('<div id="score" lay-filter="score"></div>');
+                $(score).children('div').attr('style', 'display:none');
+                $(score).append('<div id="score" lay-filter="score"></div>');
                 selectPlus.render({
                     el: '#score',
                     data: [
@@ -211,41 +230,50 @@
                     valueName: "text",
                     label: ["text"]
                 });
-                selectPlus.on('selectPlus(score)',function (e) {
+                selectPlus.on('selectPlus(score)', function (e) {
                     obj.update({
-                        score:e.checkedData.value,
-                        mark:true
+                        score: e.checkedData.value,
+                        mark: true
                     });
                 })
 
-            } else if (obj.event==='save'||obj.event==='cancel'){
+            } else if (obj.event === 'save' || obj.event === 'cancel') {
                 $(remark).removeAttr("data-edit");
-                $(remark).click(function(){return false});
+                $(remark).click(function () {
+                    return false
+                });
                 $(btn).text('编辑');
-                $(btn).attr('lay-event','edit');
-                $(cancel).attr('style','display:none');
+                $(btn).attr('lay-event', 'edit');
+                $(cancel).attr('style', 'display:none');
+                if (obj.event === 'cancel') {
+                    $(score).children('#score').remove();
+                    $(score).children('div').removeAttr('style');
+                    obj.update({
+                        mark: false
+                    });
+                }
 
                 if (obj.event === 'save')
                     $.ajax({
                         type: 'post',
                         url: '/project/review',
-                        data: JSON.stringify({id:data.id,score:data.score,remark:data.remark,mark:data.mark}),
+                        data: JSON.stringify({id: data.id, score: data.score, remark: data.remark, mark: data.mark}),
                         dataType: 'json',
                         contentType: 'application/json',
                         success: function (res) {
                             if (res.statusCode === '200') {
                                 tableIns.reload();
-                                layer.msg("评分成功",{icon:1});
+                                layer.msg("评分成功", {icon: 1});
                             }
                         }
                     })
             }
         });
 
-        function newTab(url,tit){
-            if(top.layui.index){
-                top.layui.index.openTabsPage(url,tit)
-            }else{
+        function newTab(url, tit) {
+            if (top.layui.index) {
+                top.layui.index.openTabsPage(url, tit)
+            } else {
                 window.open(url)
             }
         }

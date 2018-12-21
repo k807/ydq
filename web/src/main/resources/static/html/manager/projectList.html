@@ -93,6 +93,7 @@
 </div>
 <script src="/assets/layui/layui.js"></script>
 <script>
+    var tableIns;
     layui.use(['table','layer','laydate','jquery'],function(){
         var $ = layui.$;
         var table = layui.table;
@@ -108,7 +109,7 @@
             type: 'datetime'
         });
 
-        var tableIns = table.render({
+        tableIns = table.render({
             elem: '#table',
             toolbar: '#toolbar',
             height: 'full-200',
@@ -192,8 +193,8 @@
                     title: '分配专家',
                     shadeClose: true,
                     shade: 0.8,
-                    area: ['30%', '75%'],
-                    content: '/rule/list'
+                    area:['30%'],
+                    content: '/html/expert/expertList.html?id='+data.id
                 });
             } else if (obj.event==='verify'){
                 layer.confirm('是否通过审核？', {
@@ -238,7 +239,10 @@
                 window.open(url)
             }
         }
-    })
+    });
+    function refresh(){
+        tableIns.reload();
+    }
 </script>
 </body>
 </html>
