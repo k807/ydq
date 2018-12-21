@@ -1,65 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>站内消息</title>
+    <title>消息管理</title>
     <link rel="stylesheet" href="../static/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="../static/assets/style/admin.css">
     <script src="../static/assets/layui/layui.js" charset="utf-8"></script>
-    <script src="../static/js/privateMessage.js"></script>
+    <script src="../static/js/privateMessage.js" charset="utf-8"></script>
 </head>
-<body>
-<div style="padding: 15px">
+<body layadmin-themealias="default">
+<div class="layui-fluid">
     <div class="layui-card">
-        <div style="padding: 15px">
-            <form class="layui-form layui-form-pane">
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">标题:</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="name" placeholder="" autocomplete="off" class="layui-input">
-                        </div>
+        <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">标题:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="" autocomplete="off" class="layui-input">
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">接收人:</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="leader" placeholder="" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">消息类型:</label>
-                        <div class="layui-input-inline">
-                            <select id="stage" name="stage" lay-search>
-                                <option value="" selected="selected">请选择</option>
-                                <option value="0">公告</option>
-                                <option value="1">私信</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button type="submit" class="layui-btn" lay-submit lay-filter="search" id="submit">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
-
                 </div>
-            </form>
-        </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">接收人:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="leader" placeholder="" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">消息类型:</label>
+                    <div class="layui-input-inline">
+                        <select id="stage" name="stage" lay-search>
+                            <option value="" selected="selected">请选择</option>
+                            <option value="0">公告</option>
+                            <option value="1">私信</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn" lay-submit lay-filter="search" id="submit">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+
+            </div>
+        </form>
         <div class="layui-card-body">
-            <table class="layui-hide" id="table" lay-filter="table"
-                   lay-data="{height: full-200, url:'/demo/table/user/', initSort: {field:'date', type:'asc'}}"></table>
+            <table id="table" lay-filter="table"
+                   lay-data="{initSort: {field:'date', type:'desc'}}"></table>
         </div>
+
+        <script type="text/html" id="toolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="addRule">新建</button>
+            </div>
+        </script>
+
         <script type="text/html" id="bar">
             <b style="text-decoration:underline;color:#01AAED" lay-event="del">删除</b>
         </script>
     </div>
 </div>
-
-<script>
-    layui.use('table', function(){
-        var table = layui.table;
-    });
-</script>
-
 </body>
 </html>

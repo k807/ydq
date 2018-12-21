@@ -53,8 +53,9 @@ function initMessageList(list) {
 }
 
 
-layui.use(['jquery', 'table', 'form'], function () {
+layui.use(['jquery','layer', 'table', 'form'], function () {
     var $ = layui.$;
+    var layer = layui.layer;
     var table = layui.table;
     var form = layui.form;
     var tableIns = table.render({
@@ -65,18 +66,20 @@ layui.use(['jquery', 'table', 'form'], function () {
             {field: 'title', title: "标题", sort: true},
             {field: 'type', title: "消息类型", sort: true},
             {field: 'date', title: "发送日期", sort: true},
-            {field: 'content', title: "消息内容"},
+            {field: 'content', title: "消息内容", event: "msgContent"},
             {field: 'sender', title: "发送人", sort: true},
             {field: 'receiver', title: "接收人", sort: true},
-            // {field: 'remark', title: "备注"},
             {
-                field: 'remark', title: '备注'
+                field: 'remark', title: '备注', event: "projectDetail"
                 , templet: function (row) {
-                    var obj = JSON.parse(row.remark)
-                    if (obj.hasOwnProperty("projectId")) {
-                        var id = "项目id:" + obj.projectId
-                        var a = "<a onclick=\"newTab('/project/getDetails/'+obj.projectId,obj.projectName)\">" + id + "</a>"
-                        return a
+                    var obj
+                    if (row.remark != "") {
+                        obj = JSON.parse(row.remark)
+                        if (obj.hasOwnProperty("projectId")) {
+                            var id = "项目id:" + obj.projectId
+                            var a = "<a >" + id + "</a>"
+                            return a
+                        }
                     } else
                         return row.remark
                 }
@@ -86,8 +89,8 @@ layui.use(['jquery', 'table', 'form'], function () {
         page: true,
         limit: 10,
         limits: [10, 20, 30],
-        // url: "/pm/getPMTable",
-        // initSort: {field:'date', type:'desc'},
+        url: "/pm/getPMTable",
+        initSort: {field:'date', type:'desc'},
         response: {
             statusCode: 200
             , countName: 'count'
@@ -106,24 +109,45 @@ layui.use(['jquery', 'table', 'form'], function () {
     });
     table.on('tool(table)', function (obj) {
         var data = obj.data;
-        if (obj.event === 'del') {
-            layer.confirm('真的删除么', function (index) {
-                layer.close(index);
-                $.ajax({
-                    type: "get",
-                    url: "/pm/delete",
-                    data: {id: data.id},
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.statusCode === "200") {
-                            obj.del();
-                            layer.msg("删除成功");
-                        } else {
-                            layer.msg("删除失败");
+        switch (obj.event) {
+            case 'del':
+                layer.confirm('真的删除么', function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        type: "get",
+                        url: "/pm/delete",
+                        data: {id: data.id},
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.statusCode === "200") {
+                                obj.del();
+                                layer.msg("删除成功");
+                            } else {
+                                layer.msg("删除失败");
+                            }
                         }
-                    }
-                })
-            });
+                    })
+                });
+                break;
+            case 'projectDetail':
+                var obj = JSON.parse(data.remark)
+                if (obj.hasOwnProperty("projectId")) {
+                    newTab('/project/getDetails/' + obj.projectId, obj.projectName)
+                }
+                break;
+            case 'msgContent':
+                var title = data.title
+                var content = data.content
+                layer.open({
+                    type: 1,
+                    title:title,
+                    content: '\<\div style="padding:20px;">'+content+'\<\/div>',
+                    area: ['420px', '240px'], //宽高
+                });
+
+                break;
+            default:
+                break
         }
     });
 
