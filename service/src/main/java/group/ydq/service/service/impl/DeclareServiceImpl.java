@@ -8,6 +8,9 @@ import group.ydq.model.entity.dm.DeclareRule;
 import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.DeclareService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,8 +47,14 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
     }
 
     @Override
-    public List<DeclareRule> getRules() {
+    public List<DeclareRule> getValuableRules() {
         return ruleRepository.findDeclareRulesByEndTimeAfter(new Date());
+    }
+
+    @Override
+    public Page<DeclareRule> getAllRules(int page,int limit) {
+        Pageable pageable= PageRequest.of(page-1, limit);
+        return ruleRepository.findAll(pageable);
     }
 
     @Override
@@ -58,5 +67,14 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
         ruleRepository.save(rule);
     }
 
+    @Override
+    public int getProjectNumOfRule(long ruleId) {
+        return projectDao.countProjectsByEntrance(ruleRepository.getOne(ruleId));
+    }
 
+    @Override
+    public void delRule(long id) {
+        if (ruleRepository.existsById(id))
+            ruleRepository.deleteById(id);
+    }
 }

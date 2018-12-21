@@ -68,14 +68,9 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
     });
 
     function saveOrsubmit(action, data) {
-        var leader = {
-            "id": 1
-            //todo 从session或cookie获取用户id
-        };
         var json = {};
         json.name = data.field.name;
         json.level = data.field.level;
-        json.leader = leader;
         json.manager={'id':window.location.search.split('&')[1].split('=')[1]};
         json.phone = data.field.phone;
         json.major = data.field.major;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>后台管理</title>
@@ -59,7 +59,7 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect="" style="margin-right: 30px">
                     <a>
-                        <cite>Admin</cite>
+                        <cite th:text="${session.user.nick}"></cite>
                         <span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child layui-anim layui-anim-upbit">
                         <dd><a lay-href="set/user/info.html">基本资料</a></dd>
@@ -106,15 +106,11 @@
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
-                            <dd data-name="console">
-                                <a lay-href="pm/messageList">站内消息</a>
                             <dd data-name="console" >
-                                <a lay-href="/html/manager/declareRule.html">申报规则管理</a>
+                                <a lay-href="/html/manager/ruleManage.html">申报规则管理</a>
                             </dd>
                         </dl>
                         <dl class="layui-nav-child">
-                            <dd data-name="console">
-                                <a lay-href="pm/messageTable">消息管理</a>
                             <dd data-name="console" >
                                 <a lay-href="pm/messageList">站内消息</a>
                             </dd>

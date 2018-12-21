@@ -93,16 +93,11 @@
 </div>
 <script src="/assets/layui/layui.js"></script>
 <script>
-    layui.config({
-        base:'/assets/'
-    }).extend({
-        selectPlus:'lib/selectPlus'
-    }).use(['table','layer','laydate','jquery','selectPlus'],function(){
+    layui.use(['table','layer','laydate','jquery'],function(){
         var $ = layui.$;
         var table = layui.table;
         var laydate = layui.laydate;
         var layer=layui.layer;
-        var selectPlus=layui.selectPlus;
 
         laydate.render({
             elem: '#start',
@@ -112,8 +107,6 @@
             elem: '#end',
             type: 'datetime'
         });
-
-
 
         var tableIns = table.render({
             elem: '#table',
@@ -176,7 +169,6 @@
             limit: 15,
             limits: [15, 30, 45, 60, 75, 90],
             url: "/project/manager/list",
-            where:{'userNumber':"123456"},
             response: {
                 statusCode: 200
             },

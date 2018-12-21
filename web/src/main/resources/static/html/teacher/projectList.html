@@ -160,7 +160,7 @@
             limit: 15,
             limits: [15, 30, 45, 60, 75, 90],
             url: "/project/teacher/list",
-            where:{'userNumber':"123456"},
+            where:{'userNumber':sessionStorage.getItem('userNumber')},
             response: {
                 statusCode: 200
             },

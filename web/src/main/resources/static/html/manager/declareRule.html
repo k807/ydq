@@ -10,8 +10,7 @@
 <body>
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layadmin-user-login-main layui-card-body" style="padding: 15px;width: 40%;">
-            <div class="layadmin-user-login-box layadmin-user-login-body">
+        <div class=" layui-card-body">
                 <form class="layui-form layui-form-pane">
                     <div class="layui-form-item">
                         <label class="layui-form-label">标题</label>
@@ -56,7 +55,6 @@
                         </div>
                     </div>
                 </form>
-            </div>
         </div>
     </div>
 </div>
@@ -66,14 +64,15 @@
         var form=layui.form
             ,layedit=layui.layedit
             ,laydate=layui.laydate
-            ,layer=layui.layer
             ,$=layui.$;
 
-        var index=layedit.build('content',{
+        var index = parent.layer.getFrameIndex(window.name);
+
+        var edit=layedit.build('content',{
             height:150,
             hideTool:['image']
         });
-        layedit.sync(index);
+        layedit.sync(edit);
 
         laydate.render({
             elem: '#start',
@@ -87,9 +86,9 @@
         });
 
         form.on('submit(submit)',function(data){
-            data.field.ruleContent=layedit.getContent(index);
+            data.field.ruleContent=layedit.getContent(edit);
             data.field.publisher={
-                'id':1
+                'id':sessionStorage.getItem('id')
             };
             $.ajax({
                 type:'post',
@@ -98,8 +97,11 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 success: function (res) {
-                    if (res.statusCode === '200')
-                        layer.msg('添加成功')
+                    if (res.statusCode === '200') {
+                        parent.refresh();
+                        parent.layer.msg('添加成功', {icon: 1});
+                        parent.layer.close(index);
+                    }
                 }
             });
             return false;

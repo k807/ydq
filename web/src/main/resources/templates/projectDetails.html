@@ -43,7 +43,7 @@
                         <label class="layui-form-label">负责人</label>
                         <div class="layui-input-block">
                             <input type="text" name="leader" id="leader" autocomplete="off" class="layui-input" readonly
-                            th:value="${leader}">
+                            th:value="${leader.nick}">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -163,7 +163,7 @@
                             <td th:text="${file.uploadTime}"></td>
                             <td>已上传</td>
                             <td align="center"><a class="layui-btn layui-btn-xs" th:href="'/file/'+${file.id}">下载</a>
-                                <button th:if="${state!=10}" class="layui-btn layui-btn-xs layui-btn-danger file-delete" th:id="${file.id}">删除</button></td>
+                                <button th:if="${state!=10&&session.user.id==leader.id}" class="layui-btn layui-btn-xs layui-btn-danger file-delete" th:id="${file.id}">删除</button></td>
                         </tr>
                         </tbody>
                     </table>
@@ -171,7 +171,7 @@
                 <div class="layadmin-user-login-box layadmin-user-login-header" th:if="${#lists.isEmpty(uploadFiles)}">
                     <p>暂无数据</p>
                 </div>
-                <button th:if="${state!=10}" type="button" class="layui-btn layui-btn-normal" style="float: right" id="upload-file">上传文件</button>
+                <button th:if="${state!=10&&session.user.id==leader.id}" type="button" class="layui-btn layui-btn-normal" style="float: right" id="upload-file">上传文件</button>
             </div>
         </div>
     </div>
