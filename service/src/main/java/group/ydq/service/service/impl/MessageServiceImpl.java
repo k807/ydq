@@ -34,7 +34,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Map<String, Object> getPMTable(int page, int limit) {
         Pageable pageable = new PageRequest(page - 1, limit);
-        Page<Message> allList = messageRepository.findAllOrderByDate(pageable);
+        Page<Message> allList = messageRepository.findAll(pageable);
         Map<String, Object> map = new HashMap<>();
 
         map.put("statusCode", 200);
