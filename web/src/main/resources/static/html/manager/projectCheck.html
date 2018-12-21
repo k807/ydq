@@ -141,8 +141,8 @@
                 {fixed: 'right', title: '操作', align: 'center', toolbar: '#bar'}
             ]],
             page: true,
-            limit: 15,
-            limits: [15, 30, 45],
+            limit: 1,
+            limits: [1, 2, 4],
             url: "/stage/getAll",
             response: {
                 statusCode: 200,
@@ -150,7 +150,8 @@
             parseData: function (res) {
                 return {
                     "code": res.statusCode,
-                    "data": res.object,
+                    "data": res.object.data,
+                    "count": res.object.count
                 };
             }
         });

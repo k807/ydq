@@ -64,8 +64,9 @@ public class ProjectController {
             review.setRemark(remark);
             review.setMark(mark);
             projectService.saveReview(review);
-            if (projectService.isAllExpertsMarked(review.getProject().getId()))
+            if (projectService.isAllExpertsMarked(review.getProject().getId())) {
                 changeState(review.getProject().getId(),4);
+            }
             return RetResponse.success();
         }
         return RetResponse.error();
@@ -76,8 +77,9 @@ public class ProjectController {
     public BaseResponse changeState(long projectId,int state){
         if (projectService.isProjectExist(projectId)){
             projectService.changeState(projectId, state);
-            if (state==5)
+            if (state==5) {
                 stageService.startStage(projectId,1);
+            }
             return RetResponse.success(DateUtil.dateToStr(new Date(),DateUtil.format1));
         }
         return RetResponse.error();
@@ -151,8 +153,9 @@ public class ProjectController {
         members.append(array.getString(array.size()-1));
 
         List<String> pics=new ArrayList<>();
-        for (ProjectFile pic:project.getCommitmentPics())
+        for (ProjectFile pic:project.getCommitmentPics()) {
             pics.add("/file/"+pic.getId());
+        }
 
         List<Map<String,Object>> uploadFiles=new ArrayList<>();
         for (ProjectFile uploadFile:project.getMidCheckFiles()){
@@ -178,10 +181,11 @@ public class ProjectController {
             for (ExpertReview review : reviews) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("expertName", review.getExpert().getNick());
-                if (review.isMark())
+                if (review.isMark()) {
                     map.put("score", review.getScore() + "分");
-                else
+                } else {
                     map.put("score", "尚未评分");
+                }
                 map.put("remark", review.getRemark());
                 maps.add(map);
             }
@@ -269,7 +273,8 @@ public class ProjectController {
     }
 
     private void deleteFile(ProjectFile file){
-        if (FileUtil.delete(file.getUuid(),FileUtil.getSuffix(file.getName())))
+        if (FileUtil.delete(file.getUuid(),FileUtil.getSuffix(file.getName()))) {
             fileService.deleteFile(file.getId());
+        }
     }
 }
