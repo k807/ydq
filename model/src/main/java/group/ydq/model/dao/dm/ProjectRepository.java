@@ -1,5 +1,6 @@
 package group.ydq.model.dao.dm;
 
+import group.ydq.model.entity.dm.DeclareRule;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.rbac.User;
 import org.springframework.data.domain.Page;
@@ -28,5 +29,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long>{
     void changeState(long id, int state, Date updateTime);
 
     boolean existsProjectById(long id);
+
+    int countProjectsByEntrance(DeclareRule rule);
 
 }

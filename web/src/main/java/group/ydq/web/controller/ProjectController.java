@@ -6,6 +6,7 @@ import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.dm.ProjectFile;
+import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.CheckStageService;
 import group.ydq.service.service.FileService;
 import group.ydq.service.service.ProjectService;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -104,7 +106,8 @@ public class ProjectController {
 
     @RequestMapping("/new/{type:.+}")
     @ResponseBody
-    public BaseResponse saveOrSubmitProject(@PathVariable String type,@RequestBody Project project){
+    public BaseResponse saveOrSubmitProject(@PathVariable String type,@RequestBody Project project,HttpServletRequest request){
+        project.setLeader((User)request.getSession().getAttribute("user"));
         if (type.equals("save")){
             project.setState(-1);
             project.setSubmit(false);
@@ -178,18 +181,20 @@ public class ProjectController {
             for (ExpertReview review : reviews) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("expertName", review.getExpert().getNick());
-                if (review.isMark())
+                if (review.isMark()) {
                     map.put("score", review.getScore() + "分");
-                else
+                    map.put("remark", review.getRemark());
+                }else {
                     map.put("score", "尚未评分");
-                map.put("remark", review.getRemark());
+                    map.put("remark", "该专家还没干活！");
+                }
                 maps.add(map);
             }
             model.addAttribute("reviews", maps);
         }
         model.addAttribute("submit",project.isSubmit());
         model.addAttribute("name",project.getName());
-        model.addAttribute("leader",project.getLeader().getNick());
+        model.addAttribute("leader",project.getLeader());
         model.addAttribute("major",project.getMajor());
         model.addAttribute("level",project.getLevel());
         model.addAttribute("phone",project.getPhone());
@@ -206,7 +211,8 @@ public class ProjectController {
 
     @RequestMapping("/{role:.+}/list")
     @ResponseBody
-    public BaseResponse getProjectList(@PathVariable String role, int page,int limit,String userNumber){
+    public BaseResponse getProjectList(@PathVariable String role, int page, int limit, HttpServletRequest request){
+        String userNumber=((User)request.getSession().getAttribute("user")).getUserNumber();
         Map<String, Object> obj = new HashMap<>();
         List<Map<String,Object>> list=new ArrayList<>();
         if (role.equals("expert")){
@@ -266,6 +272,11 @@ public class ProjectController {
             obj.put("data", list);
         }
         return RetResponse.success(obj);
+    }
+
+    @RequestMapping("/declare.htm")
+    public String declarePage(){
+        return "/projectDeclare";
     }
 
     private void deleteFile(ProjectFile file){

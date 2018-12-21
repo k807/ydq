@@ -1,5 +1,6 @@
 package group.ydq.web;
 
+import group.ydq.authority.annotion.EnableAuthorityManage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.server.ConfigurableWebServerFactory;
@@ -14,7 +15,7 @@ import org.springframework.http.HttpStatus;
 @EnableJpaAuditing
 @SpringBootApplication(scanBasePackages = "group.ydq")
 // 是否启用权限控制
-//@EnableAuthorityManage
+@EnableAuthorityManage
 public class WebApplication {
 
     @Bean

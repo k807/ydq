@@ -2,9 +2,11 @@ package group.ydq.web.controller;
 
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.dm.DeclareRule;
+import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.DeclareService;
 import group.ydq.utils.DateUtil;
 import group.ydq.utils.RetResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * @author Daylight
@@ -30,7 +30,22 @@ public class RuleController {
 
     @RequestMapping("/list")
     public String getRules(Model model){
-        List<DeclareRule> rules=declareService.getRules();
+        List<DeclareRule> rules=declareService.getValuableRules();
+        model.addAttribute("list",ruleList(rules));
+        return "ruleList";
+    }
+
+    @RequestMapping("/getRules")
+    @ResponseBody
+    public BaseResponse getRules(int page,int limit){
+        Page<DeclareRule> rules=declareService.getAllRules(page, limit);
+        Map<String,Object> map=new HashMap<>();
+        map.put("data",ruleList(rules.getContent()));
+        map.put("count",rules.getTotalElements());
+        return RetResponse.success(map);
+    }
+
+    private List<Map<String,Object>> ruleList(List<DeclareRule> rules){
         List<Map<String,Object>> list=new ArrayList<>();
         for (DeclareRule rule:rules){
             Map<String,Object> map=new HashMap<>();
@@ -40,11 +55,14 @@ public class RuleController {
             map.put("endTime",DateUtil.dateToStr(rule.getEndTime(),DateUtil.format2));
             map.put("content",rule.getRuleContent());
             map.put("major",rule.getMajor());
-            map.put("publisher",rule.getPublisher().getId());
+            Map<String,Object> publisher=new HashMap<>();
+            publisher.put("id",rule.getPublisher().getId());
+            publisher.put("nick",rule.getPublisher().getNick());
+            map.put("publisher",publisher);
+            map.put("projectNum",declareService.getProjectNumOfRule(rule.getId()));
             list.add(map);
         }
-        model.addAttribute("list",list);
-        return "ruleList";
+        return list;
     }
 
     @RequestMapping("/get/{id:.+}")
@@ -62,8 +80,16 @@ public class RuleController {
 
     @RequestMapping("/add")
     @ResponseBody
-    public BaseResponse addRule(@RequestBody DeclareRule rule){
+    public BaseResponse addRule(@RequestBody DeclareRule rule, HttpServletRequest request){
+        rule.setPublisher(((User)request.getSession().getAttribute("user")));
         declareService.addRule(rule);
+        return RetResponse.success();
+    }
+
+    @RequestMapping("/del")
+    @ResponseBody
+    public BaseResponse delRule(long ruleId){
+        declareService.delRule(ruleId);
         return RetResponse.success();
     }
 }

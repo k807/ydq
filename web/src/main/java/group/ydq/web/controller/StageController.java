@@ -8,20 +8,21 @@ import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.CheckStageService;
-import group.ydq.service.service.FileService;
 import group.ydq.service.service.MessageService;
 import group.ydq.service.service.ProjectService;
 import group.ydq.utils.RetResponse;
 import group.ydq.utils.StageCheckStatusToProjStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
  * author:Leo
  * date:2018/11/30
+ *
  */
 @RestController
 @RequestMapping("/stage")
@@ -30,27 +31,21 @@ public class StageController {
     private ProjectService projectService;
 
     @Resource
-    private FileService fileService;
-
-    @Resource
     private CheckStageService checkStageService;
 
     @Resource
     private MessageService messageService;
 
-    @Resource
-    private UserRepository userRepository;
-
     @RequestMapping("/addRule")
-    private BaseResponse addRule(@RequestBody Map<String, Object> msg) throws ParseException, NullPointerException {
+    @SuppressWarnings("unchecked")
+    private BaseResponse addRule(@RequestBody Map<String, Object> msg, HttpServletRequest httpServletRequest) throws NullPointerException {
         String title = (String) msg.get("title");
         System.out.println(title);
         String content = (String) msg.get("content");
         ArrayList<String> stage = (ArrayList<String>) msg.get("stage");
-        Long sender = Long.parseLong((String) msg.get("sender"));
-        User u1 = userRepository.getOne(sender);
-        for (int i = 0; i < stage.size(); i++) {
-            User u2 = checkStageService.findACheckStageByCheckStageID(Long.parseLong(stage.get(i))).getProject().getLeader();
+        User u1 = (User) httpServletRequest.getSession().getAttribute("user");
+        for (String s : stage) {
+            User u2 = checkStageService.findACheckStageByCheckStageID(Long.parseLong(s)).getProject().getLeader();
             Message m = new Message(new Date(), 0, title, content, "", u1, u2);
             messageService.sendMessage(m);
         }
@@ -58,57 +53,39 @@ public class StageController {
     }
 
     @RequestMapping("/getAll")
-    private BaseResponse getAll() throws NullPointerException {
-        List<CheckStage> all = checkStageService.getCheckStageByStageStatus(1);
-        ArrayList<JSONObject> dataList = new ArrayList<>();
-        for (CheckStage checkStage : all) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", checkStage.getId());
-            jsonObject.put("pid", checkStage.getProject().getId());
-            jsonObject.put("name", checkStage.getProject().getName());
-            jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
-            jsonObject.put("stage", checkStage.getStage());
-            jsonObject.put("createTime", checkStage.getProject().getCreateTime());
-            jsonObject.put("status", checkStage.getStatus());
-            if(null == checkStage.getVerifiers()){
-                jsonObject.put("verifier", "暂时还没有人审核");
-            }else{
-                jsonObject.put("verifier", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
-            }
-            dataList.add(jsonObject);
-        }
-        return new BaseResponse(dataList);
+    private BaseResponse getAll(@RequestParam(name = "page",defaultValue = "1") int page,
+                                @RequestParam(name = "limit", defaultValue = "15") int limit, HttpServletRequest httpServletRequest) throws NullPointerException {
+        User verifier = (User)httpServletRequest.getSession().getAttribute("user");
+        Map<String, Object> map = new HashMap<>();
+        Page<CheckStage> all = checkStageService.findCheckStagesByStageAndVerifiers(page,limit,1,verifier);
+        map.put("count",all.getTotalElements());
+        map.put("data",checkStageService.decorateData(all));
+        return new BaseResponse(map);
     }
 
 
     @RequestMapping("/getByConditions")
     @ResponseBody
-    private BaseResponse getByConditions(@RequestParam(name = "name", defaultValue = "") String name,
+    private BaseResponse getByConditions(@RequestParam(name = "page",defaultValue = "1") int page,
+                                         @RequestParam(name = "limit", defaultValue = "15") int limit,
+                                         @RequestParam(name = "name", defaultValue = "") String name,
                                          @RequestParam(name = "leader", defaultValue = "") String leader,
                                          @RequestParam(name = "status", defaultValue = "") String status,
                                          @RequestParam(name = "stage", defaultValue = "1") int stage,
                                          @RequestParam(name = "createTime", defaultValue = "1970-01-01 00:00:00") String createTime,
-                                         @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime) {
-        List<CheckStage> dataList = checkStageService.findByConditions(name, leader, stage, status, createTime, endTime);
-        List<JSONObject> decoratedDataList = new ArrayList<>();
-        for (CheckStage checkStage : dataList) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", checkStage.getId());
-            jsonObject.put("name", checkStage.getProject().getName());
-            jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
-            jsonObject.put("stage", checkStage.getStage());
-            jsonObject.put("createTime", checkStage.getProject().getCreateTime());
-            jsonObject.put("status", checkStage.getStatus());
-            jsonObject.put("verifier", checkStage.getVerifiers().getNick());// 这个位置如果审核人为空的话会报NPE
-            decoratedDataList.add(jsonObject);
-        }
-        return new BaseResponse(decoratedDataList);
+                                         @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime, HttpServletRequest httpServletRequest) {
+        User verifier = (User) httpServletRequest.getSession().getAttribute("user");
+        Map<String, Object> map = new HashMap<>();
+        Page<CheckStage> dataList = checkStageService.findByConditions(page,limit,name, leader, stage, status, createTime, endTime,verifier.getId());
+        map.put("count",dataList.getTotalElements());
+        map.put("data",checkStageService.decorateData(dataList));
+        return new BaseResponse(map);
     }
 
     @RequestMapping("/changeState")
     @ResponseBody
     //这个接口用于并处理接收审核的数据
-    private BaseResponse changeState(@RequestBody Map<String, Object> paramsMap){
+    private BaseResponse changeState(@RequestBody Map<String, Object> paramsMap,HttpServletRequest httpServletRequest){
         /*
          * checkStageID --> StageCheck表中的主键ID
          * checkStageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
@@ -123,11 +100,10 @@ public class StageController {
         String checkMessage = (String) paramsMap.get("msg");
         int checkStageCode = (int) paramsMap.get("stage");
         int checkStageStatus = (int) paramsMap.get("status");
-        Long verifierID = ((Integer) paramsMap.get("verifier")).longValue();
-        String messageTitle = null;
+        User verifier = (User) httpServletRequest.getSession().getAttribute("user");
+        String messageTitle;
         CheckStage toBeChangedCheckStage = checkStageService.findACheckStageByCheckStageID(checkStageID);
         Project project = toBeChangedCheckStage.getProject();
-        User verifier = userRepository.getOne(verifierID);
         int beingVerifiedProjStatusCode = StageCheckStatusToProjStatus.changeToProjectStatus(checkStageCode,checkStageStatus);
         Date endTime = null;
         switch (beingVerifiedProjStatusCode){
@@ -156,7 +132,6 @@ public class StageController {
         remarkJson.put("projectId", project.getId());
         remarkJson.put("projectName", project.getName());
         messageService.sendMessage(new Message(new Date(), 1, messageTitle, checkMessage, JSONObject.toJSONString(remarkJson), verifier, project.getLeader()));
-        //System.out.println(checkStageID + checkMessage + checkStageCode + checkStageStatus + verifierID);
         return new BaseResponse("Change success!");
     }
 
