@@ -95,7 +95,7 @@ public class CheckStageServiceImpl implements CheckStageService {
         return
                 limit * page < dataList.size() ?
                 new PageImpl<>(dataList.subList((page - 1)*limit, page*limit),Pageable.unpaged(), dataList.size()):
-                new PageImpl<>(dataList.subList((page - 1)*limit,dataList.size() - 1),Pageable.unpaged(),dataList.size());
+                new PageImpl<>(dataList.subList((page - 1)*limit,dataList.size()),Pageable.unpaged(),dataList.size());
     }
 
     @Override
