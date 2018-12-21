@@ -47,10 +47,9 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             }
         }
 
-        // 2. 是否是index页面，如果是则不做权限检查
-        if (requestUrl.equals(authorityManager.getIndexPath())
-                || requestUrl.equals(authorityManager.getLoginPath())
-                || requestUrl.equals(authorityManager.getLogoutPath())) {
+        // 2. 是否是登陆和登出页面，如果是则不做权限检查
+        if (requestUrl.equals(authorityManager.getLoginPage())
+                || requestUrl.equals(authorityManager.getLogoutPage())) {
             return true;
         }
 
@@ -68,8 +67,25 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             if (matcher.match(requestUrl, path)) {
                 // 4.1 检查登陆状态
                 Subject subject = SubjectUtils.getSubject();
+                // 如果已经登陆并且访问默认页面，则访问通过
+                if (SubjectUtils.isOnline(subject)) {
+                    if (requestUrl.equals(authorityManager.getIndexPage())) {
+                        AuthorityManager.getPublisher().
+                                fireAuthenticationSuccessEvent(new AuthorityEvent("visit index page success", request, request.getSession()));
+                        return true;
+                    }
+                    // 限制需要登陆的路径
+                    for (String loginLimitedPath : authorityManager.getLoginLimitedPath()) {
+                        if (matcher.match(requestUrl, loginLimitedPath)) {
+                            AuthorityManager.getPublisher().
+                                    fireAuthenticationSuccessEvent(new AuthorityEvent("visit login limited page success", request, request.getSession()));
+                            return true;
+                        }
+                    }
+                }
+                // 如果没有登陆
                 if (!SubjectUtils.isOnline(subject)) {
-                    response.sendRedirect(authorityManager.getIndexPath());
+                    response.sendRedirect(authorityManager.getLoginPage());
                     AuthorityManager.getPublisher().
                             fireAuthenticationFailEvent(new AuthorityEvent("have not login", request, request.getSession()));
                     return false;
@@ -80,7 +96,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                             fireAuthenticationSuccessEvent(new AuthorityEvent("authentication success", request, request.getSession()));
                     return true;
                 } else {
-                    response.sendRedirect(authorityManager.getIndexPath());
+                    response.sendRedirect(authorityManager.getIndexPage());
                     AuthorityManager.getPublisher().
                             fireAuthenticationFailEvent(new AuthorityEvent("authentication fail", request, request.getSession()));
                     return false;

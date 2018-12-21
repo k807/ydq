@@ -3,6 +3,7 @@ package group.ydq.service.authority;
 import group.ydq.authority.AuthorityChecker;
 import group.ydq.authority.Subject;
 import group.ydq.model.entity.rbac.Permission;
+import group.ydq.model.entity.rbac.Role;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.RBACService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,13 @@ public class AuthorityCheckerImpl implements AuthorityChecker {
 
     @Override
     public String getRoleByUser(String userNumber) {
-        User user = rbacService.getRoleByUserNumber(userNumber);
-        return user.getRole().getName();
+        Role role = rbacService.getRoleByUserNumber(userNumber);
+        return role.getName();
     }
 
     @Override
     public boolean checkPrincipal(Subject subject) {
-        User user = rbacService.getRoleByUserNumber(subject.getPrincipal());
-
+        User user = rbacService.getUserByUserNumber(subject.getPrincipal());
         return user.getPassword().equals(subject.getAccess());
     }
 }

@@ -83,11 +83,13 @@ public class SubjectUtils {
 
 
     static boolean login(Subject subject) {
+        HttpSession session = getHttpSession();
         if (isOnline(subject)) {
             return true;
         }
         if (AuthorityManager.checkSubject(subject)) {
             statusMap.put(subject, LoginStatus.ONLINE);
+            subjectMap.put(session, subject);
             AuthorityManager.getPublisher().fireLoginSuccessEvent(new LogEvent(subject, "login success"));
             return true;
         } else {

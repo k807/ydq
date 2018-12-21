@@ -22,12 +22,21 @@ public class AuthorityConfigurer {
     @Bean
     public AuthorityManager authorityManager(AuthorityChecker authorityChecker, PatternMatcher patternMatcher) {
         AuthorityManager manager = new AuthorityManager(authorityChecker, patternMatcher);
+
         manager.configureDefaultScanPath(new String[]{".*"});
-        manager.configureIndexPath("/user/index");
-        manager.configureLoginPath("/user/login");
-        manager.configureLogoutPath("/user/logout");
+
+        manager.configureIndexPage("/");
+        manager.configureLoginPage("/login");
+        manager.configureLogoutPage("/login");
         // 配置不受检查的路径 也可以使用@Unlimited注解
-        manager.configureUnlimitedPath("/test/hello");
+        manager.configureUnlimitedPath("/authority/login");
+        manager.configureUnlimitedPath("/authority/addUser");
+        manager.configureUnlimitedPath("/assets/.*");
+        // todo: 测试接口关闭校验
+        manager.configureUnlimitedPath("/authority/.*");
+        // 配置需要登陆才能获取的权限
+        manager.configureLoginLimitedPath("/authority/logout");
+        manager.configureLoginLimitedPath("/user/.*");
         // 支持注册监听器
         manager.registListener("logListener", new LogListener());
         return manager;
