@@ -18,7 +18,7 @@ public interface CheckStageService  extends  BaseService{
     CheckStage findACheckStageByCheckStageID(Long stageCheckID);
     void changeVerifyMessage(Long stageCheckID, String adviceMessage, int changeToThisStatus, User verifierId, Date endTime);
     void startStage(Long projectId,int stage);
-    Page<CheckStage> findByConditions(int page, int limit, String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd);
-    Page<CheckStage> getCheckStageByStageStatus(int page, int limit, int stageStatus);
+    Page<CheckStage> findByConditions(int page, int limit, String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd,Long verifierID);
+    Page<CheckStage> findCheckStagesByStageAndVerifiers(int page, int limit, int stageStatus,User verifier);
     List<JSONObject> decorateData(Page<CheckStage> checkStages);
 }

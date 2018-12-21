@@ -141,8 +141,8 @@
                 {fixed: 'right', title: '操作', align: 'center', toolbar: '#bar'}
             ]],
             page: true,
-            limit: 1,
-            limits: [1, 2, 4],
+            limit: 10,
+            limits: [10, 20, 30],
             url: "/stage/getAll",
             response: {
                 statusCode: 200,
@@ -165,7 +165,6 @@
                         stageId.push(stage.data[i].id);
                     }
                     var id = stageId.join(',');
-                    var sender = 1;
                     var s = parseInt($("#stage").val());
                     if(s === 1){
                         var t = '设置中期检查规则说明';
@@ -176,7 +175,7 @@
                     layer.open({
                         type: 2,
                         title: t,
-                        content: ['checkRule.html?id=' + id + '&sender=' + sender + '&stage=' + s , 'no'],
+                        content: ['checkRule.html?id=' + id + '&stage=' + s , 'no'],
                         area: ['700px', '550px'],
                     });
                 }
@@ -209,7 +208,6 @@
                             }
                         }
                         option.msg = value;
-                        option.verifier = 1;
                         option.status = 1;
                         changeStatus(option);
                         layer.close(index);
@@ -225,7 +223,6 @@
                             }
                         }
                         option.msg = value;
-                        option.verifier = 1;
                         option.status = 2;
                         changeStatus(option);
                         layer.close(index);

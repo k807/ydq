@@ -57,7 +57,7 @@ public class CheckStageServiceImpl implements CheckStageService {
 
     @Override
     public CheckStage findACheckStageByCheckStageID(Long stageCheckID) {
-        return stageDao.getCheckStagesById(stageCheckID);
+        return stageDao.getOne(stageCheckID);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CheckStageServiceImpl implements CheckStageService {
     /*
     * 不要动下面这段代码！
     * */
-    public Page<CheckStage> findByConditions(int page, int limit, String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd) {
+    public Page<CheckStage> findByConditions(int page, int limit, String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd,Long verifierID) {
         String sqlSession = "";
         if(!"".equals(stageStatus)){
             int status = Integer.parseInt(stageStatus);
@@ -90,8 +90,10 @@ public class CheckStageServiceImpl implements CheckStageService {
                 "right join `user` on project.leader_id = `user`.id " +
                 "where project.`name` like '%" + projectName + "%' and " +
                 "`user`.nick like '%" + leaderName + "%' and " +
+                "verifiers_id = " + verifierID + " and " +
                 "check_stage.stage = " + projectStage + " and " + sqlSession +
                 "project.create_time between '" + createTimeStart + "' and '" + createTimeEnd + " ' " ,CheckStage.class).getResultList();
+
         return
                 limit * page < dataList.size() ?
                 new PageImpl<>(dataList.subList((page - 1)*limit, page*limit),Pageable.unpaged(), dataList.size()):
@@ -104,9 +106,9 @@ public class CheckStageServiceImpl implements CheckStageService {
     }
 
     @Override
-    public Page<CheckStage> getCheckStageByStageStatus(int page, int limit, int stageStatus) {
+    public Page<CheckStage> findCheckStagesByStageAndVerifiers(int page, int limit, int stageStatus, User verifier) {
         Pageable pageable = PageRequest.of(page-1, limit);
-        return stageDao.findCheckStagesByStage(pageable, stageStatus);
+        return stageDao.findCheckStagesByStageAndVerifiers(pageable, stageStatus,verifier);
     }
 
     @Override

@@ -86,7 +86,8 @@ layui.use(['jquery', 'table', 'form'], function () {
         page: true,
         limit: 10,
         limits: [10, 20, 30],
-        url: "/pm/getPMTable",
+        // url: "/pm/getPMTable",
+        // initSort: {field:'date', type:'desc'},
         response: {
             statusCode: 200
             , countName: 'count'

@@ -24,8 +24,5 @@ public interface CheckStageRepository extends JpaRepository<CheckStage,Long> {
     @Query(value = "select * from check_stage where id=?1",nativeQuery = true)
     CheckStage getCheckStagesById(Long checkStageID);
 
-    /*@Query(value = "select * from check_stage where stage = ?1",nativeQuery = true)
-    List<CheckStage> getCheckStagesByStageStatus(int stageStatus);*/
-
-    Page<CheckStage> findCheckStagesByStage(Pageable pageable, int stage);
+    Page<CheckStage> findCheckStagesByStageAndVerifiers(Pageable pageable, int stage, User verifier);
 }
