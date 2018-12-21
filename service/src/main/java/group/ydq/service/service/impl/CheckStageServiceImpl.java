@@ -57,7 +57,7 @@ public class CheckStageServiceImpl implements CheckStageService {
 
     @Override
     public CheckStage findACheckStageByCheckStageID(Long stageCheckID) {
-        return stageDao.getCheckStagesById(stageCheckID);
+        return stageDao.getOne(stageCheckID);
     }
 
     @Override
@@ -92,6 +92,7 @@ public class CheckStageServiceImpl implements CheckStageService {
                 "`user`.nick like '%" + leaderName + "%' and " +
                 "check_stage.stage = " + projectStage + " and " + sqlSession +
                 "project.create_time between '" + createTimeStart + "' and '" + createTimeEnd + " ' " ,CheckStage.class).getResultList();
+
         return
                 limit * page < dataList.size() ?
                 new PageImpl<>(dataList.subList((page - 1)*limit, page*limit),Pageable.unpaged(), dataList.size()):

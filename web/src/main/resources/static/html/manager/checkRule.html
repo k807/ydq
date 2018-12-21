@@ -79,13 +79,11 @@
 
         var str = getQueryString('id');
         var stageId = str.split(',');
-        var sender = getQueryString('sender');
         var stage = parseInt(getQueryString('stage'));
         form.on('submit(sub)', function (data) {
             data.field.ruleContent = layedit.getContent(index);
             var msg = {};
             msg.stage = stageId;
-            msg.sender = sender;
             if (stage === 1) {
                 msg.title = '中期检查说明'
             } else if (stage === 2) {
