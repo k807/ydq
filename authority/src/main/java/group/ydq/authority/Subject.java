@@ -2,6 +2,8 @@ package group.ydq.authority;
 
 import group.ydq.authority.exception.ModifyIllegalException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -20,6 +22,8 @@ public class Subject {
     private String[] permissions;
 
     private boolean isLogin = false;
+
+    private Map<Object, Object> bindMap = new HashMap<>();
 
     public String getPrincipal() {
         return principal;
@@ -58,8 +62,12 @@ public class Subject {
     }
 
     // 在当前subject上绑定数据
-    public void bind(Object object) {
-        SubjectUtils.bind(this, object);
+    public void bind(Object key, Object value) {
+        bindMap.put(key, value);
+    }
+
+    public Object getBindMap(Object key) {
+        return bindMap.get(key);
     }
 
     private void checkModifiable() {

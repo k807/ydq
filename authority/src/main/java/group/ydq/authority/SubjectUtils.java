@@ -28,7 +28,6 @@ public class SubjectUtils {
 
     }
 
-    private static Map<Subject, Object> dataMap = new ConcurrentHashMap<>();
     private static Map<Subject, LoginStatus> statusMap = new ConcurrentHashMap<>();
     private static Map<HttpSession, Subject> subjectMap = new ConcurrentHashMap<>();
 
@@ -65,19 +64,6 @@ public class SubjectUtils {
             subject = new Subject();
             subjectMap.putIfAbsent(session, subject);
             return subject;
-        }
-    }
-
-
-    /**
-     * 在Subject上绑定数据
-     *
-     * @param subject
-     * @param object
-     */
-    static void bind(Subject subject, Object object) {
-        if (isOnline(subject)) {
-            dataMap.put(subject, object);
         }
     }
 
