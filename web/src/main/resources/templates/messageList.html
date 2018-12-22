@@ -73,9 +73,13 @@
             <p>
                 <b style="font-size:20px;color:#009688;">{{item.title}}</b>
                 <br><span>{{item.content}}</span>
-
-            </p>
-        </div>
+                {{# if(item.remark !=null&&item.remark.hasOwnProperty("ruleId")) { }}
+                <span>
+        <a onclick="newTab('/project/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">入口</a>
+                </span>
+    {{# } }}
+    </p>
+    </div>
     </li>
     {{# }); }}
     {{#  if(d.list.length === 0){ }}

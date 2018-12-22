@@ -8,6 +8,7 @@ import group.ydq.model.entity.dm.DeclareRule;
 import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.service.service.DeclareService;
+import group.ydq.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,13 +59,21 @@ public class DeclareServiceImpl extends BaseServiceImpl implements DeclareServic
     }
 
     @Override
+    public Page<DeclareRule> searchRules(int page, int limit, String title, String major, String start, String end) {
+        Pageable pageable= PageRequest.of(page-1, limit);
+        Date startTime=DateUtil.strToDate(start,DateUtil.format2);
+        Date endTime=DateUtil.strToDate(end,DateUtil.format2);
+        return ruleRepository.queryDeclareRulesByTitleContainingAndMajorInAndStartTimeAfterAndEndTimeBefore(pageable,title,ProjectServiceImpl.strToCollection(major), new Date(startTime.getTime()-1),new Date((endTime.getTime()+1)));
+    }
+
+    @Override
     public DeclareRule getRule(long id) {
         return ruleRepository.getOne(id);
     }
 
     @Override
-    public void addRule(DeclareRule rule) {
-        ruleRepository.save(rule);
+    public DeclareRule addRule(DeclareRule rule) {
+        return ruleRepository.saveAndFlush(rule);
     }
 
     @Override

@@ -12,36 +12,51 @@
         <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">学号:</label>
+                    <label class="layui-form-label">项目名称:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="stuNumber" placeholder="请输入学号" autocomplete="off"
-                               class="layui-input" id="studentNumber">
+                        <input type="text" name="name" placeholder="请输入项目名称" autocomplete="off"
+                               class="layui-input" id="name">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">学生姓名:</label>
+                    <label class="layui-form-label">项目级别:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input" id="studentName">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">学生状态:</label>
-                    <div class="layui-input-inline">
-                        <select name="state" lay-search="" id="studentState">
+                        <select name="level" lay-search="" id="level">
                             <option value="">请选择或输入</option>
-                            <option value="1">启用</option>
-                            <option value="0">禁用</option>
-                            <option value="2">黑名单</option>
+                            <option value="0">校级一类</option>
+                            <option value="1">校级二类</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">注册渠道:</label>
+                    <label class="layui-form-label">所属专业:</label>
                     <div class="layui-input-inline">
-                        <select name="channel" lay-search="" id="studentRegisterChannel">
+                        <select name="major" lay-search="">
                             <option value="">请选择或输入</option>
-                            <option value="0">PC端</option>
-                            <option value="1">微信端</option>
+                            <option value="0">计算机科学与技术</option>
+                            <option value="1">电子信息工程</option>
+                            <option value="2">电子信息科学与技术</option>
+                            <option value="3">数字媒体技术</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">项目状态:</label>
+                    <div class="layui-input-inline">
+                        <select name="state" lay-search="" id="state">
+                            <option value="">请选择或输入</option>
+                            <option value="-1">未提交</option>
+                            <option value="0">审核中</option>
+                            <option value="1">初审通过</option>
+                            <option value="2">初审未通过</option>
+                            <option value="3">立项评审中</option>
+                            <option value="4">立项评审完成</option>
+                            <option value="5">已立项</option>
+                            <option value="6">不立项</option>
+                            <option value="7">中期检查待整改</option>
+                            <option value="8">中期检查通过</option>
+                            <option value="9">结题验收待整改</option>
+                            <option value="10">已结题</option>
                         </select>
                     </div>
                 </div>
@@ -206,6 +221,24 @@
                     content: '/rule/get/'+data.entrance.id
                 });
             }
+        });
+
+        form.on('submit(search)', function (data) {
+            tableIns.reload({
+                url: '/project/teacher/search',
+                where: {
+                    name: data.field.name,
+                    level: data.field.level,
+                    state: data.field.state,
+                    major: data.field.major,
+                    start: data.field.start,
+                    end: data.field.end
+                },
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
         });
 
         function newTab(url,tit){

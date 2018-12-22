@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -32,4 +33,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long>{
 
     int countProjectsByEntrance(DeclareRule rule);
 
+    Page<Project> queryProjectsByLeaderAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(Pageable pageable,User leader,String name, Collection level,Collection state,Collection major,Date start,Date end);
+
+    Page<Project> queryProjectsByManagerAndSubmitTrueAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(Pageable pageable,User manager,String name, Collection level,Collection state,Collection major,Date start,Date end);
 }

@@ -17,9 +17,11 @@ public interface DeclareService extends BaseService{
 
     Page<DeclareRule> getAllRules(int page,int limit);
 
+    Page<DeclareRule> searchRules(int page,int limit,String title,String major,String start,String end);
+
     DeclareRule getRule(long id);
 
-    void addRule(DeclareRule rule);
+    DeclareRule addRule(DeclareRule rule);
 
     int getProjectNumOfRule(long ruleId);
 

@@ -12,36 +12,46 @@
         <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">学号:</label>
+                    <label class="layui-form-label">项目名称:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="stuNumber" placeholder="请输入学号" autocomplete="off"
-                               class="layui-input" id="studentNumber">
+                        <input type="text" name="name" placeholder="请输入项目名称" autocomplete="off"
+                               class="layui-input" id="name">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">学生姓名:</label>
+                    <label class="layui-form-label">项目级别:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input" id="studentName">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">学生状态:</label>
-                    <div class="layui-input-inline">
-                        <select name="state" lay-search="" id="studentState">
+                        <select name="level" lay-search="" id="level">
                             <option value="">请选择或输入</option>
-                            <option value="1">启用</option>
-                            <option value="0">禁用</option>
-                            <option value="2">黑名单</option>
+                            <option value="0">校级一类</option>
+                            <option value="1">校级二类</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">注册渠道:</label>
+                    <label class="layui-form-label">所属专业:</label>
                     <div class="layui-input-inline">
-                        <select name="channel" lay-search="" id="studentRegisterChannel">
+                        <select name="major" lay-search="">
                             <option value="">请选择或输入</option>
-                            <option value="0">PC端</option>
-                            <option value="1">微信端</option>
+                            <option value="0">计算机科学与技术</option>
+                            <option value="1">电子信息工程</option>
+                            <option value="2">电子信息科学与技术</option>
+                            <option value="3">数字媒体技术</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">项目状态:</label>
+                    <div class="layui-input-inline">
+                        <select name="state" lay-search="" id="state">
+                            <option value="">请选择或输入</option>
+                            <option value="0">审核中</option>
+                            <option value="1">初审通过</option>
+                            <option value="2">初审未通过</option>
+                            <option value="3">立项评审中</option>
+                            <option value="4">立项评审完成</option>
+                            <option value="5">已立项</option>
+                            <option value="6">不立项</option>
                         </select>
                     </div>
                 </div>
@@ -94,11 +104,12 @@
 <script src="/assets/layui/layui.js"></script>
 <script>
     var tableIns;
-    layui.use(['table','layer','laydate','jquery'],function(){
+    layui.use(['table', 'layer', 'laydate', 'form', 'jquery'], function () {
         var $ = layui.$;
         var table = layui.table;
         var laydate = layui.laydate;
-        var layer=layui.layer;
+        var layer = layui.layer;
+        var form = layui.form;
 
         laydate.render({
             elem: '#start',
@@ -116,51 +127,74 @@
             cols: [
                 [
                     {type: 'checkbox', fixed: 'left'},
-                    {field: 'id',title:'ID',width:60, sort:true,hide: true},
+                    {field: 'id', title: 'ID', width: 60, sort: true, hide: true},
                     {field: 'name', title: "项目名称"},
-                    {field:'leader',title:"负责人",width:120,sort:true,templet:function (d) {
+                    {
+                        field: 'leader', title: "负责人", width: 120, sort: true, templet: function (d) {
                             return d.leader.nick
-                        }},
-                    {field:'level',title:'项目级别',width:100,templet:function(d){
-                        switch (d.level){
-                            case 0:return "校级一类";
-                            case 1:return "校级二类";
                         }
-                    }},
-                    {field: 'major', title: "所属专业",width:180,sort:true,templet:function(d){
-                        switch (d.major){
-                            case 0:return '计算机科学与技术';
-                            case 1:return '电子信息工程';
-                            case 2:return '电子信息科学与技术';
-                            case 3:return '数字媒体技术';
-                        }
-                    }},
-                    {field:'experts',title:'分配专家',templet: function(d){
-                        if (d.experts.length===0)
-                            return "尚未分配";
-                        else{
-                            var expert='';
-                            for (var i=0;i<d.experts.length-1;i++){
-                                expert+=d.experts[i].nick+"、"
-                            }
-                            expert+=d.experts[d.experts.length-1].nick;
-                            return expert;
-                        }}
                     },
-                    {field: 'createTime', title: "创建时间",width:170,sort:true},
-                    {field: 'updateTime', title: "更新时间",width:170,sort:true},
-                    {field: 'state',title:'状态',width:120,sort:true,templet:function(d){
-                        switch(d.state){
-                            case 0:return '审核中';
-                            case 1:return '初审通过';
-                            case 2:return '初审未通过';
-                            case 3:return '立项评审中';
-                            case 4:return '立项评审完成';
-                            case 5:return '已立项';
-                            case 6:return '不立项';
+                    {
+                        field: 'level', title: '项目级别', width: 100, templet: function (d) {
+                            switch (d.level) {
+                                case 0:
+                                    return "校级一类";
+                                case 1:
+                                    return "校级二类";
+                            }
                         }
-                    }},
-                    {title: '操作', toolbar: '#bar',width:160}
+                    },
+                    {
+                        field: 'major', title: "所属专业", width: 180, sort: true, templet: function (d) {
+                            switch (d.major) {
+                                case 0:
+                                    return '计算机科学与技术';
+                                case 1:
+                                    return '电子信息工程';
+                                case 2:
+                                    return '电子信息科学与技术';
+                                case 3:
+                                    return '数字媒体技术';
+                            }
+                        }
+                    },
+                    {
+                        field: 'experts', title: '分配专家', templet: function (d) {
+                            if (d.experts.length === 0)
+                                return "尚未分配";
+                            else {
+                                var expert = '';
+                                for (var i = 0; i < d.experts.length - 1; i++) {
+                                    expert += d.experts[i].nick + "、"
+                                }
+                                expert += d.experts[d.experts.length - 1].nick;
+                                return expert;
+                            }
+                        }
+                    },
+                    {field: 'createTime', title: "创建时间", width: 170, sort: true},
+                    {field: 'updateTime', title: "更新时间", width: 170, sort: true},
+                    {
+                        field: 'state', title: '状态', width: 120, sort: true, templet: function (d) {
+                            switch (d.state) {
+                                case 0:
+                                    return '审核中';
+                                case 1:
+                                    return '初审通过';
+                                case 2:
+                                    return '初审未通过';
+                                case 3:
+                                    return '立项评审中';
+                                case 4:
+                                    return '立项评审完成';
+                                case 5:
+                                    return '已立项';
+                                case 6:
+                                    return '不立项';
+                            }
+                        }
+                    },
+                    {title: '操作', toolbar: '#bar', width: 160}
                 ]
             ],
             text: {
@@ -185,63 +219,103 @@
         table.on('tool(table)', function (obj) {
             var data = obj.data;
 
-            if (obj.event==='detail'){
-                newTab('/project/getDetails/'+data.id,data.name);
-            } else if (obj.event === 'distribute'){
+            if (obj.event === 'detail') {
+                newTab('/project/getDetails/' + data.id, data.name);
+            } else if (obj.event === 'distribute') {
                 layer.open({
                     type: 2,
                     title: '分配专家',
                     shadeClose: true,
                     shade: 0.8,
-                    area:['30%'],
-                    content: '/html/expert/expertList.html?id='+data.id
+                    area: ['30%'],
+                    content: '/html/expert/expertList.html?id=' + data.id + '&name=' + data.name
                 });
-            } else if (obj.event==='verify'){
+            } else if (obj.event === 'verify') {
                 layer.confirm('是否通过审核？', {
                     btn: ['通过', '不通过', '取消'] //可以无限个按钮
-                    ,btn3: function(index, layero){
+                    , btn3: function (index, layero) {
                         layer.close(index);
                     }
-                }, function(index, layero){
-                    changeState(data.id,1);
+                }, function (index, layero) {
+                    changeState(data.id, 1);
+                    sendMsg('项目初步审核通过！', '您的项目已通过初步审核，进入立项评审阶段', data.leader.id, data.id, data.name);
                     layer.close(index);
-                }, function(index){
-                    changeState(data.id,2);
+                }, function (index) {
+                    changeState(data.id, 2);
+                    sendMsg('项目初步审核未通过！', '很抱歉，您的项目未通过初步审核', data.leader.id, data.id, data.name);
                     layer.close(index);
                 });
-            } else if (obj.event==='approval'){
+            } else if (obj.event === 'approval') {
                 layer.confirm('是否立项？', {
                     btn: ['立项', '不立项', '取消'] //可以无限个按钮
-                    ,btn3: function(index, layero){
+                    , btn3: function (index, layero) {
                         layer.close(index);
                     }
-                }, function(index, layero){
-                    changeState(data.id,5);
+                }, function (index, layero) {
+                    changeState(data.id, 5);
+                    sendMsg('项目已立项！', '你的项目已被立项，进入中期检查阶段！', data.leader.id, data.id, data.name);
                     layer.close(index);
-                }, function(index){
-                    changeState(data.id,6);
+                }, function (index) {
+                    changeState(data.id, 6);
+                    sendMsg('项目未立项！', '很抱歉，经过审核我们决定不对你的项目进行立项', data.leader.id, data.id, data.name);
                     layer.close(index);
                 });
             }
         });
 
-        function changeState(id,state){
-            $.get('/project/changeState',{projectId:id,state:state},function (res) {
+        form.on('submit(search)', function (data) {
+            tableIns.reload({
+                url: '/project/manager/search',
+                where: {
+                    name: data.field.name,
+                    level: data.field.level,
+                    state: data.field.state,
+                    major: data.field.major,
+                    start: data.field.start,
+                    end: data.field.end
+                },
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+        function changeState(id, state) {
+            $.get('/project/changeState', {projectId: id, state: state}, function (res) {
                 tableIns.reload();
-                layer.msg('操作成功',{icon:1});
-            },'json');
+                layer.msg('操作成功', {icon: 1});
+            }, 'json');
         }
 
-        function newTab(url,tit){
-            if(top.layui.index){
-                top.layui.index.openTabsPage(url,tit)
-            }else{
+        function newTab(url, tit) {
+            if (top.layui.index) {
+                top.layui.index.openTabsPage(url, tit)
+            } else {
                 window.open(url)
             }
         }
     });
-    function refresh(){
+
+    function refresh() {
         tableIns.reload();
+    }
+
+    function sendMsg(title, content, receiver, projectId, projectName) {
+        var data = {
+            title: title,
+            type: 1,
+            receiver: {id: receiver},
+            content: content,
+            remark: '{"projectId":' + projectId + ',"projectName":"' + projectName + '"}'
+        };
+        layui.jquery.ajax({
+            url:'/pm/send',
+            type:'post',
+            data:JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json'
+        });
     }
 </script>
 </body>

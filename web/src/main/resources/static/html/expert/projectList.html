@@ -12,37 +12,41 @@
         <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">学号:</label>
+                    <label class="layui-form-label">项目名称:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="stuNumber" placeholder="请输入学号" autocomplete="off"
-                               class="layui-input" id="studentNumber">
+                        <input type="text" name="name" placeholder="请输入项目名称" autocomplete="off"
+                               class="layui-input" id="name">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">学生姓名:</label>
+                    <label class="layui-form-label">项目级别:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input"
-                               id="studentName">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">学生状态:</label>
-                    <div class="layui-input-inline">
-                        <select name="state" lay-search="" id="studentState">
+                        <select name="level" lay-search="" id="level">
                             <option value="">请选择或输入</option>
-                            <option value="1">启用</option>
-                            <option value="0">禁用</option>
-                            <option value="2">黑名单</option>
+                            <option value="0">校级一类</option>
+                            <option value="1">校级二类</option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">注册渠道:</label>
+                    <label class="layui-form-label">所属专业:</label>
                     <div class="layui-input-inline">
-                        <select name="channel" lay-search="" id="studentRegisterChannel">
+                        <select name="major" lay-search="">
                             <option value="">请选择或输入</option>
-                            <option value="0">PC端</option>
-                            <option value="1">微信端</option>
+                            <option value="0">计算机科学与技术</option>
+                            <option value="1">电子信息工程</option>
+                            <option value="2">电子信息科学与技术</option>
+                            <option value="3">数字媒体技术</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态:</label>
+                    <div class="layui-input-inline">
+                        <select name="state" lay-search="" id="state">
+                            <option value="">请选择或输入</option>
+                            <option value="0">未评分</option>
+                            <option value="1">已评分</option>
                         </select>
                     </div>
                 </div>
@@ -95,11 +99,12 @@
         base: '/assets/'
     }).extend({
         selectPlus: 'lib/selectPlus'
-    }).use(['table', 'layer', 'laydate', 'jquery', 'selectPlus'], function () {
+    }).use(['table', 'layer','form', 'laydate', 'jquery', 'selectPlus'], function () {
         var $ = layui.$;
         var table = layui.table;
         var laydate = layui.laydate;
         var selectPlus = layui.selectPlus;
+        var form=layui.form;
 
         laydate.render({
             elem: '#start',
@@ -268,6 +273,24 @@
                         }
                     })
             }
+        });
+
+        form.on('submit(search)', function (data) {
+            tableIns.reload({
+                url: '/project/expert/search',
+                where: {
+                    name: data.field.name,
+                    level: data.field.level,
+                    state: data.field.state,
+                    major: data.field.major,
+                    start: data.field.start,
+                    end: data.field.end
+                },
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
         });
 
         function newTab(url, tit) {

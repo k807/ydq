@@ -2,6 +2,7 @@ package group.ydq.service.service;
 
 import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
+import group.ydq.model.entity.rbac.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -35,6 +36,10 @@ public interface ProjectService extends BaseService{
     ExpertReview getExpertReview(long id);
 
     boolean isAllExpertsMarked(long projectId);
+
+    Page<Project> searchProject(int role, int page, int limit, User user,String name, String level, String state, String major, String start, String end);
+
+    Page<ExpertReview> searchExpertReview(int page, int limit, User user,String name, String level, String state, String major, String start, String end);
 
     void saveReview(ExpertReview review);
 }

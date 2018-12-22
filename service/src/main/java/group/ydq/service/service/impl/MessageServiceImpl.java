@@ -127,9 +127,7 @@ public class MessageServiceImpl implements MessageService {
                 map.put("date", DateUtil.dateToStr(list.get(i).getDate(), DateUtil.format4));
             }
             User sender = list.get(i).getSender();
-            User receiver = list.get(i).getReceiver();
             map.put("sender", sender.getNick());
-            map.put("receiver", receiver.getNick());
             listMap.add(map);
         }
         return listMap;

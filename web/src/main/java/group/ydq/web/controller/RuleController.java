@@ -81,9 +81,12 @@ public class RuleController {
     @RequestMapping("/add")
     @ResponseBody
     public BaseResponse addRule(@RequestBody DeclareRule rule){
-        rule.setPublisher(((User) SubjectUtils.getSubject().getBindMap("user")));
-        declareService.addRule(rule);
-        return RetResponse.success();
+        User publisher=(User) SubjectUtils.getSubject().getBindMap("user");
+        rule.setPublisher(publisher);
+        Map<String,Object> map=new HashMap<>();
+        map.put("id",declareService.addRule(rule).getId());
+        map.put("publisher",publisher.getId());
+        return RetResponse.success(map);
     }
 
     @RequestMapping("/del")
@@ -91,5 +94,19 @@ public class RuleController {
     public BaseResponse delRule(long ruleId){
         declareService.delRule(ruleId);
         return RetResponse.success();
+    }
+
+    @RequestMapping("/search")
+    @ResponseBody
+    public BaseResponse search(int page,int limit,String title,String major,String start,String end){
+        if (start.equals(""))
+            start="1900-01-01";
+        if (end.equals(""))
+            end="2200-12-31";
+        Page<DeclareRule> rules=declareService.searchRules(page, limit, title, major, start, end);
+        Map<String,Object> map=new HashMap<>();
+        map.put("data",ruleList(rules.getContent()));
+        map.put("count",rules.getTotalElements());
+        return RetResponse.success(map);
     }
 }
