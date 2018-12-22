@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -74,6 +73,16 @@ public class PMcontroller {
     }
 
     /*
+     * 查询站内信息
+     * 参数：标题；接收人；私信类型
+     * */
+    @GetMapping(value = "/queryPM")
+    @ResponseBody
+    public Map<String, Object> queryPM(int type, String title,String receiver, int page, int limit) {
+        return messageServiceImpl.getPMQuery(type, title,receiver, page, limit);
+    }
+
+    /*
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数
      * */
@@ -83,7 +92,6 @@ public class PMcontroller {
         User s = (User) SubjectUtils.getSubject().getBindMap("user");
         message.setDate(new Date());
         message.setSender(s);
-//        Message messageOne = new Message(new Date(), type, title, content, remark);
         messageServiceImpl.sendMessage(message);
         return RetResponse.success();
     }

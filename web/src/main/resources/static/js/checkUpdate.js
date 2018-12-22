@@ -28,13 +28,12 @@ layui.use('jquery', function () {
         })
     }
 
-    // setInterval(checkUpdate, 5000);
+    setInterval(checkUpdate, 60000);
 });
 
 
 function getNow() {
     nowTime = new Date().getTime()
-    // alert(nowTime)
 }
 
 

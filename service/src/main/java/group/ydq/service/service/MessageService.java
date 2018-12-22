@@ -1,9 +1,7 @@
 package group.ydq.service.service;
 
 import group.ydq.model.entity.pm.Message;
-import group.ydq.model.entity.rbac.User;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,8 +9,6 @@ import java.util.Map;
  * @date on 2018/11/12 18:00
  */
 public interface MessageService {
-
-    Map<String, Object> getPMTable(int page, int limit);
 
     Message checkUpdate();
 
@@ -22,10 +18,10 @@ public interface MessageService {
 
     void deleteMessage(Long id);
 
-    List<Message> findBySender(User sender);
-
-    List<Message> findByReceiver(User receiver);
-
     Map<String, Object> getPMList();
+
+    Map<String, Object> getPMTable(int page, int limit);
+
+    Map<String, Object> getPMQuery(int type, String title, String receiver, int page, int limit);
 
 }

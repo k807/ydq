@@ -53,7 +53,7 @@ function initMessageList(list) {
 }
 
 
-layui.use(['jquery','layer', 'table', 'form'], function () {
+layui.use(['jquery', 'layer', 'table', 'form'], function () {
     var $ = layui.$;
     var layer = layui.layer;
     var table = layui.table;
@@ -61,22 +61,29 @@ layui.use(['jquery','layer', 'table', 'form'], function () {
     var tableIns = table.render({
         elem: '#table',
         cols: [[
-            // {type: 'checkbox', fixed: 'left'},
-            // {field: 'id', hide: true},
             {field: 'title', title: "标题", sort: true},
             {field: 'type', title: "消息类型", sort: true},
             {field: 'date', title: "发送日期", sort: true},
             {field: 'content', title: "消息内容", event: "msgContent"},
             {field: 'sender', title: "发送人", sort: true},
-            {field: 'receiver', title: "接收人", sort: true},
             {
-                field: 'remark', title: '备注', event: "projectDetail"
+                field: 'receiver', title: "接收人", sort: true
+                , templet: function (row) {
+                    return row.sender == "" ? "所有用户" : row.sender
+                }
+            },
+            {
+                field: 'remark', title: '备注', event: "remarkDetail"
                 , templet: function (row) {
                     var obj
                     if (row.remark != "") {
                         obj = JSON.parse(row.remark)
                         if (obj.hasOwnProperty("projectId")) {
                             var id = "项目id:" + obj.projectId
+                            var a = "<a >" + id + "</a>"
+                            return a
+                        } else if (obj.hasOwnProperty("ruleId")) {
+                            var id = "入口id:" + obj.ruleId
                             var a = "<a >" + id + "</a>"
                             return a
                         }
@@ -90,7 +97,7 @@ layui.use(['jquery','layer', 'table', 'form'], function () {
         limit: 10,
         limits: [10, 20, 30],
         url: "/pm/getPMTable",
-        initSort: {field:'date', type:'desc'},
+        initSort: {field: 'date', type: 'desc'},
         response: {
             statusCode: 200
             , countName: 'count'
@@ -129,10 +136,12 @@ layui.use(['jquery','layer', 'table', 'form'], function () {
                     })
                 });
                 break;
-            case 'projectDetail':
+            case 'remarkDetail':
                 var obj = JSON.parse(data.remark)
                 if (obj.hasOwnProperty("projectId")) {
                     newTab('/project/getDetails/' + obj.projectId, obj.projectName)
+                } else if (obj.hasOwnProperty("ruleId")) {
+                    newTab('/project/declare.htm?rule=' + obj.ruleId + '&publisher=' + obj.publisher, obj.ruleTitle)
                 }
                 break;
             case 'msgContent':
@@ -140,8 +149,8 @@ layui.use(['jquery','layer', 'table', 'form'], function () {
                 var content = data.content
                 layer.open({
                     type: 1,
-                    title:title,
-                    content: '\<\div style="padding:20px;">'+content+'\<\/div>',
+                    title: title,
+                    content: '\<\div style="padding:20px;">' + content + '\<\/div>',
                     area: ['420px', '240px'], //宽高
                 });
 
@@ -150,6 +159,48 @@ layui.use(['jquery','layer', 'table', 'form'], function () {
                 break
         }
     });
+    form.on('submit(search)', function (data) {
+        tableIns.reload({
+            url: '/pm/queryPM',
+            where: {
+                type: data.field.type,
+                title: data.field.title,
+                receiver: data.field.receiver
+            },
+            page: {
+                curr: 1
+            }
+        });
+        return false;
+    });
+    form.on('select(type)', function (data) {
+        tableIns.reload({
+            url: '/pm/queryPM',
+            where: {
+                type: data.value,
+                title: $("#title").val(),
+                receiver: $("#receiver").val()
+            },
+            page: {
+                curr: 1
+            }
+        });
+    });
+
+    // $("#submit").click(search)
+    //
+    // function search() {
+    //     table.reload('table', {
+    //         url: "/pm/queryPM"
+    //         , where: {
+    //             type: $("#type").val(),
+    //             title: $("#title").val(),
+    //         } //设定异步数据接口的额外参数
+    //         , page: {
+    //             page: 1 //重新从第 1 页开始
+    //         }
+    //     });
+    // }
 
     function newTab(url, tit) {
         if (top.layui.index) {

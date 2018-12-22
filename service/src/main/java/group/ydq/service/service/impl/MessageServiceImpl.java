@@ -1,18 +1,19 @@
 package group.ydq.service.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import group.ydq.authority.SubjectUtils;
 import group.ydq.model.dao.pm.MessageRepository;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.entity.pm.Message;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.MessageService;
 import group.ydq.utils.DateUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,45 +26,17 @@ import java.util.Map;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-    @Autowired
+    @Resource
     private MessageRepository messageRepository;
 
-    @Autowired
+    @Resource
     private UserRepository userRepository;
 
     @Override
-    public Map<String, Object> getPMTable(int page, int limit) {
-        Pageable pageable = new PageRequest(page - 1, limit);
-        Page<Message> allList = messageRepository.findAll(pageable);
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("statusCode", 200);
-        map.put("count", messageRepository.findAll().size());
-
-
-        List<Map<String, Object>> listMap = new ArrayList<>();
-        for (Message message : allList) {
-            Map<String, Object> m = new HashMap<>();
-            m.put("id", message.getId());
-            m.put("title", message.getTitle());
-            m.put("date", DateUtil.dateToStr(message.getDate(), DateUtil.format4));
-            m.put("type", message.getType() == 0 ? "公告" : "消息");
-            m.put("content", message.getContent());
-            User sender = message.getSender();
-            User receiver = message.getReceiver();
-            m.put("sender", sender.getNick());
-            m.put("receiver", receiver.getNick());
-            m.put("remark", message.getRemark());
-            listMap.add(m);
-        }
-        map.put("object", listMap);
-
-        return map;
-    }
-
-    @Override
     public Message checkUpdate() {
-        return messageRepository.findAllOrderByDate().get(0);
+        User receiver = (User) SubjectUtils.getSubject().getBindMap("user");
+        Message m = messageRepository.findTopByReceiverOrderByDateDesc(receiver);
+        return m;
     }
 
     @Override
@@ -77,26 +50,16 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.existsById(projectId);
     }
 
-
     @Override
     public void deleteMessage(Long id) {
         messageRepository.deleteById(id);
     }
 
     @Override
-    public List<Message> findBySender(User sender) {
-        return messageRepository.findBySender(sender);
-    }
-
-    @Override
-    public List<Message> findByReceiver(User receiver) {
-        return messageRepository.findByReceiver(receiver);
-    }
-
-    @Override
     public Map<String, Object> getPMList() {
         Map<String, Object> obj = new HashMap<>();
-        List<Message> allList = messageRepository.findAllOrderByDate();
+        User receiver = (User) SubjectUtils.getSubject().getBindMap("user");
+        List<Message> allList = messageRepository.findByReceiver(receiver);
         List<Message> noticeList = new ArrayList<>();
         List<Message> messageList = new ArrayList<>();
         for (Message m : allList) {
@@ -112,6 +75,67 @@ public class MessageServiceImpl implements MessageService {
         return obj;
     }
 
+    @Override
+    public Map<String, Object> getPMTable(int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        User sender = (User) SubjectUtils.getSubject().getBindMap("user");
+        Page<Message> allList = messageRepository.findBySender(sender, pageable);
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("statusCode", 200);
+        map.put("count", allList.getTotalElements());
+
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (Message message : allList) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", message.getId());
+            m.put("title", message.getTitle());
+            m.put("date", DateUtil.dateToStr(message.getDate(), DateUtil.format4));
+            m.put("type", message.getType() == 0 ? "公告" : "消息");
+            m.put("content", message.getContent());
+            m.put("sender", message.getSender().getNick());
+            User r = message.getReceiver();
+            m.put("receiver", r == null ? null : r.getNick());
+            m.put("remark", message.getRemark());
+            listMap.add(m);
+        }
+        map.put("object", listMap);
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getPMQuery(int type, String title, String receiver, int page, int limit) {
+        Pageable pageable = new PageRequest(page - 1, limit);
+        User s = (User) SubjectUtils.getSubject().getBindMap("user");
+        User r = null;
+//        if (receiver != null && userRepository.existsById(receiver))
+//            r = userRepository.getOne(receiver);
+        Page<Message> allList = messageRepository.queryPMNick(type, title, s, receiver, pageable);
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("statusCode", 200);
+        map.put("count", allList.getTotalElements());
+
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        for (Message message : allList) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", message.getId());
+            m.put("title", message.getTitle());
+            m.put("date", DateUtil.dateToStr(message.getDate(), DateUtil.format4));
+            m.put("type", message.getType() == 0 ? "公告" : "私信");
+            m.put("content", message.getContent());
+            m.put("sender", message.getSender().getNick());
+            m.put("receiver", message.getReceiver() == null ? null : message.getReceiver().getNick());
+            m.put("remark", message.getRemark());
+            listMap.add(m);
+        }
+        map.put("object", listMap);
+
+        return map;
+    }
+
+
     private List<Map<String, Object>> listToMap(List<Message> list) {
         List<Map<String, Object>> listMap = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -126,10 +150,10 @@ public class MessageServiceImpl implements MessageService {
             } else {
                 map.put("date", DateUtil.dateToStr(list.get(i).getDate(), DateUtil.format4));
             }
-            User sender = list.get(i).getSender();
-            map.put("sender", sender.getNick());
+            map.put("sender", list.get(i).getSender().getNick());
             listMap.add(map);
         }
         return listMap;
     }
+
 }

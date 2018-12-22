@@ -16,22 +16,22 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">标题:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="" autocomplete="off" class="layui-input">
+                        <input type="text" id="title" name="title" placeholder="" autocomplete="off"
+                               class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">接收人:</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="leader" placeholder="" autocomplete="off"
+                        <input type="text" id="receiver" name="receiver" placeholder="" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">消息类型:</label>
                     <div class="layui-input-inline">
-                        <select id="stage" name="stage" lay-search>
-                            <option value="" selected="selected">请选择</option>
-                            <option value="0">公告</option>
+                        <select class="select" id="type" name="type" lay-filter="type">
+                            <option value="0" selected>公告</option>
                             <option value="1">私信</option>
                         </select>
                     </div>
