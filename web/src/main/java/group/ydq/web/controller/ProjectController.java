@@ -324,8 +324,7 @@ public class ProjectController {
     @RequestMapping("/expertList")
     @ResponseBody
     public BaseResponse getExperts(){
-        //todo change "admin" to "expert"
-        List<User> experts=rbacService.getUsersByRole(rbacService.getRoleByRoleName("admin"));
+        List<User> experts=rbacService.getUsersByRole(rbacService.getRoleByRoleName("expert"));
         Map<String,Object> map=new HashMap<>();
         map.put("data",experts);
         map.put("count",experts.size());
