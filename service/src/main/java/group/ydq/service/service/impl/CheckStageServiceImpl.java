@@ -112,7 +112,8 @@ public class CheckStageServiceImpl implements CheckStageService {
     }
 
     @Override
-    public List<JSONObject> decorateData(Page<CheckStage> checkStages){
+    public Map<String, Object> decorateData(Page<CheckStage> checkStages){
+        Map<String, Object> dataMap = new HashMap<>();
         List<JSONObject> decoratedDataList = new ArrayList<>();
         for (CheckStage checkStage : checkStages) {
             JSONObject jsonObject = new JSONObject();
@@ -130,6 +131,8 @@ public class CheckStageServiceImpl implements CheckStageService {
             }
             decoratedDataList.add(jsonObject);
         }
-        return  decoratedDataList;
+        dataMap.put("count",checkStages.getTotalElements());
+        dataMap.put("data",decoratedDataList);
+        return  dataMap;
     }
 }

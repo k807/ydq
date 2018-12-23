@@ -57,11 +57,8 @@ public class StageController {
     private BaseResponse getAll(@RequestParam(name = "page",defaultValue = "1") int page,
                                 @RequestParam(name = "limit", defaultValue = "15") int limit, HttpServletRequest httpServletRequest) throws NullPointerException {
         User verifier = (User) SubjectUtils.getSubject().getBindMap("user");
-        Map<String, Object> map = new HashMap<>();
         Page<CheckStage> all = checkStageService.findCheckStagesByStageAndVerifiers(page,limit,1,verifier);
-        map.put("count",all.getTotalElements());
-        map.put("data",checkStageService.decorateData(all));
-        return new BaseResponse(map);
+        return new BaseResponse(checkStageService.decorateData(all));
     }
 
 
@@ -76,11 +73,8 @@ public class StageController {
                                          @RequestParam(name = "createTime", defaultValue = "1970-01-01 00:00:00") String createTime,
                                          @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime, HttpServletRequest httpServletRequest) {
         User verifier = (User) SubjectUtils.getSubject().getBindMap("user");
-        Map<String, Object> map = new HashMap<>();
         Page<CheckStage> dataList = checkStageService.findByConditions(page,limit,name, leader, stage, status, createTime, endTime,verifier.getId());
-        map.put("count",dataList.getTotalElements());
-        map.put("data",checkStageService.decorateData(dataList));
-        return new BaseResponse(map);
+        return new BaseResponse(checkStageService.decorateData(dataList));
     }
 
     @RequestMapping("/changeState")
@@ -102,7 +96,6 @@ public class StageController {
         int checkStageCode = (int) paramsMap.get("stage");
         int checkStageStatus = (int) paramsMap.get("status");
         User verifier = (User) SubjectUtils.getSubject().getBindMap("user");
-
         String messageTitle;
         CheckStage toBeChangedCheckStage = checkStageService.findACheckStageByCheckStageID(checkStageID);
         Project project = toBeChangedCheckStage.getProject();

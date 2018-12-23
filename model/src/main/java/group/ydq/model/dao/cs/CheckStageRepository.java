@@ -25,4 +25,5 @@ public interface CheckStageRepository extends JpaRepository<CheckStage,Long> {
     CheckStage getCheckStagesById(Long checkStageID);
 
     Page<CheckStage> findCheckStagesByStageAndVerifiers(Pageable pageable, int stage, User verifier);
+
 }

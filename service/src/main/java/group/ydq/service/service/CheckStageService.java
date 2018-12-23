@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Natsukawamasuzu
@@ -20,5 +21,5 @@ public interface CheckStageService  extends  BaseService{
     void startStage(Long projectId,int stage);
     Page<CheckStage> findByConditions(int page, int limit, String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd,Long verifierID);
     Page<CheckStage> findCheckStagesByStageAndVerifiers(int page, int limit, int stageStatus,User verifier);
-    List<JSONObject> decorateData(Page<CheckStage> checkStages);
+    Map<String, Object> decorateData(Page<CheckStage> checkStages);
 }
