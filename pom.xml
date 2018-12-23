@@ -6,7 +6,7 @@
     <groupId>group.ydq</groupId>
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>parent</name>
     <description></description>
@@ -19,7 +19,6 @@
     </parent>
 
     <modules>
-        <module>base</module>
         <module>model</module>
         <module>service</module>
         <module>web</module>
