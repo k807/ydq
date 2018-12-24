@@ -56,8 +56,7 @@ public class StageController {
     @RequestMapping("/getAll")
     private BaseResponse getAll(@RequestParam(name = "page",defaultValue = "1") int page,
                                 @RequestParam(name = "limit", defaultValue = "15") int limit, HttpServletRequest httpServletRequest) throws NullPointerException {
-        User verifier = (User) SubjectUtils.getSubject().getBindMap("user");
-        Page<CheckStage> all = checkStageService.findCheckStagesByStageAndVerifiers(page,limit,1,verifier);
+        Page<CheckStage> all = checkStageService.findCheckStagesByStage(page,limit,1);
         return new BaseResponse(checkStageService.decorateData(all));
     }
 
@@ -72,8 +71,7 @@ public class StageController {
                                          @RequestParam(name = "stage", defaultValue = "1") int stage,
                                          @RequestParam(name = "createTime", defaultValue = "1970-01-01 00:00:00") String createTime,
                                          @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime, HttpServletRequest httpServletRequest) {
-        User verifier = (User) SubjectUtils.getSubject().getBindMap("user");
-        Page<CheckStage> dataList = checkStageService.findByConditions(page,limit,name, leader, stage, status, createTime, endTime,verifier.getId());
+        Page<CheckStage> dataList = checkStageService.findByConditions(page,limit,name, leader, stage, status, createTime, endTime);
         return new BaseResponse(checkStageService.decorateData(dataList));
     }
 

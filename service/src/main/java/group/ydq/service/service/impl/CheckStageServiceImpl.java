@@ -9,8 +9,6 @@ import group.ydq.service.service.CheckStageService;
 import group.ydq.model.dao.cs.CheckStageRepository;
 import group.ydq.model.entity.cs.CheckStage;
 import group.ydq.service.service.ProjectService;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.*;
 
 /**
@@ -64,12 +60,10 @@ public class CheckStageServiceImpl implements CheckStageService {
     public void startStage(Long projectId,int stage) {
         CheckStage cs = new CheckStage();
         Project p = projectService.getProject(projectId);
-        User u = userRepository.getOne(10000L);
         cs.setProject(p);
         cs.setStartTime(new Date());
         cs.setStage(stage);
         cs.setStatus(0);
-        cs.setVerifiers(u);
         save(cs);
     }
 
@@ -79,7 +73,7 @@ public class CheckStageServiceImpl implements CheckStageService {
     /*
     * 不要动下面这段代码！
     * */
-    public Page<CheckStage> findByConditions(int page, int limit, String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd,Long verifierID) {
+    public Page<CheckStage> findByConditions(int page, int limit, String projectName, String leaderName, int projectStage, String stageStatus, String createTimeStart, String createTimeEnd) {
         String sqlSession = "";
         if(!"".equals(stageStatus)){
             int status = Integer.parseInt(stageStatus);
@@ -90,7 +84,6 @@ public class CheckStageServiceImpl implements CheckStageService {
                 "right join `user` on project.leader_id = `user`.id " +
                 "where project.`name` like '%" + projectName + "%' and " +
                 "`user`.nick like '%" + leaderName + "%' and " +
-                "verifiers_id = " + verifierID + " and " +
                 "check_stage.stage = " + projectStage + " and " + sqlSession +
                 "project.create_time between '" + createTimeStart + "' and '" + createTimeEnd + " ' " ,CheckStage.class).getResultList();
 
@@ -106,9 +99,9 @@ public class CheckStageServiceImpl implements CheckStageService {
     }
 
     @Override
-    public Page<CheckStage> findCheckStagesByStageAndVerifiers(int page, int limit, int stageStatus, User verifier) {
+    public Page<CheckStage> findCheckStagesByStage(int page, int limit, int stageStatus) {
         Pageable pageable = PageRequest.of(page-1, limit);
-        return stageDao.findCheckStagesByStageAndVerifiers(pageable, stageStatus,verifier);
+        return stageDao.findCheckStagesByStage(pageable, stageStatus);
     }
 
     @Override
@@ -125,7 +118,7 @@ public class CheckStageServiceImpl implements CheckStageService {
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
             jsonObject.put("status", checkStage.getStatus());
             if(null == checkStage.getVerifiers()){
-                jsonObject.put("verifier", "暂时还没有人审核");
+                jsonObject.put("verifier", "待审核");
             }else{
                 jsonObject.put("verifier", checkStage.getVerifiers().getNick());
             }
