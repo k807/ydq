@@ -6,9 +6,44 @@ layui.use(['element', 'jquery'], function () {
         console.log(data.index); //得到当前Tab的所在下标
         console.log(data.elem); //得到当前的Tab大容器
     });
+    var $ = layui.jquery
+    role = null
+    $(function () {
+        userIn()
+    })
 
+    function userIn() {
+        $.ajax({
+            type: "POST",
+            url: "/authority/getSelfInfo",
+            dataType: "json",
+            success: function (result) {
+                var role = result.object.role.name
+                switch (role) {
+                    case "manager":
+                        role = 1
+                        break
+                    case "teacher":
+                        role = 2
+                        break
+                    case "expert":
+                        role = 3
+                        break
+                    default:
+                }
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        })
+
+    }
 
 });
+
+function isWho() {
+    return role
+}
 
 function getList() {
     layui.$.ajax({

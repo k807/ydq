@@ -40,17 +40,15 @@
                 <li>
                     <i class="layui-icon layui-icon-username" style="font-size: 18px; color: #FFB800;"></i>
                     {{item.sender}}
+                    {{# if(item.remark !=null&&item.remark.hasOwnProperty("projectId")) { }}
                     <button class="layui-btn layui-btn-primary layui-btn-xs"
                             onclick="newTab('/project/getDetails/{{item.remark.projectId}}','{{item.remark.projectName}}')">
                         项目详情
                     </button>
-                </li>
-                <li>{{item.content}}</li>
-                {{# if(item.remark !=null&&item.remark.hasOwnProperty("projectId")) { }}
-                <li>
+                    {{# } }}
 
                 </li>
-                {{# } }}
+                <li>{{item.content}}</li>
             </ul>
         </div>
     </div>
@@ -101,10 +99,14 @@
 
 <script>
     function newTab(url, tit) {
-        if (top.layui.index) {
-            top.layui.index.openTabsPage(url, tit)
+        if (isWho() == 2) {
+            if (top.layui.index) {
+                top.layui.index.openTabsPage(url, tit)
+            } else {
+                window.open(url)
+            }
         } else {
-            window.open(url)
+            layui.layer.msg("您没有权限")
         }
     }
 </script>

@@ -34,11 +34,10 @@ layui.use('jquery', function () {
 
         $.ajax({
             type: "POST",
-            url: "authority/getSelfInfo",
+            url: "/authority/getSelfInfo",
             dataType: "json",
             success: function (result) {
                 var role = result.object.role.name
-                console.log(role)
                 switch (role) {
                     case "manager":
                         $("#red-dot").attr("lay-href", manager)
