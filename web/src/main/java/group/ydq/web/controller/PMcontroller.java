@@ -1,5 +1,6 @@
 package group.ydq.web.controller;
 
+import group.ydq.authority.SubjectUtils;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.pm.Message;
@@ -8,11 +9,11 @@ import group.ydq.service.service.impl.MessageServiceImpl;
 import group.ydq.utils.RetResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -72,17 +73,27 @@ public class PMcontroller {
     }
 
     /*
+     * 查询站内信息
+     * 参数：标题；接收人；私信类型
+     * */
+    @GetMapping(value = "/queryPM")
+    @ResponseBody
+    public Map<String, Object> queryPM(int type, String title,String receiver, int page, int limit) {
+        return messageServiceImpl.getPMQuery(type, title,receiver, page, limit);
+    }
+
+    /*
      * 新增站内消息
      * 以title、content、time、sender、receivers、remark为参数
      * */
     @RequestMapping(value = "/send")
     @ResponseBody
-    public Message sendMessage(String title, int type, String sender, String receiver, String content, String remark) throws ParseException {
-        User s = userRepository.getOne(1L);
-        User r = userRepository.getOne(1L);
-        Message messageOne = new Message(new Date(), type, title, content, remark, s, r);
-//        Message messageOne = new Message(new Date(), type, title, content, remark);
-        return messageServiceImpl.sendMessage(messageOne);
+    public BaseResponse sendMessage(@RequestBody Message message) {
+        User s = (User) SubjectUtils.getSubject().getBindMap("user");
+        message.setDate(new Date());
+        message.setSender(s);
+        messageServiceImpl.sendMessage(message);
+        return RetResponse.success();
     }
 
     @GetMapping(value = "/delete")

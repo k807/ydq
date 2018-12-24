@@ -1,6 +1,8 @@
 package group.ydq.web.controller;
 
+import group.ydq.authority.SubjectUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class PageController {
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("user", SubjectUtils.getSubject().getBindMap("user"));
         return "home";
     }
 

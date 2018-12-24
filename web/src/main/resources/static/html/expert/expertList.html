@@ -1,10 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>专家列表</title>
+    <link rel="stylesheet" href="/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/assets/style/admin.css">
 </head>
 <body>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table id="table" lay-filter="table"></table>
+    </div>
+    <script type="text/html" id="toolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="submit">提交</button>
+        </div>
+    </script>
+</div>
+<script src="/assets/layui/layui.js"></script>
+<script>
+    layui.use(['table','jquery'],function(){
+        var table=layui.table
+            ,$=layui.jquery;
 
+        var index = parent.layer.getFrameIndex(window.name);
+
+        table.render({
+            elem: '#table',
+            toolbar: '#toolbar',
+            height: 'full',
+            cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'},
+                    {field: 'id', title: 'ID', width: '20%', sort: true},
+                    {field: 'nick', title: "姓名"},
+                    {title: '手机号码', field:'phone'}
+                ]
+            ],
+            text: {
+                none: '暂无相关数据'
+            },
+            url: "/project/expertList",
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "code": res.statusCode,
+                    "data": res.object.data,
+                    "count": res.object.count
+                };
+            },
+            done: function(res, curr, count){
+                parent.layer.iframeAuto(index);
+            }
+        });
+
+        table.on('toolbar(table)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            var data = [];
+            for (var i = 0; i < checkStatus.data.length; i++) {
+                data.push(checkStatus.data[i].id);
+            }
+            var projectId=window.location.search.split('&')[0].split('=')[1];
+            var projectName=window.location.search.split('&')[1].split('=')[1];
+            switch (obj.event) {
+                case 'submit':
+                    $.ajax({
+                        type:'post',
+                        url:'/project/distributeExperts?projectId='+projectId,
+                        data:JSON.stringify(data),
+                        dataType:'json',
+                        contentType:'application/json',
+                        success:function (res) {
+                            if (res.statusCode==='200'){
+                                for (var i=0;i<data.length;i++)
+                                    parent.sendMsg('立项评审工作分配',projectName+'等待您的评审',data[i],projectId,projectName);
+                                parent.refresh();
+                                parent.layer.msg('专家分配成功', {icon: 1});
+                                parent.layer.close(index);
+                            }else{
+                                parent.layer.msg('操作失败', {icon: 2});
+                                parent.layer.close(index);
+                            }
+                        }
+                    })
+            }
+        })
+    })
+</script>
 </body>
 </html>

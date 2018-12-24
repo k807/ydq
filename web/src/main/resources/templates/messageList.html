@@ -36,15 +36,19 @@
             <span style="font-size:14px;color:#01AAED;margin-left:10px;">{{item.date}}</span>
         </div>
         <div class="layui-card-body">
-            <i class="layui-icon layui-icon-username" style="font-size: 18px; color: #FFB800;"></i>
-            {{item.sender}}
             <ul>
-                <li>{{item.content}}</li>
-                {{# if(item.remark !=null&&item.remark.hasOwnProperty("projectId")) { }}
                 <li>
-                    <a onclick="newTab('/project/getDetails/{{item.remark.projectId}}','{{item.remark.projectName}}')">项目详情</a>
+                    <i class="layui-icon layui-icon-username" style="font-size: 18px; color: #FFB800;"></i>
+                    {{item.sender}}
+                    {{# if(item.remark !=null&&item.remark.hasOwnProperty("projectId")) { }}
+                    <button class="layui-btn layui-btn-primary layui-btn-xs"
+                            onclick="newTab('/project/getDetails/{{item.remark.projectId}}','{{item.remark.projectName}}')">
+                        项目详情
+                    </button>
+                    {{# } }}
+
                 </li>
-                {{# } }}
+                <li>{{item.content}}</li>
             </ul>
         </div>
     </div>
@@ -70,11 +74,16 @@
         <i class="layui-icon layui-timeline-axis"></i>
         <div class="layui-timeline-content layui-text">
             <h3 class="layui-timeline-title" style="font-size:20px;">{{item.date}}</h3>
-            <p>
-                <b style="font-size:20px;color:#009688;">{{item.title}}</b>
-                <br><span>{{item.content}}</span>
-
-            </p>
+            <fieldset class="layui-elem-field" style="max-width: 50%">
+                <legend><b style="font-size:20px;color:#009688;">{{item.title}}</b></legend>
+                <div class="layui-field-box">
+                    <span>{{item.content}}</span>
+                    {{# if(isWho() == 2&&item.remark !=null&&item.remark.hasOwnProperty("ruleId")) { }}
+                    <br>
+                    <a onclick="newTab('/project/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
+                    {{# } }}
+                </div>
+            </fieldset>
         </div>
     </li>
     {{# }); }}
@@ -90,10 +99,14 @@
 
 <script>
     function newTab(url, tit) {
-        if (top.layui.index) {
-            top.layui.index.openTabsPage(url, tit)
+        if (isWho() == 2) {
+            if (top.layui.index) {
+                top.layui.index.openTabsPage(url, tit)
+            } else {
+                window.open(url)
+            }
         } else {
-            window.open(url)
+            layui.layer.msg("您没有权限")
         }
     }
 </script>

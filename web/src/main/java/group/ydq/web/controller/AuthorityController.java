@@ -10,8 +10,6 @@ import group.ydq.service.service.RBACService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -284,14 +282,13 @@ public class AuthorityController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public BaseResponse login(@RequestBody User user, HttpServletRequest request) {
+    public BaseResponse login(User user) {
         Subject subject = new Subject();
         subject.setPrincipal(user.getUserNumber());
         subject.setAccess(user.getPassword());
         BaseResponse baseResponse = new BaseResponse();
         if (subject.login()) {
-            HttpSession session = request.getSession();//获取session并将userName存入session对象
-            session.setAttribute("user", rbacService.getUserByUserNumber(user.getUserNumber()));
+            subject.bind("user",rbacService.getUserByUserNumber(user.getUserNumber()));
             return baseResponse;
         } else {
             baseResponse.setStatusCode("400");

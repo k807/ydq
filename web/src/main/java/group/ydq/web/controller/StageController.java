@@ -1,6 +1,7 @@
 package group.ydq.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import group.ydq.authority.SubjectUtils;
 import group.ydq.model.dao.rbac.UserRepository;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.cs.CheckStage;
@@ -43,7 +44,7 @@ public class StageController {
         System.out.println(title);
         String content = (String) msg.get("content");
         ArrayList<String> stage = (ArrayList<String>) msg.get("stage");
-        User u1 = (User) httpServletRequest.getSession().getAttribute("user");
+        User u1 = (User) SubjectUtils.getSubject().getBindMap("user");
         for (String s : stage) {
             User u2 = checkStageService.findACheckStageByCheckStageID(Long.parseLong(s)).getProject().getLeader();
             Message m = new Message(new Date(), 0, title, content, "", u1, u2);
@@ -55,12 +56,8 @@ public class StageController {
     @RequestMapping("/getAll")
     private BaseResponse getAll(@RequestParam(name = "page",defaultValue = "1") int page,
                                 @RequestParam(name = "limit", defaultValue = "15") int limit, HttpServletRequest httpServletRequest) throws NullPointerException {
-        User verifier = (User)httpServletRequest.getSession().getAttribute("user");
-        Map<String, Object> map = new HashMap<>();
-        Page<CheckStage> all = checkStageService.findCheckStagesByStageAndVerifiers(page,limit,1,verifier);
-        map.put("count",all.getTotalElements());
-        map.put("data",checkStageService.decorateData(all));
-        return new BaseResponse(map);
+        Page<CheckStage> all = checkStageService.findCheckStagesByStage(page,limit,1);
+        return new BaseResponse(checkStageService.decorateData(all));
     }
 
 
@@ -74,12 +71,8 @@ public class StageController {
                                          @RequestParam(name = "stage", defaultValue = "1") int stage,
                                          @RequestParam(name = "createTime", defaultValue = "1970-01-01 00:00:00") String createTime,
                                          @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime, HttpServletRequest httpServletRequest) {
-        User verifier = (User) httpServletRequest.getSession().getAttribute("user");
-        Map<String, Object> map = new HashMap<>();
-        Page<CheckStage> dataList = checkStageService.findByConditions(page,limit,name, leader, stage, status, createTime, endTime,verifier.getId());
-        map.put("count",dataList.getTotalElements());
-        map.put("data",checkStageService.decorateData(dataList));
-        return new BaseResponse(map);
+        Page<CheckStage> dataList = checkStageService.findByConditions(page,limit,name, leader, stage, status, createTime, endTime);
+        return new BaseResponse(checkStageService.decorateData(dataList));
     }
 
     @RequestMapping("/changeState")
@@ -100,7 +93,7 @@ public class StageController {
         String checkMessage = (String) paramsMap.get("msg");
         int checkStageCode = (int) paramsMap.get("stage");
         int checkStageStatus = (int) paramsMap.get("status");
-        User verifier = (User) httpServletRequest.getSession().getAttribute("user");
+        User verifier = (User) SubjectUtils.getSubject().getBindMap("user");
         String messageTitle;
         CheckStage toBeChangedCheckStage = checkStageService.findACheckStageByCheckStageID(checkStageID);
         Project project = toBeChangedCheckStage.getProject();

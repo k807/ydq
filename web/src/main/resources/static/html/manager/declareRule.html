@@ -22,7 +22,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">所属专业</label>
                         <div class="layui-input-block">
-                            <select name="major" lay-verify="required">
+                            <select name="major" id="major" lay-verify="required">
                                 <option value="">请选择专业</option>
                                 <option value="0">计算机科学与技术</option>
                                 <option value="1">电子信息工程</option>
@@ -59,6 +59,7 @@
     </div>
 </div>
 <script src="/assets/layui/layui.js"></script>
+<script src="/js/sendmessage.js"></script>
 <script>
     layui.use(['form','layedit','laydate','layer','jquery'],function(){
         var form=layui.form
@@ -87,9 +88,6 @@
 
         form.on('submit(submit)',function(data){
             data.field.ruleContent=layedit.getContent(edit);
-            data.field.publisher={
-                'id':sessionStorage.getItem('id')
-            };
             $.ajax({
                 type:'post',
                 url: '/rule/add',
@@ -98,6 +96,19 @@
                 dataType: 'json',
                 success: function (res) {
                     if (res.statusCode === '200') {
+                        var json={
+                            title: data.field.title+'申报入口通知',
+                            type: 0,
+                            content: addNewRule(data.field.startTime,data.field.endTime,$('#major option:selected').text(),data.field.ruleContent),
+                            remark: '{"ruleId":' + res.object.id + ',"ruleTitle":"' + data.field.title + '","publisher":'+res.object.publisher+'}'
+                        };
+                        $.ajax({
+                            url:'/pm/send',
+                            type:'post',
+                            data:JSON.stringify(json),
+                            contentType: 'application/json',
+                            dataType: 'json'
+                        });
                         parent.refresh();
                         parent.layer.msg('添加成功', {icon: 1});
                         parent.layer.close(index);

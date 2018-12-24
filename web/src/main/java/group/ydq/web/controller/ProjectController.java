@@ -2,14 +2,13 @@ package group.ydq.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import group.ydq.authority.SubjectUtils;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.dm.ExpertReview;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.dm.ProjectFile;
 import group.ydq.model.entity.rbac.User;
-import group.ydq.service.service.CheckStageService;
-import group.ydq.service.service.FileService;
-import group.ydq.service.service.ProjectService;
+import group.ydq.service.service.*;
 import group.ydq.utils.DateUtil;
 import group.ydq.utils.FileUtil;
 import group.ydq.utils.RetResponse;
@@ -20,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -35,6 +33,12 @@ public class ProjectController {
 
     @Resource
     private CheckStageService stageService;
+
+    @Resource
+    private DeclareService declareService;
+
+    @Resource
+    private RBACService rbacService;
 
     @Resource
     private FileService fileService;
@@ -106,8 +110,8 @@ public class ProjectController {
 
     @RequestMapping("/new/{type:.+}")
     @ResponseBody
-    public BaseResponse saveOrSubmitProject(@PathVariable String type,@RequestBody Project project,HttpServletRequest request){
-        project.setLeader((User)request.getSession().getAttribute("user"));
+    public BaseResponse saveOrSubmitProject(@PathVariable String type,@RequestBody Project project){
+        project.setLeader(((User)SubjectUtils.getSubject().getBindMap("user")));
         if (type.equals("save")){
             project.setState(-1);
             project.setSubmit(false);
@@ -206,76 +210,141 @@ public class ProjectController {
         model.addAttribute("stage",stage);
         model.addAttribute("state",project.getState());
         model.addAttribute("uploadFiles",uploadFiles);
+        model.addAttribute("user",SubjectUtils.getSubject().getBindMap("user"));
         return "projectDetails";
     }
 
-    @RequestMapping("/{role:.+}/list")
-    @ResponseBody
-    public BaseResponse getProjectList(@PathVariable String role, int page, int limit, HttpServletRequest request){
-        String userNumber=((User)request.getSession().getAttribute("user")).getUserNumber();
-        Map<String, Object> obj = new HashMap<>();
+    private List<Map<String,Object>> expertMapList(Page<ExpertReview> projects){
         List<Map<String,Object>> list=new ArrayList<>();
+        for (ExpertReview project:projects){
+            Map<String,Object> map=new HashMap<>();
+            map.put("id",project.getId());
+            map.put("projectId",project.getProject().getId());
+            map.put("mark",project.isMark());
+            map.put("score",project.getScore());
+            map.put("remark",project.getRemark());
+            map.put("manager",project.getProject().getManager());
+            map.put("level",project.getProject().getLevel());
+            map.put("name",project.getProject().getName());
+            map.put("leader",project.getProject().getLeader());
+            map.put("major",project.getProject().getMajor());
+            map.put("createTime", DateUtil.dateToStr(project.getProject().getCreateTime(),DateUtil.format1));
+            list.add(map);
+        }
+        return list;
+    }
+
+    private List<Map<String,Object>> teacherMapList(Page<Project> projects){
+        List<Map<String,Object>> list=new ArrayList<>();
+        for (Project project:projects){
+            Map<String,Object> map=new HashMap<>();
+            map.put("id",project.getId());
+            map.put("name",project.getName());
+            map.put("state",project.getState());
+            map.put("major",project.getMajor());
+            map.put("level",project.getLevel());
+            map.put("entrance",project.getEntrance());
+            map.put("manager",project.getManager());
+            map.put("createTime",DateUtil.dateToStr(project.getCreateTime(),DateUtil.format1));
+            map.put("updateTime",DateUtil.dateToStr(project.getUpdateTime(),DateUtil.format1));
+            map.put("submit",project.isSubmit());
+            list.add(map);
+        }
+        return list;
+    }
+
+    private List<Map<String,Object>> managerMapList(Page<Project> projects){
+        List<Map<String,Object>> list=new ArrayList<>();
+        for (Project project:projects){
+            Map<String,Object> map=new HashMap<>();
+            map.put("id",project.getId());
+            map.put("name",project.getName());
+            map.put("leader",project.getLeader());
+            map.put("state",project.getState());
+            map.put("major",project.getMajor());
+            map.put("level",project.getLevel());
+            map.put("createTime",DateUtil.dateToStr(project.getCreateTime(),DateUtil.format1));
+            map.put("updateTime",DateUtil.dateToStr(project.getUpdateTime(),DateUtil.format1));
+            map.put("experts",project.getExperts());
+            list.add(map);
+        }
+        return list;
+    }
+
+    @RequestMapping("/{role:.+}/search")
+    @ResponseBody
+    public BaseResponse search(@PathVariable String role,int page,int limit,String name,String level,String state,String major,String start,String end){
+        if (start.equals(""))
+            start="1900-01-01 00:00:00";
+        if (end.equals(""))
+            end="2200-12-31 23:59:59";
+        User user= ((User)SubjectUtils.getSubject().getBindMap("user"));
+        Map<String, Object> obj = new HashMap<>();
         if (role.equals("expert")){
-            Page<ExpertReview> projects=projectService.getProjectOfExpert(page, limit, userNumber);
-            for (ExpertReview project:projects){
-                Map<String,Object> map=new HashMap<>();
-                map.put("id",project.getId());
-                map.put("projectId",project.getProject().getId());
-                map.put("mark",project.isMark());
-                map.put("score",project.getScore());
-                map.put("remark",project.getRemark());
-                map.put("manager",project.getProject().getManager());
-                map.put("level",project.getProject().getLevel());
-                map.put("name",project.getProject().getName());
-                map.put("leader",project.getProject().getLeader());
-                map.put("major",project.getProject().getMajor());
-                map.put("createTime", DateUtil.dateToStr(project.getProject().getCreateTime(),DateUtil.format1));
-                list.add(map);
-            }
+            Page<ExpertReview> projects=projectService.searchExpertReview(page, limit, user,name,level,state,major,start,end);
             obj.put("count",projects.getTotalElements());
-            obj.put("data",list);
+            obj.put("data",expertMapList(projects));
         }else {
             Page<Project> projects;
             if (role.equals("teacher")) {
-                projects = projectService.getProjectsOfLeader(page, limit, userNumber);
-                for (Project project:projects){
-                    Map<String,Object> map=new HashMap<>();
-                    map.put("id",project.getId());
-                    map.put("name",project.getName());
-                    map.put("state",project.getState());
-                    map.put("major",project.getMajor());
-                    map.put("level",project.getLevel());
-                    map.put("entrance",project.getEntrance());
-                    map.put("manager",project.getManager());
-                    map.put("createTime",DateUtil.dateToStr(project.getCreateTime(),DateUtil.format1));
-                    map.put("updateTime",DateUtil.dateToStr(project.getUpdateTime(),DateUtil.format1));
-                    map.put("submit",project.isSubmit());
-                    list.add(map);
-                }
+                projects = projectService.searchProject(1,page, limit, user,name,level,state,major,start,end);
+                obj.put("data",teacherMapList(projects));
             }else {
-                projects = projectService.getProjectsOfManagerInDeclareStage(page, limit, userNumber);
-                for (Project project:projects){
-                    Map<String,Object> map=new HashMap<>();
-                    map.put("id",project.getId());
-                    map.put("name",project.getName());
-                    map.put("leader",project.getLeader());
-                    map.put("state",project.getState());
-                    map.put("major",project.getMajor());
-                    map.put("level",project.getLevel());
-                    map.put("createTime",DateUtil.dateToStr(project.getCreateTime(),DateUtil.format1));
-                    map.put("updateTime",DateUtil.dateToStr(project.getUpdateTime(),DateUtil.format1));
-                    map.put("experts",project.getExperts());
-                    list.add(map);
-                }
+                projects = projectService.searchProject(2,page, limit, user,name,level,state,major,start,end);
+                obj.put("data",managerMapList(projects));
             }
             obj.put("count", projects.getTotalElements());
-            obj.put("data", list);
         }
         return RetResponse.success(obj);
     }
 
+    @RequestMapping("/{role:.+}/list")
+    @ResponseBody
+    public BaseResponse getProjectList(@PathVariable String role, int page, int limit){
+        String userNumber= ((User)SubjectUtils.getSubject().getBindMap("user")).getUserNumber();
+        Map<String, Object> obj = new HashMap<>();
+        if (role.equals("expert")){
+            Page<ExpertReview> projects=projectService.getProjectOfExpert(page, limit, userNumber);
+            obj.put("count",projects.getTotalElements());
+            obj.put("data",expertMapList(projects));
+        }else {
+            Page<Project> projects;
+            if (role.equals("teacher")) {
+                projects = projectService.getProjectsOfLeader(page, limit, userNumber);
+                obj.put("data",teacherMapList(projects));
+            }else {
+                projects = projectService.getProjectsOfManagerInDeclareStage(page, limit, userNumber);
+                obj.put("data",managerMapList(projects));
+            }
+            obj.put("count", projects.getTotalElements());
+        }
+        return RetResponse.success(obj);
+    }
+
+    @RequestMapping("/expertList")
+    @ResponseBody
+    public BaseResponse getExperts(){
+        List<User> experts=rbacService.getUsersByRole(rbacService.getRoleByRoleName("expert"));
+        Map<String,Object> map=new HashMap<>();
+        map.put("data",experts);
+        map.put("count",experts.size());
+        return RetResponse.success(map);
+    }
+
+    @RequestMapping("/distributeExperts")
+    @ResponseBody
+    public BaseResponse distributeExperts(long projectId,@RequestBody List<Long> ids){
+        if (ids!=null&&ids.size()!=0) {
+            declareService.distributeExpert(projectId, ids);
+            changeState(projectId,3);
+            return RetResponse.success();
+        }
+        return RetResponse.error();
+    }
+
     @RequestMapping("/declare.htm")
-    public String declarePage(){
+    public String declarePage(Model model){
+        model.addAttribute("user",SubjectUtils.getSubject().getBindMap("user"));
         return "/projectDeclare";
     }
 

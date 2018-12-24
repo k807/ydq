@@ -67,7 +67,7 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
         },'json')
     });
 
-    function saveOrsubmit(action, data) {
+    function saveOrSubmit(action, data) {
         var json = {};
         json.name = data.field.name;
         json.level = data.field.level;
@@ -104,7 +104,7 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
                 tipsMore:true
             });
         if (pics.length!==0&&JSON.stringify(file)!=='{}')
-            saveOrsubmit('submit',data);
+            saveOrSubmit('submit',data);
         return false;
     });
     form.on("submit(save)",function(data){
@@ -117,7 +117,7 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
                 tipsMore:true
             });
         if (pics.length!==0&&JSON.stringify(file)!=='{}')
-            saveOrsubmit('save',data);
+            saveOrSubmit('save',data);
         return false;
     });
 

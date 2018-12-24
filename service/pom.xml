@@ -43,12 +43,6 @@
 
         <dependency>
             <groupId>group.ydq</groupId>
-            <artifactId>base</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>group.ydq</groupId>
             <artifactId>authority</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
