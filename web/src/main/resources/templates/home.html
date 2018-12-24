@@ -87,7 +87,7 @@
                             <cite>主页</cite>
                         </a>
                         <dl class="layui-nav-child">
-                            <dd data-name="console" class="layui-this">
+                            <dd data-name="console">
                                 <a lay-href="/html/userManage.html">用户信息管理</a>
                             </dd>
                         </dl>
@@ -112,42 +112,48 @@
 
                     <li class="layui-nav-item layui-nav-itemed"
                         th:if="${user.role.name =='teacher'}">
-                        <a lay-tips="项目管理"
-                           lay-href="/html/teacher/projectList.html">
-                            <i class="layui-icon layui-icon-form"></i>
-                            <cite>项目管理</cite>
-                        </a>
+                        <dd data-name="console" class="layui-this">
+                            <a lay-tips="项目管理"
+                               lay-href="/html/teacher/projectList.html">
+                                <i class="layui-icon layui-icon-form"></i>
+                                <cite>项目管理</cite>
+                            </a>
+                        </dd>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
                         th:if="${user.role.name =='expert'}">
-                        <a lay-tips="项目评审管理"
-                           lay-href="/html/expert/projectList.html">
-                            <i class="layui-icon layui-icon-form"></i>
-                            <cite>项目评审管理</cite>
-                        </a>
+                        <dd data-name="console" class="layui-this">
+                            <a lay-tips="项目评审管理"
+                               lay-href="/html/expert/projectList.html">
+                                <i class="layui-icon layui-icon-form"></i>
+                                <cite>项目评审管理</cite>
+                            </a>
+                        </dd>
                     </li>
+
                     <li class="layui-nav-item layui-nav-itemed"
                         th:if="${user.role.name =='manager'}">
-                        <a lay-tips="项目申报管理"
-                           lay-href="/html/manager/projectList.html">
-                            <i class="layui-icon layui-icon-form"></i>
-                            <cite>项目申报管理</cite>
-                        </a>
-                    </li>
-                    <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='manager'}">
-                        <a lay-tips="申报规则管理"
-                           lay-href="/html/manager/ruleManage.html">
+                        <a lay-tips="申报管理">
                             <i class="layui-icon layui-icon-list"></i>
-                            <cite>申报规则管理</cite>
+                            <cite>申报管理</cite>
                         </a>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console" class="layui-this">
+                                <a lay-href="/html/manager/projectList.html">申报审核</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd data-name="console">
+                                <a lay-href="/html/manager/ruleManage.html">规则管理</a>
+                            </dd>
+                        </dl>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
                         th:if="${user.role.name =='manager'}">
-                        <a lay-tips="项目阶段检查"
+                        <a lay-tips="阶段检查"
                            lay-href="/html/manager/projectCheck.html">
                             <i class="layui-icon layui-icon-survey"></i>
-                            <cite>项目阶段检查</cite>
+                            <cite>阶段检查</cite>
                         </a>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
