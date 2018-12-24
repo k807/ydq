@@ -167,5 +167,4 @@ public class RBACServiceImpl extends BaseServiceImpl implements RBACService {
         return permissionRepository.findAll();
     }
 
-
 }
