@@ -17,6 +17,13 @@ public interface RBACService extends BaseService {
 
     void addPermission(Permission permission);
 
+    // 创建用户并且如果用户没有指定角色，则给定默认角色
+    void addUserWithDefaultRole(User user);
+
+    Role getDefaultRole();
+
+    User getUerById(Long id);
+
     void addUser(User user);
 
     void updateRole(Role role);

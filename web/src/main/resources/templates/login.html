@@ -46,7 +46,7 @@
                 </button>
             </div>
             <div class="layui-trans layui-form-item layadmin-user-login-other">
-                <a href="register.html" class="layadmin-user-jump-change layadmin-link">注册帐号</a>
+                <a href="/register" class="layadmin-user-jump-change layadmin-link">注册帐号</a>
             </div>
         </div>
     </div>
@@ -70,8 +70,9 @@
             $.ajax({
                 type: "post",
                 url: "/authority/login",
+                contentType: "application/json",
                 dataType: "json",
-                data: json,
+                data: JSON.stringify(json),
                 success: function (data) {
                     if (data.statusCode === "400") {
                         layer.msg("登陆失败");

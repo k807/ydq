@@ -29,6 +29,7 @@ public class AuthorityConfigurer {
         manager.configureLoginPage("/login");
         manager.configureLogoutPage("/login");
         // 配置不受检查的路径 也可以使用@Unlimited注解
+        manager.configureUnlimitedPath("/register");
         manager.configureUnlimitedPath("/authority/login");
         manager.configureUnlimitedPath("/authority/addUser");
         manager.configureUnlimitedPath("/assets/.*");

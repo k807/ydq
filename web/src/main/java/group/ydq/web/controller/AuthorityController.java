@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * =============================================
@@ -29,18 +31,20 @@ public class AuthorityController {
 
     @RequestMapping(path = "/addUser", method = RequestMethod.POST)
     public BaseResponse addUser(User user) {
-        rbacService.addUser(user);
+        user.setCreateTime(new Date());
+        rbacService.addUserWithDefaultRole(user);
         return new BaseResponse();
     }
 
     @RequestMapping(path = "/getSelfInfo")
-    public BaseResponse getSelfInfo(){
+    public BaseResponse getSelfInfo() {
         BaseResponse response = new BaseResponse();
         Subject subject = SubjectUtils.getSubject();
         User user = rbacService.getUserByUserNumber(subject.getPrincipal());
         response.setObject(user);
         return response;
     }
+
     /**
      * 根据角色获取用户列表
      *
@@ -53,6 +57,27 @@ public class AuthorityController {
         Role r = rbacService.getRoleByRoleName(role);
         List<User> userList = rbacService.getUsersByRole(r);
         response.setObject(userList);
+        return response;
+    }
+
+    /**
+     * 根据角色获取权限列表
+     *
+     * @param role
+     * @return
+     */
+    @RequestMapping(path = "/getPermissionByRole/{role}")
+    public BaseResponse getPermissionByRole(@PathVariable String role) {
+        BaseResponse response = new BaseResponse();
+        Role r = rbacService.getRoleByRoleName(role);
+        response.setObject(r.getPermissionList());
+        return response;
+    }
+
+    @RequestMapping(path = "/getDefaultRole")
+    public BaseResponse getDefaultRole() {
+        BaseResponse response = new BaseResponse();
+        response.setObject(rbacService.getDefaultRole());
         return response;
     }
 
@@ -99,6 +124,7 @@ public class AuthorityController {
             return response;
         }
         Permission permission = rbacService.getPermissionByPermissionName(permissionName);
+        oldRole.setUpdateTime(new Date());
         switch (operate) {
             case "add":
                 oldRole.getPermissionList().add(permission);
@@ -152,9 +178,15 @@ public class AuthorityController {
      * @return
      */
     @RequestMapping(path = "/{role}/user/{operate}", method = RequestMethod.POST)
-    public BaseResponse updateUser(User object, @PathVariable("operate") String operate, @PathVariable("role") String role) {
+    public BaseResponse updateUser(@RequestBody User object, @PathVariable("operate") String operate, @PathVariable("role") String role) {
         BaseResponse response = new BaseResponse();
-        Role objectRole = rbacService.getRoleByUserNumber(object.getUserNumber());
+        Role objectRole = null;
+        if (!"add".equals(operate) && !"update".equals(operate)) {
+            objectRole = rbacService.getRoleByUserNumber(object.getUserNumber());
+        }
+        if("update".equals(operate)){
+            objectRole = rbacService.getUerById(object.getId()).getRole();
+        }
         if (!"add".equals(operate) && objectRole != null && !objectRole.getName().equals(role)) {
             response.setStatusCode("400");
             response.setMsg("please check you path!");
@@ -162,7 +194,7 @@ public class AuthorityController {
         }
         switch (operate) {
             case "add":
-                rbacService.addUser(object);
+                rbacService.addUserWithDefaultRole(object);
                 break;
             case "update":
                 // 不能修改role
@@ -186,9 +218,12 @@ public class AuthorityController {
      * @return
      */
     @RequestMapping(path = "/role/{operate}/{role}", method = RequestMethod.POST)
-    public BaseResponse updateRole(Role object, @PathVariable("operate") String operate, @PathVariable("role") String role) {
+    public BaseResponse updateRole(@RequestBody Role object, @PathVariable("operate") String operate, @PathVariable("role") String role) {
         BaseResponse response = new BaseResponse();
-        Role oldObject = rbacService.getRoleById(object.getId());
+        Role oldObject = null;
+        if (!Objects.isNull(object.getId())) {
+            oldObject = rbacService.getRoleById(object.getId());
+        }
         if (!"add".equals(operate) &&
                 (role == null || !role.equals(oldObject.getName()))) {
             response.setStatusCode("400");
@@ -220,9 +255,12 @@ public class AuthorityController {
      * @return
      */
     @RequestMapping(path = "/permission/{operate}/{permission}", method = RequestMethod.POST)
-    public BaseResponse updatePermission(Permission object, @PathVariable("operate") String operate, @PathVariable("permission") String permission) {
+    public BaseResponse updatePermission(@RequestBody Permission object, @PathVariable("operate") String operate, @PathVariable("permission") String permission) {
         BaseResponse response = new BaseResponse();
-        Permission oldObject = rbacService.getPermssionById(object.getId());
+        Permission oldObject = null;
+        if (!Objects.isNull(object.getId())) {
+            oldObject = rbacService.getPermssionById(object.getId());
+        }
         if (!"add".equals(operate) &&
                 (permission == null || !permission.equals(oldObject.getName()))) {
             response.setStatusCode("400");
@@ -246,13 +284,13 @@ public class AuthorityController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public BaseResponse login(User user, HttpServletRequest request) {
+    public BaseResponse login(@RequestBody User user, HttpServletRequest request) {
         Subject subject = new Subject();
         subject.setPrincipal(user.getUserNumber());
         subject.setAccess(user.getPassword());
         BaseResponse baseResponse = new BaseResponse();
         if (subject.login()) {
-            HttpSession session=request.getSession();//获取session并将userName存入session对象
+            HttpSession session = request.getSession();//获取session并将userName存入session对象
             session.setAttribute("user", rbacService.getUserByUserNumber(user.getUserNumber()));
             return baseResponse;
         } else {

@@ -3,6 +3,7 @@ package group.ydq.model.entity.rbac;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -20,7 +21,13 @@ public class Permission {
 
     private String name;
 
+    private String description;
+
     private String path;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -38,6 +45,14 @@ public class Permission {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getPath() {
         return path;
     }
@@ -46,6 +61,21 @@ public class Permission {
         this.path = path;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     @Override
     public boolean equals(Object o) {

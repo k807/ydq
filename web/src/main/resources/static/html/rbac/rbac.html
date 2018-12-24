@@ -5,15 +5,25 @@
     <title>权限列表</title>
     <link rel="stylesheet" href="/assets/layui/css/layui.css">
     <link rel="stylesheet" href="/assets/style/admin.css">
+    <style>
+        .layui-table-cell {
+            height: inherit;
+        }
+
+        .layui-table-tool {
+            z-index: 0;
+        }
+    </style>
 </head>
 <body layadmin-themealias="default">
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-tab layui-tab-card">
+        <div class="layui-tab layui-tab-card" lay-filter="childTab">
             <ul class="layui-tab-title">
                 <li class="layui-this">我的权限</li>
                 <li>角色管理</li>
                 <li>权限管理</li>
+                <li>用户管理</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -38,25 +48,247 @@
                             </div>
                         </div>
                     </form>
-                        <table id="table" lay-filter="table"></table>
+                    <div class="layui-row">
+                        <div class="layui-col-md12">
+                            <table id="table"></table>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="layui-tab-item">
-                        <table id="table2" lay-filter="table2"></table>
+                    <div class="layui-row">
+                        <div class="layui-col-md12">
+                            <table id="table2" lay-filter="table2"></table>
+                        </div>
+                    </div>
                 </div>
-                <div class="layui-tab-item">3</div>
+                <div class="layui-tab-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md12">
+                            <table id="table3" lay-filter="table3"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md3">
+                            <ul class="layui-nav">
+                                <li class="layui-nav-item">
+                                    <a href="javascript:;">根据角色查看所有用户</a>
+                                    <dl id="user_role_select" class="layui-nav-child"> <!-- 二级菜单 -->
+                                    </dl>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="layui-col-md9">
+                            <form class="layui-form layui-form-pane layui-card-header layuiadmin-card-header-auto">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">当前角色:</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="nick" placeholder="名称" autocomplete="off"
+                                                   class="layui-input" id="currentRole" disabled="false">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="layui-row">
+                        <div class="layui-col-md12">
+                            <table id="table4" lay-filter="table4"></table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="/assets/layui/layui.js"></script>
-<script>
-    // layui.use('element', function () {
-    //     var $ = layui.jquery
-    //         , element = layui.element;
-    // });
+<div id="createRoleModel" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称</label>
+            <div class="layui-input-block">
+                <input id="input_roleName" type="text" name="name" lay-verify="required" placeholder="角色名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input id="input_roleDescription" type="text" name="description" lay-verify="required"
+                       placeholder="角色描述" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
 
+<div id="createPermissionModel" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限名称</label>
+            <div class="layui-input-block">
+                <input id="input_createPermissionName" type="text" name="name" lay-verify="required" placeholder="角色名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限路径</label>
+            <div class="layui-input-block">
+                <input id="input_createPermissionPath" type="text" name="name" lay-verify="required" placeholder="角色名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限描述</label>
+            <div class="layui-input-block">
+                <input id="input_createPermissionDescription" type="text" name="name" lay-verify="required"
+                       placeholder="角色名称"
+                       class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="createUserModel" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名称</label>
+            <div class="layui-input-block">
+                <input id="input_createUserName" type="text" name="name" lay-verify="required" placeholder="用户名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户账号</label>
+            <div class="layui-input-block">
+                <input id="input_createUserUserNumber" type="text" name="name" lay-verify="required" placeholder="用户账号"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户密码</label>
+            <div class="layui-input-block">
+                <input id="input_createUserPassword" type="text" name="description" lay-verify="required"
+                       placeholder="用户密码" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="updatePermissionModel" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限名称</label>
+            <div class="layui-input-block">
+                <input id="input_permissionName" type="text" name="name" lay-verify="required" placeholder="角色名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限路径</label>
+            <div class="layui-input-block">
+                <input id="input_permissionPath" type="text" name="name" lay-verify="required" placeholder="角色名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限描述</label>
+            <div class="layui-input-block">
+                <input id="input_permissionDescription" type="text" name="description" lay-verify="required"
+                       placeholder="角色描述" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="updateUserModel" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名称</label>
+            <div class="layui-input-block">
+                <input id="input_updateUserName" type="text" name="name" lay-verify="required" placeholder="用户名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户账号</label>
+            <div class="layui-input-block">
+                <input id="input_updateUserUserNumber" type="text" name="name" lay-verify="required" placeholder="用户账号"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户密码</label>
+            <div class="layui-input-block">
+                <input id="input_updateUserPassword" type="text" name="description" lay-verify="required"
+                       placeholder="用户密码" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="updateUserRoleModel" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">选择角色</label>
+                <div class="layui-input-inline">
+                    <select id="updateUserRoleSelect" name="modules" lay-verify="required" lay-search="">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="addRolePermissionModel" style="display: none">
+    <table class="layui-hide" id="addRolePermissionTable"></table>
+</div>
+
+<div id="delRolePermissionModel" style="display: none">
+    <table class="layui-hide" id="delRolePermissionTable"></table>
+</div>
+
+<script src="/assets/layui/layui.js"></script>
+
+<script type="text/html" id="roleOperateTool">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delRole">删除角色</a>
+    <a class="layui-btn layui-btn-xs" lay-event="addPermission">增加权限</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delPermission">删除权限</a>
+</script>
+
+<script type="text/html" id="permissionOperateTool">
+    <a class="layui-btn layui-btn-xs" lay-event="updatePermission">修改权限</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delPermission">删除权限</a>
+</script>
+
+<script type="text/html" id="userOperateTool">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delUser">删除用户</a>
+    <a class="layui-btn layui-btn-xs" lay-event="updateUser">修改用户信息</a>
+    <a class="layui-btn layui-btn-xs" lay-event="updateUserRole">修改用户角色</a>
+</script>
+
+<script type="text/html" id="roleCreateTool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="createRole">增加角色</button>
+    </div>
+</script>
+
+<script type="text/html" id="permissionCreateTool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="createPermission">增加权限</button>
+    </div>
+</script>
+
+<script type="text/html" id="userCreateTool">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="createUser">增加用户</button>
+    </div>
+</script>
+
+<script>
     layui.use(['element', 'table', 'layer', 'laydate', 'jquery'], function () {
         var $ = layui.$;
         var table = layui.table;
@@ -72,7 +304,6 @@
                 url: "/authority/getSelfInfo",
                 success: function (data) {
                     selfInfo = data.object;
-                    console.log(selfInfo);
                 }
             });
             return selfInfo;
@@ -80,86 +311,652 @@
 
         var selfInfo = getSelfInfo();
 
-        $("#nick").val(selfInfo.nick);
-        $("#role").val(selfInfo.role.name);
-        $("#stuNumber").val(selfInfo.userNumber);
-
         var getSelfPermission = function () {
             return "/authority/getPermissionByUser/" + selfInfo.userNumber;
         };
 
-        laydate.render({
-            elem: '#start',
-            type: 'datetime'
-        });
-        laydate.render({
-            elem: '#end',
-            type: 'datetime'
-        });
-
-        var tableIns = table.render({
-            elem: '#table',
-            toolbar: '#toolbar',
-            height: 'full-200',
-            cols: [
-                [
-                    {type: 'checkbox', fixed: 'left'},
-                    {field: 'id', title: 'ID', width: "20%"},
-                    {field: 'name', title: "权限名称"},
-                    {field: 'path', title: '权限路径'}
-                ]
-            ],
-            text: {
-                none: '暂无相关数据'
-            },
-            url: getSelfPermission(),
-            response: {
-                statusCode: 200
-            },
-            parseData: function (res) {
-                console.log(res);
-                return {
-                    "code": res.statusCode,
-                    "data": res.object
-                };
-            }
-        });
-
-        var tableIns2 = table.render({
-            elem: '#table2',
-            toolbar: '#toolbar',
-            height: 'full-120',
-            cols: [
-                [
-                    {type: 'checkbox', fixed: 'left'},
-                    {field: 'id', title: 'ID', width: "20%"},
-                    {field: 'name', title: "角色名称"},
-                    {
-                        field: 'permissionList', title: '拥有权限', templet: function (d) {
-                            var show = "";
-                            d.permissionList.forEach(function (value) {
-                                show += (value.path + "</br>");
-                            });
-                            return show;
+        var initFourthPageByRole = function (roleName) {
+            var tableIns = table.render({
+                elem: '#table4',
+                toolbar: '#userCreateTool',
+                height: 'full-200',
+                cols: [
+                    [
+                        {type: 'checkbox', width: "10%"},
+                        {field: 'id', title: 'ID', width: "10%"},
+                        {field: 'nick', title: "用户名称", width: "10%"},
+                        {field: 'userNumber', title: '用户账号', width: "10%"},
+                        {field: 'password', title: '用户密码', width: "15%"},
+                        {
+                            field: 'role', title: '角色', width: "10%", templet: function (d) {
+                                return d.role.name;
+                            }
+                        },
+                        {field: 'createTime', title: '创建时间', width: "10%"},
+                        {
+                            field: 'operate', title: "操作", width: "25%", toolbar: '#userOperateTool'
                         }
-                    }
-                ]
-            ],
-            text: {
-                none: '暂无相关数据'
-            },
-            url: "/authority/getAllRoles",
-            response: {
-                statusCode: 200
-            },
-            parseData: function (res) {
-                console.log(res);
-                return {
-                    "code": res.statusCode,
-                    "data": res.object
-                };
+                    ]
+                ],
+                text: {
+                    none: '暂无相关数据'
+                },
+                url: "/authority/getUserByRole/" + roleName,
+                response: {
+                    statusCode: 200
+                },
+                parseData: function (res) {
+                    return {
+                        "code": res.statusCode,
+                        "data": res.object
+                    };
+                }
+            });
+        };
+        // 根据角色展示所有用户表格
+        showUserByRole = function (roleName) {
+            initFourthPageByRole(roleName);
+            $("#currentRole").val(roleName);
+            table.on('toolbar(table4)', function (obj) {
+                switch (obj.event) {
+                    case "createUser":
+                        var defaultRole = "";
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            url: "/authority/getDefaultRole",
+                            success: function (data) {
+                                if (data.statusCode == "200") {
+                                    defaultRole = data.object.name;
+                                }
+                            }
+                        });
+                        layer.open({
+                            type: 1,
+                            title: "创建角色",
+                            area: ['400px', '250px'],
+                            shadeClose: false,
+                            btn: ['确定', '取消'],
+                            content: $('#createUserModel'),
+                            yes: function (index, layero) {
+                                var nick = $("#input_createUserName").val();
+                                var userNumber = $("#input_createUserUserNumber").val();
+                                var password = $("#input_createUserPassword").val();
+                                var object = {
+                                    nick: nick,
+                                    userNumber: userNumber,
+                                    password: password
+                                };
+                                var url = "/authority/" + defaultRole + "/user/add";
+                                $.ajax({
+                                    type: "POST",
+                                    async: false,
+                                    contentType: "application/json",
+                                    data: JSON.stringify(object),
+                                    url: url,
+                                    success: function (data) {
+                                        if (data.statusCode == "200") {
+                                            initFourthPageByRole(defaultRole);
+                                        }
+                                    }
+                                });
+                                layer.close(layer.index);
+                            }
+                        });
+                        break;
+                }
+
+            });
+            table.on('tool(table4)', function (obj) {
+                console.log(obj);
+                switch (obj.event) {
+                    case "updateUserRole":
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            url: "/authority/getAllRoles",
+                            success: function (data) {
+                                if (data.statusCode == "200") {
+                                    data.object.forEach(function (value) {
+                                        var show = "<option value='" + value.name + "'>" + value.name + "</option>"
+                                        $("#updateUserRoleSelect").append(show);
+                                    });
+                                    form.render();
+                                }
+                            }
+                        });
+                        layer.open({
+                            type: 1,
+                            title: "更新用户角色",
+                            area: ['300px', '600px'],
+                            shadeClose: false,
+                            btn: ['确定', '取消'],
+                            content: $('#updateUserRoleModel'),
+                            yes: function (index, layero) {
+                                var oldRoleName = obj.data.role.name;
+                                var newRoleName = $("#updateUserRoleSelect").val();
+                                var object = {
+                                    userNumber: obj.data.userNumber,
+                                };
+                                var url = "/authority/updateUserRole/"+ oldRoleName + "/" + newRoleName;
+                                $.ajax({
+                                    type: "POST",
+                                    async: false,
+                                    data: object,
+                                    url: url,
+                                    success: function (data) {
+                                        if (data.statusCode == "200") {
+                                            showUserByRole(newRoleName);
+                                        }
+                                    }
+                                });
+                                layer.close(layer.index);
+                            }
+                        });
+                        break;
+                    case "updateUser":
+                        $("#input_updateUserName").val(obj.data.nick);
+                        $("#input_updateUserPassword").val(obj.data.password);
+                        $("#input_updateUserUserNumber").val(obj.data.userNumber);
+                        layer.open({
+                            type: 1,
+                            title: "更新用户",
+                            area: ['400px', '250px'],
+                            shadeClose: false,
+                            btn: ['确定', '取消'],
+                            content: $('#updateUserModel'),
+                            yes: function (index, layero) {
+                                var id = obj.data.id;
+                                var nick = $("#input_updateUserName").val();
+                                var password = $("#input_updateUserPassword").val();
+                                var userNumber = $("#input_updateUserUserNumber").val();
+                                var object = {
+                                    id: id,
+                                    nick: nick,
+                                    password: password,
+                                    userNumber: userNumber
+                                };
+                                var url = "/authority/" + obj.data.role.name + "/user/update";
+                                $.ajax({
+                                    type: "POST",
+                                    async: false,
+                                    contentType: "application/json",
+                                    data: JSON.stringify(object),
+                                    url: url,
+                                    success: function (data) {
+                                        if (data.statusCode == "200") {
+                                            showUserByRole(roleName);
+                                        }
+                                    }
+                                });
+                                layer.close(layer.index);
+                            }
+                        });
+                        break;
+                    case "delUser":
+                        layer.open({
+                            type: 1,
+                            content: "确认删除用户？",
+                            btn: ['确定', '取消'],
+                            yes: function (index, layero) {
+                                var data = obj.data;
+                                var url = "/authority/" + obj.data.role.name + "/user/delete";
+                                var object = {
+                                    id: data.id,
+                                    userNumber: data.userNumber
+                                };
+                                $.ajax({
+                                    type: "POST",
+                                    async: false,
+                                    contentType: "application/json",
+                                    data: JSON.stringify(object),
+                                    url: url,
+                                    success: function (data) {
+                                        if (data.statusCode == "200") {
+                                            initFourthPageByRole(obj.data.role.name);
+                                        }
+                                    }
+                                });
+                                layer.close(layer.index);
+                            }
+                        });
+                        break;
+                }
+            });
+        };
+
+        var getUserRoleSelectList = function () {
+            $("#user_role_select").html("");
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/authority/getAllRoles",
+                success: function (data) {
+                    objectList = data.object;
+                    objectList.forEach(function (value) {
+                        var functionName = "showUserByRole(\"" + value.name + "\")";
+                        var show = "<dd><a href='#' onclick=\'" + functionName + "\'>" + value.name + "</a></dd>";
+                        $("#user_role_select").append(show);
+                    });
+                }
+            });
+        };
+
+        // 查看用户的按钮id
+        var getUserListBtnId = function (roleId) {
+            return "btn_getUserList_" + roleId;
+        };
+
+        var initFirstPage = function () {
+            $("#nick").val(selfInfo.nick);
+            $("#role").val(selfInfo.role.name);
+            $("#stuNumber").val(selfInfo.userNumber);
+
+            // 我的权限表
+            var tableIns = table.render({
+                elem: '#table',
+                height: 'full-200',
+                cols: [
+                    [
+                        {field: 'id', title: 'ID', width: "20%"},
+                        {field: 'name', title: "权限名称", width: "30%"},
+                        {field: 'path', title: '权限路径', width: "20%"},
+                        {field: 'description', title: '权限描述', width: "30%"}
+                    ]
+                ],
+                text: {
+                    none: '暂无相关数据'
+                },
+                url: getSelfPermission(),
+                response: {
+                    statusCode: 200
+                },
+                parseData: function (res) {
+                    return {
+                        "code": res.statusCode,
+                        "data": res.object
+                    };
+                }
+            });
+        };
+
+        var initSecondPage = function () {
+            var tableIns2 = table.render({
+                elem: '#table2',
+                toolbar: '#roleCreateTool',
+                height: 'full-120',
+                cols: [
+                    [
+                        {field: 'id', title: 'ID', width: "20%"},
+                        {field: 'name', title: "角色名称", width: "20%"},
+                        {
+                            field: 'permissionList', title: '拥有权限', width: "30%", templet: function (d) {
+                                var show = "";
+                                d.permissionList.forEach(function (value) {
+                                    show += value.path + "</br>";
+                                });
+                                return show;
+                            }
+                        },
+                        {
+                            field: 'operate', title: "操作", width: "20%", toolbar: '#roleOperateTool'
+                        }
+                    ]
+                ],
+                text: {
+                    none: '暂无相关数据'
+                },
+                url: "/authority/getAllRoles",
+                response: {
+                    statusCode: 200
+                },
+                parseData: function (res) {
+                    return {
+                        "code": res.statusCode,
+                        "data": res.object
+                    };
+                }
+            });
+        };
+
+        var initThirdPage = function () {
+            // 权限管理表
+            var tableIns3 = table.render({
+                elem: '#table3',
+                toolbar: '#permissionCreateTool',
+                height: 'full-120',
+                cols: [
+                    [
+                        {field: 'id', title: 'ID', width: "10%"},
+                        {field: 'name', title: "权限名称", width: "10%"},
+                        {field: 'description', title: "权限介绍", width: "20%"},
+                        {field: 'path', title: "权限路径", width: "20%"},
+                        {field: 'createTime', title: "创建时间", width: "10%"},
+                        {field: 'updateTime', title: "更新时间", width: "10%"},
+                        {
+                            field: 'operate', title: "操作", width: "20%", toolbar: '#permissionOperateTool'
+                        }
+                    ]
+                ],
+                text: {
+                    none: '暂无相关数据'
+                },
+                url: "/authority/getAllPermissions",
+                response: {
+                    statusCode: 200
+                },
+                parseData: function (res) {
+                    return {
+                        "code": res.statusCode,
+                        "data": res.object
+                    };
+                }
+            });
+        };
+
+        initFirstPage();
+
+        element.on('tab(childTab)', function (data) {
+            switch (data.index) {
+                // 我的权限
+                case 0:
+                    initFirstPage();
+                    break;
+                // 角色管理
+                case 1:
+                    // 角色管理表
+                    initSecondPage();
+                    table.on('toolbar(table2)', function (obj) {
+                        switch (obj.event) {
+                            case "createRole":
+                                layer.open({
+                                    type: 1,
+                                    title: "创建角色",
+                                    area: ['400px', '250px'],
+                                    shadeClose: false,
+                                    btn: ['确定', '取消'],
+                                    content: $('#createRoleModel'),
+                                    yes: function (index, layero) {
+                                        var name = $("#input_roleName").val();
+                                        var description = $("#input_roleDescription").val();
+                                        var object = {
+                                            name: name,
+                                            description: description
+                                        };
+                                        var url = "/authority/role/add/" + name;
+                                        $.ajax({
+                                            type: "POST",
+                                            async: false,
+                                            contentType: "application/json",
+                                            data: JSON.stringify(object),
+                                            url: url,
+                                            success: function (data) {
+                                                if (data.statusCode == "200") {
+                                                    initSecondPage();
+                                                }
+                                            }
+                                        });
+                                        layer.close(layer.index);
+                                    }
+                                });
+                                break;
+                        }
+
+                    });
+                    table.on('tool(table2)', function (obj) {
+                        switch (obj.event) {
+                            case "delRole":
+                                layer.open({
+                                    type: 1,
+                                    content: "确认删除角色？",
+                                    btn: ['确定', '取消'],
+                                    yes: function (index, layero) {
+                                        var data = obj.data;
+                                        var url = "/authority/role/delete/" + data.name;
+                                        var object = {
+                                            id: data.id,
+                                            name: data.name
+                                        };
+                                        $.ajax({
+                                            type: "POST",
+                                            async: false,
+                                            contentType: "application/json",
+                                            data: JSON.stringify(object),
+                                            url: url,
+                                            success: function (data) {
+                                                if (data.statusCode == "200") {
+                                                    initSecondPage();
+                                                }
+                                            }
+                                        });
+                                        layer.close(layer.index);
+                                    }
+                                });
+                                break;
+                            case "addPermission":
+                                layer.open({
+                                    type: 1,
+                                    area: ['700px', '500px'],
+                                    content: $("#addRolePermissionModel"),
+                                    btn: ['增加', '取消'],
+                                    yes: function (index, layero) {
+                                        var checkStatus = table.checkStatus('addRolePermissionTable');
+                                        checkStatus.data.forEach(function (value) {
+                                            var url = "/authority/updateRolePermission/add/" + obj.data.name + "/" + value.name;
+                                            var object = {
+                                                roleId: obj.data.id
+                                            };
+                                            $.ajax({
+                                                type: "POST",
+                                                data: object,
+                                                async: false,
+                                                url: url,
+                                                success: function (data) {
+                                                }
+                                            });
+                                        });
+                                        initSecondPage();
+                                        layer.close(layer.index);
+                                    }
+                                });
+                                table.render({
+                                    elem: '#addRolePermissionTable'
+                                    , url: '/authority/getAllPermissions'
+                                    , cols: [[
+                                        {type: 'checkbox', width: "10%"}
+                                        , {field: 'id', width: "10%", title: '权限ID'}
+                                        , {field: 'name', width: "20%", title: '权限名称'}
+                                        , {field: 'path', width: "20%", title: '权限路径'}
+                                        , {field: 'description', width: "40%", title: '权限描述'}
+                                    ]],
+                                    response: {
+                                        statusCode: "200"
+                                    },
+                                    parseData: function (res) {
+                                        return {
+                                            "code": res.statusCode,
+                                            "data": res.object
+                                        };
+                                    }
+                                });
+                                break;
+                            case "delPermission":
+                                layer.open({
+                                    type: 1,
+                                    area: ['700px', '500px'],
+                                    content: $("#delRolePermissionModel"),
+                                    btn: ['删除', '取消'],
+                                    yes: function (index, layero) {
+                                        var checkStatus = table.checkStatus('delRolePermissionTable');
+                                        checkStatus.data.forEach(function (value) {
+                                            var url = "/authority/updateRolePermission/delete/" + obj.data.name + "/" + value.name;
+                                            var object = {
+                                                roleId: obj.data.id
+                                            };
+                                            $.ajax({
+                                                type: "POST",
+                                                async: false,
+                                                data: object,
+                                                url: url,
+                                                success: function (data) {
+                                                }
+                                            });
+                                        });
+                                        initSecondPage();
+                                        layer.close(layer.index);
+                                    }
+                                });
+                                table.render({
+                                        elem: '#delRolePermissionTable'
+                                        , url: '/authority/getPermissionByRole/' + obj.data.name
+                                        ,
+                                        cols: [[
+                                            {type: 'checkbox', width: "10%"}
+                                            , {field: 'id', width: "10%", title: '权限ID'}
+                                            , {field: 'name', width: "20%", title: '权限名称'}
+                                            , {field: 'path', width: "20%", title: '权限路径'}
+                                            , {field: 'description', width: "40%", title: '权限描述'}
+                                        ]],
+                                        response: {
+                                            statusCode: "200"
+                                        }
+                                        ,
+                                        parseData: function (res) {
+                                            return {
+                                                "code": res.statusCode,
+                                                "data": res.object
+                                            };
+                                        }
+                                    }
+                                )
+                                ;
+                                break;
+                        }
+
+                    });
+                    break;
+                // 权限管理
+                case 2:
+                    initThirdPage();
+                    table.on('toolbar(table3)', function (obj) {
+                        switch (obj.event) {
+                            case "createPermission":
+                                layer.open({
+                                    type: 1,
+                                    title: "创建权限",
+                                    area: ['400px', '250px'],
+                                    shadeClose: false,
+                                    btn: ['确定', '取消'],
+                                    content: $('#createPermissionModel'),
+                                    yes: function (index, layero) {
+                                        var name = $("#input_createPermissionName").val();
+                                        var path = $("#input_createPermissionPath").val();
+                                        var description = $("#input_createPermissionDescription").val();
+                                        var object = {
+                                            name: name,
+                                            path: path,
+                                            description: description
+                                        };
+                                        var url = "/authority/permission/add/" + name;
+                                        $.ajax({
+                                            type: "POST",
+                                            async: false,
+                                            contentType: "application/json",
+                                            data: JSON.stringify(object),
+                                            url: url,
+                                            success: function (data) {
+                                                if (data.statusCode == "200") {
+                                                    initThirdPage();
+                                                }
+                                            }
+                                        });
+                                        layer.close(layer.index);
+                                    }
+                                });
+                                break;
+                        }
+
+                    });
+                    table.on('tool(table3)', function (obj) {
+                        console.log(obj);
+                        switch (obj.event) {
+                            case "updatePermission":
+                                $("#input_permissionName").val(obj.data.name);
+                                $("#input_permissionPath").val(obj.data.path);
+                                $("#input_permissionDescription").val(obj.data.description);
+                                layer.open({
+                                    type: 1,
+                                    title: "更新权限",
+                                    area: ['400px', '250px'],
+                                    shadeClose: false,
+                                    btn: ['确定', '取消'],
+                                    content: $('#updatePermissionModel'),
+                                    yes: function (index, layero) {
+                                        var id = obj.data.id;
+                                        var name = $("#input_permissionName").val();
+                                        var path = $("#input_permissionPath").val();
+                                        var description = $("#input_permissionDescription").val();
+                                        var object = {
+                                            id: id,
+                                            name: name,
+                                            path: path,
+                                            description: description
+                                        };
+                                        var url = "/authority/permission/update/" + name;
+                                        $.ajax({
+                                            type: "POST",
+                                            async: false,
+                                            contentType: "application/json",
+                                            data: JSON.stringify(object),
+                                            url: url,
+                                            success: function (data) {
+                                                if (data.statusCode == "200") {
+                                                    initThirdPage();
+                                                }
+                                            }
+                                        });
+                                        layer.close(layer.index);
+                                    }
+                                });
+                                break;
+                            case "delPermission":
+                                layer.open({
+                                    type: 1,
+                                    content: "确认删除权限？",
+                                    btn: ['确定', '取消'],
+                                    yes: function (index, layero) {
+                                        var data = obj.data;
+                                        var url = "/authority/permission/delete/" + data.name;
+                                        var object = {
+                                            id: data.id,
+                                            name: data.name
+                                        };
+                                        $.ajax({
+                                            type: "POST",
+                                            async: false,
+                                            contentType: "application/json",
+                                            data: JSON.stringify(object),
+                                            url: url,
+                                            success: function (data) {
+                                                if (data.statusCode == "200") {
+                                                    initThirdPage();
+                                                }
+                                            }
+                                        });
+                                        layer.close(layer.index);
+                                    }
+                                });
+                                break;
+                        }
+                    });
+                    break;
+                // 用户管理
+                case 3:
+                    getUserRoleSelectList();
+                    break;
             }
         });
+
 
         function newTab(url, tit) {
             if (top.layui.index) {

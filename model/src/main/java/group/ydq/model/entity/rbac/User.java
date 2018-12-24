@@ -1,6 +1,7 @@
 package group.ydq.model.entity.rbac;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -25,6 +26,8 @@ public class User {
     private String password;
 
     private String phone;
+
+    private Date createTime;
 
     @ManyToOne
     private Role role;
@@ -67,6 +70,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Role getRole() {

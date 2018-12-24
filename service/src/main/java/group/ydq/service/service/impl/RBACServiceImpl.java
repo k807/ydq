@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,13 +24,14 @@ import java.util.List;
  */
 @Service
 public class RBACServiceImpl extends BaseServiceImpl implements RBACService {
+    private static final String DEFAULT_ROLE = "supermanager";
+
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private PermissionRepository permissionRepository;
-
 
     @Override
     @Transactional
@@ -51,17 +53,40 @@ public class RBACServiceImpl extends BaseServiceImpl implements RBACService {
 
     @Override
     public void addRole(Role role) {
+        role.setUpdateTime(new Date());
+        role.setCreateTime(new Date());
         roleRepository.save(role);
     }
 
     @Override
     public void addPermission(Permission permission) {
+        permission.setCreateTime(new Date());
+        permission.setUpdateTime(new Date());
         permissionRepository.save(permission);
     }
 
     @Override
     public void addUser(User user) {
+        user.setCreateTime(new Date());
         userRepository.save(user);
+    }
+
+    @Override
+    public void addUserWithDefaultRole(User user) {
+        Role defaultRole = getDefaultRole();
+        user.setRole(defaultRole);
+        user.setCreateTime(new Date());
+        addUser(user);
+    }
+
+    @Override
+    public Role getDefaultRole() {
+        return roleRepository.findByName(DEFAULT_ROLE);
+    }
+
+    @Override
+    public User getUerById(Long id) {
+        return userRepository.getOne(id);
     }
 
     @Override
@@ -74,11 +99,13 @@ public class RBACServiceImpl extends BaseServiceImpl implements RBACService {
         if (role.getName() != null) {
             origin.setName(role.getName());
         }
+        role.setUpdateTime(new Date());
         roleRepository.save(origin);
     }
 
     @Override
     public void updatePermission(Permission permission) {
+        permission.setUpdateTime(new Date());
         permissionRepository.save(permission);
     }
 
