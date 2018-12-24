@@ -97,7 +97,7 @@
                         th:if="${user.role.name!='manager'}">
                         <a lay-tips="站内消息"
                            lay-href="/pm/messageList">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-dialogue"></i>
                             <cite>站内消息</cite>
                         </a>
                     </li>
@@ -105,7 +105,7 @@
                         th:if="${user.role.name =='manager'}">
                         <a lay-tips="消息管理"
                            lay-href="/pm/messageTable">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-dialogue"></i>
                             <cite>消息管理</cite>
                         </a>
                     </li>
@@ -114,7 +114,7 @@
                         th:if="${user.role.name =='teacher'}">
                         <a lay-tips="项目管理"
                            lay-href="/html/teacher/projectList.html">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-form"></i>
                             <cite>项目管理</cite>
                         </a>
                     </li>
@@ -122,7 +122,7 @@
                         th:if="${user.role.name =='expert'}">
                         <a lay-tips="项目评审管理"
                            lay-href="/html/expert/projectList.html">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-form"></i>
                             <cite>项目评审管理</cite>
                         </a>
                     </li>
@@ -130,23 +130,23 @@
                         th:if="${user.role.name =='manager'}">
                         <a lay-tips="项目申报管理"
                            lay-href="/html/manager/projectList.html">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-form"></i>
                             <cite>项目申报管理</cite>
                         </a>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
                         th:if="${user.role.name =='manager'}">
-                        <a lay-tips="项目申报管理"
+                        <a lay-tips="申报规则管理"
                            lay-href="/html/manager/ruleManage.html">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-list"></i>
                             <cite>申报规则管理</cite>
                         </a>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
                         th:if="${user.role.name =='manager'}">
-                        <a lay-tips="项目申报管理"
+                        <a lay-tips="项目阶段检查"
                            lay-href="/html/manager/projectCheck.html">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-survey"></i>
                             <cite>项目阶段检查</cite>
                         </a>
                     </li>
@@ -154,7 +154,7 @@
                         th:if="${user.role.name =='teacher'}">
                         <a lay-tips="项目申报"
                            href="javascript:openEntrance()">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-release"></i>
                             <cite>项目申报</cite>
                         </a>
                     </li>
@@ -163,7 +163,7 @@
                         th:if="${user.role.name =='manager'}">
                         <a lay-tips="权限管理"
                            lay-href="/html/rbac/rbac.html">
-                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-icon-auz"></i>
                             <cite>权限管理</cite>
                         </a>
                     </li>
