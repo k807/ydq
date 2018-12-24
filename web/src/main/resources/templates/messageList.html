@@ -78,7 +78,7 @@
                 <legend><b style="font-size:20px;color:#009688;">{{item.title}}</b></legend>
                 <div class="layui-field-box">
                     <span>{{item.content}}</span>
-                    {{# if(item.remark !=null&&item.remark.hasOwnProperty("ruleId")) { }}
+                    {{# if(isWho() == 2&&item.remark !=null&&item.remark.hasOwnProperty("ruleId")) { }}
                     <br>
                     <a onclick="newTab('/project/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
                     {{# } }}
