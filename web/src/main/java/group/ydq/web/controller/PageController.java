@@ -1,6 +1,9 @@
 package group.ydq.web.controller;
 
 import group.ydq.authority.SubjectUtils;
+import group.ydq.model.entity.rbac.User;
+import group.ydq.service.service.PageRenderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class PageController {
+
+    @Autowired
+    private PageRenderService pageRenderService;
+
     @RequestMapping("/")
     public String index(Model model) {
-        model.addAttribute("user", SubjectUtils.getSubject().getBindMap("user"));
+        pageRenderService.render(model, (User) SubjectUtils.getSubject().getBindMap("user"));
         return "home";
     }
 

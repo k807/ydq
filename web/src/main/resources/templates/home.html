@@ -60,7 +60,7 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect="" style="margin-right: 30px">
                     <a>
-                        <cite th:text="${user.nick}"></cite>
+                        <cite th:text="${nick}"></cite>
                         <span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child layui-anim layui-anim-upbit">
                         <dd><a lay-href="set/user/info.html">基本资料</a></dd>
@@ -94,7 +94,7 @@
 
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name!='manager'}">
+                        th:if="${ifshow_pm_messageList}">
                         <a lay-tips="站内消息"
                            lay-href="/pm/messageList">
                             <i class="layui-icon layui-icon-dialogue"></i>
@@ -102,7 +102,7 @@
                         </a>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='manager'}">
+                        th:if="${ifshow_pm_messageTable}">
                         <a lay-tips="消息管理"
                            lay-href="/pm/messageTable">
                             <i class="layui-icon layui-icon-dialogue"></i>
@@ -111,7 +111,7 @@
                     </li>
 
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='teacher'}">
+                        th:if="${ifshow_teacher_projectList}">
                         <dd data-name="console" class="layui-this">
                             <a lay-tips="项目管理"
                                lay-href="/html/teacher/projectList.html">
@@ -121,7 +121,7 @@
                         </dd>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='expert'}">
+                        th:if="${ifshow_expert_projectList}">
                         <dd data-name="console" class="layui-this">
                             <a lay-tips="项目评审管理"
                                lay-href="/html/expert/projectList.html">
@@ -132,7 +132,7 @@
                     </li>
 
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='manager'}">
+                        th:if="${ifshow_manager_projectList}">
                         <a lay-tips="申报管理">
                             <i class="layui-icon layui-icon-list"></i>
                             <cite>申报管理</cite>
@@ -149,7 +149,7 @@
                         </dl>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='manager'}">
+                        th:if="${ifshow_manager_projectCheck}">
                         <a lay-tips="阶段检查"
                            lay-href="/html/manager/projectCheck.html">
                             <i class="layui-icon layui-icon-survey"></i>
@@ -157,7 +157,7 @@
                         </a>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='teacher'}">
+                        th:if="${ifshow_rule_list}">
                         <a lay-tips="项目申报"
                            href="javascript:openEntrance()">
                             <i class="layui-icon layui-icon-release"></i>
@@ -166,7 +166,7 @@
                     </li>
 
                     <li class="layui-nav-item layui-nav-itemed"
-                        th:if="${user.role.name =='manager'}">
+                        th:if="${ifshow_rbac_rbac}">
                         <a lay-tips="权限管理"
                            lay-href="/html/rbac/rbac.html">
                             <i class="layui-icon layui-icon-auz"></i>
