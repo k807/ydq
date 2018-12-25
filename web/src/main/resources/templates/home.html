@@ -27,21 +27,11 @@
                 </li>
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
-                <!--<li class="layui-nav-item">-->
-                <!--<p id="time1" style="color: #000;"></p>-->
-                <!--<script src="time.js"></script>-->
-                <!--</li>-->
                 <li class="layui-nav-item " lay-unselect="" style="">
-                    <!--<a id="red-dot" layadmin-event="more">-->
-                    <a id="red-dot">
+                    <a id="red-dot"
+                       th:attr="lay-href=${ifshow_pm_messageTable?'/pm/messageTable':'/pm/messageList'},lay-text=${ifshow_pm_messageTable?'消息管理':'站内消息'}">
                         <i class="layui-icon layui-icon-notice"></i>
                     </a>
-                    <!-- <a id="red-dot" onclick="getNow()"lay-href="pm/privatemessage" lay-text="消息中心">
-                         <i class="layui-icon layui-icon-notice"></i>
-
-                         &lt;!&ndash; 如果有新消息，则显示小圆点 &ndash;&gt;
-                         &lt;!&ndash;<span class="layui-badge-dot"></span>&ndash;&gt;
-                     </a>-->
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a layadmin-event="theme">
@@ -87,13 +77,13 @@
                             <cite>主页</cite>
                         </a>
                         <dl class="layui-nav-child">
-                            <dd data-name="console">
+                            <dd data-name="console" class="layui-this">
                                 <a lay-href="/html/userManage.html">用户信息管理</a>
                             </dd>
                         </dl>
 
                     </li>
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_pm_messageList}">
                         <a lay-tips="站内消息"
                            lay-href="/pm/messageList">
@@ -101,7 +91,7 @@
                             <cite>站内消息</cite>
                         </a>
                     </li>
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_pm_messageTable}">
                         <a lay-tips="消息管理"
                            lay-href="/pm/messageTable">
@@ -110,35 +100,31 @@
                         </a>
                     </li>
 
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_teacher_projectList}">
-                        <dd data-name="console" class="layui-this">
-                            <a lay-tips="项目管理"
-                               lay-href="/html/teacher/projectList.html">
-                                <i class="layui-icon layui-icon-form"></i>
-                                <cite>项目管理</cite>
-                            </a>
-                        </dd>
+                        <a lay-tips="项目管理"
+                           lay-href="/html/teacher/projectList.html">
+                            <i class="layui-icon layui-icon-form"></i>
+                            <cite>项目管理</cite>
+                        </a>
                     </li>
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_expert_projectList}">
-                        <dd data-name="console" class="layui-this">
-                            <a lay-tips="项目评审管理"
-                               lay-href="/html/expert/projectList.html">
-                                <i class="layui-icon layui-icon-form"></i>
-                                <cite>项目评审管理</cite>
-                            </a>
-                        </dd>
+                        <a lay-tips="项目评审管理"
+                           lay-href="/html/expert/projectList.html">
+                            <i class="layui-icon layui-icon-form"></i>
+                            <cite>项目评审管理</cite>
+                        </a>
                     </li>
 
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_manager_projectList}">
                         <a lay-tips="申报管理">
                             <i class="layui-icon layui-icon-list"></i>
                             <cite>申报管理</cite>
                         </a>
                         <dl class="layui-nav-child">
-                            <dd data-name="console" class="layui-this">
+                            <dd data-name="console">
                                 <a lay-href="/html/manager/projectList.html">申报审核</a>
                             </dd>
                         </dl>
@@ -148,7 +134,7 @@
                             </dd>
                         </dl>
                     </li>
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_manager_projectCheck}">
                         <a lay-tips="阶段检查"
                            lay-href="/html/manager/projectCheck.html">
@@ -156,7 +142,7 @@
                             <cite>阶段检查</cite>
                         </a>
                     </li>
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_rule_list}">
                         <a lay-tips="项目申报"
                            href="javascript:openEntrance()">
@@ -165,7 +151,7 @@
                         </a>
                     </li>
 
-                    <li class="layui-nav-item layui-nav-itemed"
+                    <li class="layui-nav-item"
                         th:if="${ifshow_rbac_rbac}">
                         <a lay-tips="权限管理"
                            lay-href="/html/rbac/rbac.html">
@@ -208,7 +194,7 @@
     </div>
 </div>
 <script src="/assets/layui/layui.js"></script>
-<script src="../static/js/checkUpdate.js"></script>
+<script src="/js/checkUpdate.js"></script>
 <script>
     layui.config({
         base: '/assets/' //静态资源所在路径

@@ -45,19 +45,19 @@ public class PageRenderServiceImpl implements PageRenderService {
             wholeUser = rbacService.getUerById(user.getId());
         }
         model.addAttribute("nick", user.getNick());
-        model.addAttribute("ifshow_pm_messageList", false);
-        model.addAttribute("ifshow_pm_messageTable", true);
+        model.addAttribute("ifshow_pm_messageList", true);
+        model.addAttribute("ifshow_pm_messageTable", false);
         model.addAttribute("ifshow_teacher_projectList", true);
-        model.addAttribute("ifshow_expert_projectList", true);
-        model.addAttribute("ifshow_manager_projectList", true);
-        model.addAttribute("ifshow_manager_projectCheck", true);
+        model.addAttribute("ifshow_expert_projectList", false);
+        model.addAttribute("ifshow_manager_projectList", false);
+        model.addAttribute("ifshow_manager_projectCheck", false);
         model.addAttribute("ifshow_rule_list", true);
         model.addAttribute("ifshow_rbac_rbac", false);
 
         if (!Objects.isNull(wholeUser)) {
             Role role = wholeUser.getRole();
             List<Permission> permissionList = role.getPermissionList();
-            Map<String, Permission> permissionMap = new HashMap();
+            Map<String, Permission> permissionMap = new HashMap<>();
             for (Permission permission : permissionList) {
                 permissionMap.put(permission.getName(), permission);
             }
@@ -66,6 +66,19 @@ public class PageRenderServiceImpl implements PageRenderService {
                 if (patternMatcher.match(permission.getPath(), totalPermissionService.getTotalAuthorityPermission().getPath())) {
                     model.addAttribute("ifshow_rbac_rbac", true);
                 }
+            }
+            if (permissionMap.containsKey("manager")){
+                model.addAttribute("ifshow_pm_messageTable",true);
+                model.addAttribute("ifshow_pm_messageList", false);
+                model.addAttribute("ifshow_manager_projectList", true);
+                model.addAttribute("ifshow_manager_projectCheck", true);
+            }
+            if (permissionMap.containsKey("expert")){
+                model.addAttribute("ifshow_expert_projectList", true);
+            }
+            if (!permissionMap.containsKey("teacher")){
+                model.addAttribute("ifshow_teacher_projectList", false);
+                model.addAttribute("ifshow_rule_list", false);
             }
         }
 

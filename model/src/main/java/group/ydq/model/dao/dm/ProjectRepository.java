@@ -20,7 +20,7 @@ import java.util.Date;
 public interface ProjectRepository extends JpaRepository<Project,Long>{
     Page<Project> findProjectsByLeader(Pageable pageable,User leader);
 
-    Page<Project> findProjectsByManagerAndSubmitTrue(Pageable pageable,User manager);
+    Page<Project> findProjectsBySubmitTrue(Pageable pageable);
 
     Page<Project> findProjectsByManagerAndSubmitTrueAndStateBetween(Pageable pageable,User manager,int state1,int state2);
 

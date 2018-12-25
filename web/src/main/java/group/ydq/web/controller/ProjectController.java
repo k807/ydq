@@ -348,6 +348,12 @@ public class ProjectController {
         return "/projectDeclare";
     }
 
+    @RequestMapping("/list")
+    @ResponseBody
+    public BaseResponse getAllProject(int page,int limit){
+        return RetResponse.success(projectService.getAllProject(page,limit));
+    }
+
     private void deleteFile(ProjectFile file){
         if (FileUtil.delete(file.getUuid(),FileUtil.getSuffix(file.getName())))
             fileService.deleteFile(file.getId());
