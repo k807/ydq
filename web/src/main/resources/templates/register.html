@@ -76,12 +76,12 @@
             }
         });
         $("#btn_register").click(function () {
-            var usernumber = $("#LAY-user-login-usernumber").val();
+            var userNumber = $("#LAY-user-login-usernumber").val();
             var password = $("#LAY-user-login-password").val();
             var nick = $("#LAY-user-login-nickname").val();
             var jsonData = {
                 nick: nick,
-                userNumber: usernumber,
+                userNumber: userNumber,
                 password: password
             };
             $.ajax({

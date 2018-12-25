@@ -35,8 +35,7 @@ public class AuthorityConfigurer {
         manager.configureUnlimitedPath("/assets/.*");
         manager.configureUnlimitedPath("/html/.*");
         manager.configureUnlimitedPath("/register");
-        // todo: 测试接口关闭校验
-        manager.configureUnlimitedPath("/authority/.*");
+
         // 配置需要登陆才能获取的权限
         manager.configureLoginLimitedPath("/authority/logout");
         manager.configureLoginLimitedPath("/user/.*");

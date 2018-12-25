@@ -28,7 +28,7 @@ public class AuthorityController {
     private RBACService rbacService;
 
     @RequestMapping(path = "/addUser", method = RequestMethod.POST)
-    public BaseResponse addUser(User user) {
+    public BaseResponse addUser(@RequestBody User user) {
         user.setCreateTime(new Date());
         rbacService.addUserWithDefaultRole(user);
         return new BaseResponse();
@@ -282,7 +282,7 @@ public class AuthorityController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public BaseResponse login(User user) {
+    public BaseResponse login(@RequestBody User user) {
         Subject subject = new Subject();
         subject.setPrincipal(user.getUserNumber());
         subject.setAccess(user.getPassword());
