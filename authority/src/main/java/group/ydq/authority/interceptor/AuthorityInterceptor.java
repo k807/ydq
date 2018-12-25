@@ -1,11 +1,13 @@
 package group.ydq.authority.interceptor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import group.ydq.authority.AuthorityManager;
 import group.ydq.authority.PatternMatcher;
 import group.ydq.authority.Subject;
 import group.ydq.authority.SubjectUtils;
 import group.ydq.authority.annotion.Unlimited;
 import group.ydq.authority.event.impl.AuthorityEvent;
+import group.ydq.model.dto.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,9 +32,16 @@ public class AuthorityInterceptor implements HandlerInterceptor {
     @Autowired
     private AuthorityManager authorityManager;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestUrl = request.getRequestURI();
+
+        BaseResponse authorityFailResponse = new BaseResponse();
+        authorityFailResponse.setStatusCode("401");
+
 
         // 获取handlerMethod对象
         HandlerMethod handlerMethod = null;
@@ -88,6 +97,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                     response.sendRedirect(authorityManager.getLoginPage());
                     AuthorityManager.getPublisher().
                             fireAuthenticationFailEvent(new AuthorityEvent("have not login", request, request.getSession()));
+
                     return false;
                 }
                 // 4.2 检查权限
@@ -96,9 +106,10 @@ public class AuthorityInterceptor implements HandlerInterceptor {
                             fireAuthenticationSuccessEvent(new AuthorityEvent("authentication success", request, request.getSession()));
                     return true;
                 } else {
-                    response.sendRedirect(authorityManager.getIndexPage());
                     AuthorityManager.getPublisher().
                             fireAuthenticationFailEvent(new AuthorityEvent("authentication fail", request, request.getSession()));
+                    authorityFailResponse.setMsg("AUTHORITY FAIL PATH:" + requestUrl);
+                    response.getWriter().write(objectMapper.writeValueAsString(authorityFailResponse));
                     return false;
                 }
 

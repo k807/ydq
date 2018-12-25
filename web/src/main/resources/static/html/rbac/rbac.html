@@ -303,6 +303,17 @@
                 async: false,
                 url: "/authority/getSelfInfo",
                 success: function (data) {
+                    if (data.statusCode == "401") {
+                        layer.open({
+                            title: '权限校验失败',
+                            content: "权限校验失败!</br>" + data.msg,
+                            offset: 'rb',
+                            shade: 0,
+                            shadeClose: true,
+                            time: 1500
+                        });
+                    }
+
                     selfInfo = data.object;
                 }
             });
@@ -346,6 +357,16 @@
                     statusCode: 200
                 },
                 parseData: function (res) {
+                    if (res.statusCode == "401") {
+                        layer.open({
+                            title: '权限校验失败',
+                            content: "权限校验失败!</br>" + res.msg,
+                            offset: 'rb',
+                            shade: 0,
+                            shadeClose: true,
+                            time: 1500
+                        });
+                    }
                     return {
                         "code": res.statusCode,
                         "data": res.object
@@ -366,6 +387,17 @@
                             async: false,
                             url: "/authority/getDefaultRole",
                             success: function (data) {
+                                if (data.statusCode == "401") {
+                                    layer.open({
+                                        title: '权限校验失败',
+                                        content: "权限校验失败!</br>" + data.msg,
+                                        offset: 'rb',
+                                        shade: 0,
+                                        shadeClose: true,
+                                        time: 1500
+                                    });
+                                }
+
                                 if (data.statusCode == "200") {
                                     defaultRole = data.object.name;
                                 }
@@ -375,6 +407,7 @@
                             type: 1,
                             title: "创建角色",
                             area: ['400px', '250px'],
+                            shade: 0,
                             shadeClose: false,
                             btn: ['确定', '取消'],
                             content: $('#createUserModel'),
@@ -395,6 +428,17 @@
                                     data: JSON.stringify(object),
                                     url: url,
                                     success: function (data) {
+                                        if (data.statusCode == "401") {
+                                            layer.open({
+                                                title: '权限校验失败',
+                                                content: "权限校验失败!</br>" + data.msg,
+                                                offset: 'rb',
+                                                shade: 0,
+                                                shadeClose: true,
+                                                time: 1500
+                                            });
+                                        }
+
                                         if (data.statusCode == "200") {
                                             initFourthPageByRole(defaultRole);
                                         }
@@ -408,7 +452,6 @@
 
             });
             table.on('tool(table4)', function (obj) {
-                console.log(obj);
                 switch (obj.event) {
                     case "updateUserRole":
                         $.ajax({
@@ -416,6 +459,17 @@
                             async: false,
                             url: "/authority/getAllRoles",
                             success: function (data) {
+                                if (data.statusCode == "401") {
+                                    layer.open({
+                                        title: '权限校验失败',
+                                        content: "权限校验失败!</br>" + data.msg,
+                                        offset: 'rb',
+                                        shade: 0,
+                                        shadeClose: true,
+                                        time: 1500
+                                    });
+                                }
+
                                 if (data.statusCode == "200") {
                                     data.object.forEach(function (value) {
                                         var show = "<option value='" + value.name + "'>" + value.name + "</option>"
@@ -429,6 +483,7 @@
                             type: 1,
                             title: "更新用户角色",
                             area: ['300px', '600px'],
+                            shade: 0,
                             shadeClose: false,
                             btn: ['确定', '取消'],
                             content: $('#updateUserRoleModel'),
@@ -438,13 +493,24 @@
                                 var object = {
                                     userNumber: obj.data.userNumber,
                                 };
-                                var url = "/authority/updateUserRole/"+ oldRoleName + "/" + newRoleName;
+                                var url = "/authority/updateUserRole/" + oldRoleName + "/" + newRoleName;
                                 $.ajax({
                                     type: "POST",
                                     async: false,
                                     data: object,
                                     url: url,
                                     success: function (data) {
+                                        if (data.statusCode == "401") {
+                                            layer.open({
+                                                title: '权限校验失败',
+                                                content: "权限校验失败!</br>" + data.msg,
+                                                offset: 'rb',
+                                                shade: 0,
+                                                shadeClose: true,
+                                                time: 1500
+                                            });
+                                        }
+
                                         if (data.statusCode == "200") {
                                             showUserByRole(newRoleName);
                                         }
@@ -462,6 +528,7 @@
                             type: 1,
                             title: "更新用户",
                             area: ['400px', '250px'],
+                            shade: 0,
                             shadeClose: false,
                             btn: ['确定', '取消'],
                             content: $('#updateUserModel'),
@@ -484,6 +551,17 @@
                                     data: JSON.stringify(object),
                                     url: url,
                                     success: function (data) {
+                                        if (data.statusCode == "401") {
+                                            layer.open({
+                                                title: '权限校验失败',
+                                                content: "权限校验失败!</br>" + data.msg,
+                                                offset: 'rb',
+                                                shade: 0,
+                                                shadeClose: true,
+                                                time: 1500
+                                            });
+                                        }
+
                                         if (data.statusCode == "200") {
                                             showUserByRole(roleName);
                                         }
@@ -512,6 +590,17 @@
                                     data: JSON.stringify(object),
                                     url: url,
                                     success: function (data) {
+                                        if (data.statusCode == "401") {
+                                            layer.open({
+                                                title: '权限校验失败',
+                                                content: "权限校验失败!</br>" + data.msg,
+                                                offset: 'rb',
+                                                shade: 0,
+                                                shadeClose: true,
+                                                time: 1500
+                                            });
+                                        }
+
                                         if (data.statusCode == "200") {
                                             initFourthPageByRole(obj.data.role.name);
                                         }
@@ -532,6 +621,17 @@
                 async: false,
                 url: "/authority/getAllRoles",
                 success: function (data) {
+                    if (data.statusCode == "401") {
+                        layer.open({
+                            title: '权限校验失败',
+                            content: "权限校验失败!</br>" + data.msg,
+                            offset: 'rb',
+                            shade: 0,
+                            shadeClose: true,
+                            time: 1500
+                        });
+                    }
+
                     objectList = data.object;
                     objectList.forEach(function (value) {
                         var functionName = "showUserByRole(\"" + value.name + "\")";
@@ -567,14 +667,24 @@
                 text: {
                     none: '暂无相关数据'
                 },
-                url: getSelfPermission(),
+                url: "/authority/getSelfInfo",
                 response: {
                     statusCode: 200
                 },
                 parseData: function (res) {
+                    if (res.statusCode == "401") {
+                        layer.open({
+                            title: '权限校验失败',
+                            content: "权限校验失败!</br>" + res.msg,
+                            offset: 'rb',
+                            shade: 0,
+                            shadeClose: true,
+                            time: 1500
+                        });
+                    }
                     return {
                         "code": res.statusCode,
-                        "data": res.object
+                        "data": res.object.role.permissionList
                     };
                 }
             });
@@ -606,11 +716,21 @@
                 text: {
                     none: '暂无相关数据'
                 },
-                url: "/authority/getAllRoles",
+                url: "/authority/getAllRolesWithPermission",
                 response: {
                     statusCode: 200
                 },
                 parseData: function (res) {
+                    if (res.statusCode == "401") {
+                        layer.open({
+                            title: '权限校验失败',
+                            content: "权限校验失败!</br>" + res.msg,
+                            offset: 'rb',
+                            shade: 0,
+                            shadeClose: true,
+                            time: 1500
+                        });
+                    }
                     return {
                         "code": res.statusCode,
                         "data": res.object
@@ -646,6 +766,16 @@
                     statusCode: 200
                 },
                 parseData: function (res) {
+                    if (res.statusCode == "401") {
+                        layer.open({
+                            title: '权限校验失败',
+                            content: "权限校验失败!</br>" + res.msg,
+                            offset: 'rb',
+                            shade: 0,
+                            shadeClose: true,
+                            time: 1500
+                        });
+                    }
                     return {
                         "code": res.statusCode,
                         "data": res.object
@@ -673,6 +803,7 @@
                                     type: 1,
                                     title: "创建角色",
                                     area: ['400px', '250px'],
+                                    shade: 0,
                                     shadeClose: false,
                                     btn: ['确定', '取消'],
                                     content: $('#createRoleModel'),
@@ -691,6 +822,17 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
+                                                if (data.statusCode == "401") {
+                                                    layer.open({
+                                                        title: '权限校验失败',
+                                                        content: "权限校验失败!</br>" + data.msg,
+                                                        offset: 'rb',
+                                                        shade: 0,
+                                                        shadeClose: true,
+                                                        time: 1500
+                                                    });
+                                                }
+
                                                 if (data.statusCode == "200") {
                                                     initSecondPage();
                                                 }
@@ -724,6 +866,17 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
+                                                if (data.statusCode == "401") {
+                                                    layer.open({
+                                                        title: '权限校验失败',
+                                                        content: "权限校验失败!</br>" + data.msg,
+                                                        offset: 'rb',
+                                                        shade: 0,
+                                                        shadeClose: true,
+                                                        time: 1500
+                                                    });
+                                                }
+
                                                 if (data.statusCode == "200") {
                                                     initSecondPage();
                                                 }
@@ -752,6 +905,17 @@
                                                 async: false,
                                                 url: url,
                                                 success: function (data) {
+                                                    if (data.statusCode == "401") {
+                                                        layer.open({
+                                                            title: '权限校验失败',
+                                                            content: "权限校验失败!</br>" + data.msg,
+                                                            offset: 'rb',
+                                                            shade: 0,
+                                                            shadeClose: true,
+                                                            time: 1500
+                                                        });
+                                                    }
+
                                                 }
                                             });
                                         });
@@ -773,6 +937,16 @@
                                         statusCode: "200"
                                     },
                                     parseData: function (res) {
+                                        if (res.statusCode == "401") {
+                                            layer.open({
+                                                title: '权限校验失败',
+                                                content: "权限校验失败!</br>" + res.msg,
+                                                offset: 'rb',
+                                                shade: 0,
+                                                shadeClose: true,
+                                                time: 1500
+                                            });
+                                        }
                                         return {
                                             "code": res.statusCode,
                                             "data": res.object
@@ -799,6 +973,17 @@
                                                 data: object,
                                                 url: url,
                                                 success: function (data) {
+                                                    if (data.statusCode == "401") {
+                                                        layer.open({
+                                                            title: '权限校验失败',
+                                                            content: "权限校验失败!</br>" + data.msg,
+                                                            offset: 'rb',
+                                                            shade: 0,
+                                                            shadeClose: true,
+                                                            time: 1500
+                                                        });
+                                                    }
+
                                                 }
                                             });
                                         });
@@ -822,6 +1007,16 @@
                                         }
                                         ,
                                         parseData: function (res) {
+                                            if (res.statusCode == "401") {
+                                                layer.open({
+                                                    title: '权限校验失败',
+                                                    content: "权限校验失败!</br>" + res.msg,
+                                                    offset: 'rb',
+                                                    shade: 0,
+                                                    shadeClose: true,
+                                                    time: 1500
+                                                });
+                                            }
                                             return {
                                                 "code": res.statusCode,
                                                 "data": res.object
@@ -845,6 +1040,7 @@
                                     type: 1,
                                     title: "创建权限",
                                     area: ['400px', '250px'],
+                                    shade: 0,
                                     shadeClose: false,
                                     btn: ['确定', '取消'],
                                     content: $('#createPermissionModel'),
@@ -865,6 +1061,17 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
+                                                if (data.statusCode == "401") {
+                                                    layer.open({
+                                                        title: '权限校验失败',
+                                                        content: "权限校验失败!</br>" + data.msg,
+                                                        offset: 'rb',
+                                                        shade: 0,
+                                                        shadeClose: true,
+                                                        time: 1500
+                                                    });
+                                                }
+
                                                 if (data.statusCode == "200") {
                                                     initThirdPage();
                                                 }
@@ -878,7 +1085,6 @@
 
                     });
                     table.on('tool(table3)', function (obj) {
-                        console.log(obj);
                         switch (obj.event) {
                             case "updatePermission":
                                 $("#input_permissionName").val(obj.data.name);
@@ -888,6 +1094,7 @@
                                     type: 1,
                                     title: "更新权限",
                                     area: ['400px', '250px'],
+                                    shade: 0,
                                     shadeClose: false,
                                     btn: ['确定', '取消'],
                                     content: $('#updatePermissionModel'),
@@ -902,7 +1109,7 @@
                                             path: path,
                                             description: description
                                         };
-                                        var url = "/authority/permission/update/" + name;
+                                        var url = "/authority/permission/update/" + obj.data.name;
                                         $.ajax({
                                             type: "POST",
                                             async: false,
@@ -910,6 +1117,17 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
+                                                if (data.statusCode == "401") {
+                                                    layer.open({
+                                                        title: '权限校验失败',
+                                                        content: "权限校验失败!</br>" + data.msg,
+                                                        offset: 'rb',
+                                                        shade: 0,
+                                                        shadeClose: true,
+                                                        time: 1500
+                                                    });
+                                                }
+
                                                 if (data.statusCode == "200") {
                                                     initThirdPage();
                                                 }
@@ -938,6 +1156,17 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
+                                                if (data.statusCode == "401") {
+                                                    layer.open({
+                                                        title: '权限校验失败',
+                                                        content: "权限校验失败!</br>" + data.msg,
+                                                        offset: 'rb',
+                                                        shade: 0,
+                                                        shadeClose: true,
+                                                        time: 1500
+                                                    });
+                                                }
+
                                                 if (data.statusCode == "200") {
                                                     initThirdPage();
                                                 }

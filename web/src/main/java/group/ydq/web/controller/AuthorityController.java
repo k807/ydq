@@ -2,6 +2,7 @@ package group.ydq.web.controller;
 
 import group.ydq.authority.Subject;
 import group.ydq.authority.SubjectUtils;
+import group.ydq.authority.annotion.Unlimited;
 import group.ydq.model.dto.BaseResponse;
 import group.ydq.model.entity.rbac.Permission;
 import group.ydq.model.entity.rbac.Role;
@@ -34,6 +35,7 @@ public class AuthorityController {
         return new BaseResponse();
     }
 
+    @Unlimited
     @RequestMapping(path = "/getSelfInfo")
     public BaseResponse getSelfInfo() {
         BaseResponse response = new BaseResponse();
@@ -72,6 +74,7 @@ public class AuthorityController {
         return response;
     }
 
+    @Unlimited
     @RequestMapping(path = "/getDefaultRole")
     public BaseResponse getDefaultRole() {
         BaseResponse response = new BaseResponse();
@@ -79,10 +82,19 @@ public class AuthorityController {
         return response;
     }
 
+    @RequestMapping(path = "/getAllRolesWithPermission")
+    public BaseResponse getAllRolesWithPermission() {
+        BaseResponse response = new BaseResponse();
+        List<Role> roles = rbacService.getAllRolesWithPermission();
+        response.setObject(roles);
+        return response;
+    }
+
+    @Unlimited
     @RequestMapping(path = "/getAllRoles")
     public BaseResponse getAllRoles() {
         BaseResponse response = new BaseResponse();
-        List<Role> roles = rbacService.getAllRoles();
+        List<Role> roles = rbacService.getAllRolesWithoutPermission();
         response.setObject(roles);
         return response;
     }
@@ -182,7 +194,7 @@ public class AuthorityController {
         if (!"add".equals(operate) && !"update".equals(operate)) {
             objectRole = rbacService.getRoleByUserNumber(object.getUserNumber());
         }
-        if("update".equals(operate)){
+        if ("update".equals(operate)) {
             objectRole = rbacService.getUerById(object.getId()).getRole();
         }
         if (!"add".equals(operate) && objectRole != null && !objectRole.getName().equals(role)) {
@@ -281,6 +293,7 @@ public class AuthorityController {
         return new BaseResponse();
     }
 
+    @Unlimited
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public BaseResponse login(@RequestBody User user) {
         Subject subject = new Subject();
@@ -288,7 +301,7 @@ public class AuthorityController {
         subject.setAccess(user.getPassword());
         BaseResponse baseResponse = new BaseResponse();
         if (subject.login()) {
-            subject.bind("user",rbacService.getUserByUserNumber(user.getUserNumber()));
+            subject.bind("user", rbacService.getUserByUserNumber(user.getUserNumber()));
             return baseResponse;
         } else {
             baseResponse.setStatusCode("400");
@@ -297,6 +310,7 @@ public class AuthorityController {
         }
     }
 
+    @Unlimited
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public BaseResponse logout() {
         Subject subject = SubjectUtils.getSubject();

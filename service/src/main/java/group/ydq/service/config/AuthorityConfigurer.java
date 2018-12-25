@@ -35,10 +35,9 @@ public class AuthorityConfigurer {
         manager.configureUnlimitedPath("/assets/.*");
         manager.configureUnlimitedPath("/html/.*");
         manager.configureUnlimitedPath("/register");
-
         // 配置需要登陆才能获取的权限
         manager.configureLoginLimitedPath("/authority/logout");
-        manager.configureLoginLimitedPath("/user/.*");
+        manager.configureLoginLimitedPath("^/user/.*$");
         // 支持注册监听器
         manager.registListener("logListener", new LogListener());
         return manager;

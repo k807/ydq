@@ -185,8 +185,17 @@ public class RBACServiceImpl extends BaseServiceImpl implements RBACService {
     }
 
     @Override
-    public List<Role> getAllRoles() {
+    public List<Role> getAllRolesWithPermission() {
         return roleRepository.findAll();
+    }
+
+    @Override
+    public List<Role> getAllRolesWithoutPermission() {
+        List<Role> allRole = roleRepository.findAll();
+        for (Role role : allRole) {
+            role.setPermissionList(null);
+        }
+        return allRole;
     }
 
     @Override

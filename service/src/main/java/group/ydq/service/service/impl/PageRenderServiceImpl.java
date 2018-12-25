@@ -1,10 +1,12 @@
 package group.ydq.service.service.impl;
 
+import group.ydq.authority.PatternMatcher;
 import group.ydq.model.entity.rbac.Permission;
 import group.ydq.model.entity.rbac.Role;
 import group.ydq.model.entity.rbac.User;
 import group.ydq.service.service.PageRenderService;
 import group.ydq.service.service.RBACService;
+import group.ydq.service.service.TotalPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -27,6 +29,12 @@ public class PageRenderServiceImpl implements PageRenderService {
     @Autowired
     private RBACService rbacService;
 
+    @Autowired
+    private PatternMatcher patternMatcher;
+
+    @Autowired
+    private TotalPermissionService totalPermissionService;
+
     @Override
     public void render(Model model, User user) {
         User wholeUser = null;
@@ -37,7 +45,7 @@ public class PageRenderServiceImpl implements PageRenderService {
             wholeUser = rbacService.getUerById(user.getId());
         }
         model.addAttribute("nick", user.getNick());
-        model.addAttribute("ifshow_pm_messageList", true);
+        model.addAttribute("ifshow_pm_messageList", false);
         model.addAttribute("ifshow_pm_messageTable", true);
         model.addAttribute("ifshow_teacher_projectList", true);
         model.addAttribute("ifshow_expert_projectList", true);
@@ -54,8 +62,10 @@ public class PageRenderServiceImpl implements PageRenderService {
                 permissionMap.put(permission.getName(), permission);
             }
 
-            if (permissionMap.containsKey("authority")) {
-                model.addAttribute("ifshow_rbac_rbac", true);
+            for (Permission permission : permissionList) {
+                if (patternMatcher.match(permission.getPath(), totalPermissionService.getTotalAuthorityPermission().getPath())) {
+                    model.addAttribute("ifshow_rbac_rbac", true);
+                }
             }
         }
 

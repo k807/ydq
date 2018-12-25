@@ -50,7 +50,9 @@ public interface RBACService extends BaseService {
 
     List<User> getUsersByRole(Role role);
 
-    List<Role> getAllRoles();
+    List<Role> getAllRolesWithPermission();
+
+    List<Role> getAllRolesWithoutPermission();
 
     List<Permission> getAllPermissions();
 }
