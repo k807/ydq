@@ -34,6 +34,7 @@ public class AuthorityConfigurer {
         manager.configureUnlimitedPath("/authority/addUser");
         manager.configureUnlimitedPath("/assets/.*");
         manager.configureUnlimitedPath("/html/.*");
+        manager.configureUnlimitedPath("/js/.*");
         manager.configureUnlimitedPath("/register");
 
         // 配置需要登陆才能获取的权限

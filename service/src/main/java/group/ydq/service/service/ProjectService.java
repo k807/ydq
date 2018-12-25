@@ -21,7 +21,7 @@ public interface ProjectService extends BaseService{
 
     Page<Project> getProjectsOfLeader(int page, int limit, String userNumber);
 
-    Page<Project> getProjectsOfManager(int page,int limit,String userNumber);
+    Page<Project> getAllProject(int page, int limit);
 
     Page<Project> getProjectsOfManagerInDeclareStage(int page,int limit,String userNumber);
 

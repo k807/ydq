@@ -21,8 +21,8 @@
             <div class="layui-form-item">
                 <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                        for="LAY-user-login-usernumber"></label>
-                <input type="text" name="stuNumber" id="LAY-user-login-usernumber" lay-verify="required"
-                       placeholder="学号" class="layui-input">
+                <input type="text" name="userNumber" id="LAY-user-login-usernumber" lay-verify="required"
+                       placeholder="账号" class="layui-input">
             </div>
             <div class="layui-form-item">
                 <label class="layadmin-user-login-icon layui-icon layui-icon-password"
@@ -39,7 +39,7 @@
             <div class="layui-form-item">
                 <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                        for="LAY-user-login-nickname"></label>
-                <input type="text" name="nickname" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="昵称"
+                <input type="text" name="nick" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="昵称"
                        class="layui-input">
             </div>
             <div class="layui-form-item">
@@ -75,20 +75,12 @@
                 $('#rpwr').attr('hidden', 'hidden');
             }
         });
-        $("#btn_register").click(function () {
-            var userNumber = $("#LAY-user-login-usernumber").val();
-            var password = $("#LAY-user-login-password").val();
-            var nick = $("#LAY-user-login-nickname").val();
-            var jsonData = {
-                nick: nick,
-                userNumber: userNumber,
-                password: password
-            };
+        form.on('submit(LAY-user-reg-submit)',function (data) {
             $.ajax({
                 type: "post",
                 url: "/authority/addUser",
                 contentType: "application/json",
-                data: JSON.stringify(jsonData),
+                data: JSON.stringify(data.field),
                 dataType: "json",
                 success: function (data) {
                     if (data.statusCode === "200") {

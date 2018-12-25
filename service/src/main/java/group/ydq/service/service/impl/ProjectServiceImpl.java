@@ -65,9 +65,9 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     }
 
     @Override
-    public Page<Project> getProjectsOfManager(int page, int limit,String userNumber) {
+    public Page<Project> getAllProject(int page, int limit) {
         Pageable pageable= PageRequest.of(page-1,limit);
-        return projectRepository.findProjectsByManagerAndSubmitTrue(pageable,userRepository.findByUserNumber(userNumber));
+        return projectRepository.findProjectsBySubmitTrue(pageable);
     }
 
     @Override

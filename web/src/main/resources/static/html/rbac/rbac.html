@@ -366,7 +366,7 @@
                             async: false,
                             url: "/authority/getDefaultRole",
                             success: function (data) {
-                                if (data.statusCode == "200") {
+                                if (data.statusCode === "200") {
                                     defaultRole = data.object.name;
                                 }
                             }
@@ -395,7 +395,7 @@
                                     data: JSON.stringify(object),
                                     url: url,
                                     success: function (data) {
-                                        if (data.statusCode == "200") {
+                                        if (data.statusCode === "200") {
                                             initFourthPageByRole(defaultRole);
                                         }
                                     }
@@ -416,9 +416,9 @@
                             async: false,
                             url: "/authority/getAllRoles",
                             success: function (data) {
-                                if (data.statusCode == "200") {
+                                if (data.statusCode === "200") {
                                     data.object.forEach(function (value) {
-                                        var show = "<option value='" + value.name + "'>" + value.name + "</option>"
+                                        var show = "<option value='" + value.name + "'>" + value.name + "</option>";
                                         $("#updateUserRoleSelect").append(show);
                                     });
                                     form.render();
@@ -436,7 +436,7 @@
                                 var oldRoleName = obj.data.role.name;
                                 var newRoleName = $("#updateUserRoleSelect").val();
                                 var object = {
-                                    userNumber: obj.data.userNumber,
+                                    userNumber: obj.data.userNumber
                                 };
                                 var url = "/authority/updateUserRole/"+ oldRoleName + "/" + newRoleName;
                                 $.ajax({
@@ -445,7 +445,7 @@
                                     data: object,
                                     url: url,
                                     success: function (data) {
-                                        if (data.statusCode == "200") {
+                                        if (data.statusCode === "200") {
                                             showUserByRole(newRoleName);
                                         }
                                     }
@@ -484,7 +484,7 @@
                                     data: JSON.stringify(object),
                                     url: url,
                                     success: function (data) {
-                                        if (data.statusCode == "200") {
+                                        if (data.statusCode === "200") {
                                             showUserByRole(roleName);
                                         }
                                     }
@@ -512,7 +512,7 @@
                                     data: JSON.stringify(object),
                                     url: url,
                                     success: function (data) {
-                                        if (data.statusCode == "200") {
+                                        if (data.statusCode === "200") {
                                             initFourthPageByRole(obj.data.role.name);
                                         }
                                     }
@@ -691,7 +691,7 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
-                                                if (data.statusCode == "200") {
+                                                if (data.statusCode === "200") {
                                                     initSecondPage();
                                                 }
                                             }
@@ -724,7 +724,7 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
-                                                if (data.statusCode == "200") {
+                                                if (data.statusCode === "200") {
                                                     initSecondPage();
                                                 }
                                             }
@@ -865,7 +865,7 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
-                                                if (data.statusCode == "200") {
+                                                if (data.statusCode === "200") {
                                                     initThirdPage();
                                                 }
                                             }
@@ -910,7 +910,7 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
-                                                if (data.statusCode == "200") {
+                                                if (data.statusCode === "200") {
                                                     initThirdPage();
                                                 }
                                             }
@@ -938,7 +938,7 @@
                                             data: JSON.stringify(object),
                                             url: url,
                                             success: function (data) {
-                                                if (data.statusCode == "200") {
+                                                if (data.statusCode === "200") {
                                                     initThirdPage();
                                                 }
                                             }

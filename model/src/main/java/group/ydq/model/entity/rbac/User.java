@@ -1,5 +1,7 @@
 package group.ydq.model.entity.rbac;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -27,6 +29,7 @@ public class User {
 
     private String phone;
 
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     @ManyToOne

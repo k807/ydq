@@ -1,11 +1,8 @@
 layui.use('jquery', function () {
 
     var $ = layui.jquery;
-    manager = "pm/messageTable"
-    user = "pm/messageList"
     $(function () {
         getNow()
-        userIn()
     })
 
     function checkUpdate() {
@@ -28,35 +25,6 @@ layui.use('jquery', function () {
                 console.log(result)
             }
         })
-    }
-
-    function userIn() {
-
-        $.ajax({
-            type: "POST",
-            url: "/authority/getSelfInfo",
-            dataType: "json",
-            success: function (result) {
-                var role = result.object.role.name
-                switch (role) {
-                    case "manager":
-                        $("#red-dot").attr("lay-href", manager)
-                        break
-                    case "teacher":
-                        $("#red-dot").attr("lay-href", user)
-                        break
-                    case "expert":
-                        $("#red-dot").attr("lay-href", user)
-                        break
-                    default:
-                        $("#red-dot").attr("lay-href", user)
-                }
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        })
-
     }
 
     setInterval(checkUpdate, 60000);
