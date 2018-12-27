@@ -1,5 +1,6 @@
 package group.ydq.model.dao.dm;
 
+import com.alibaba.fastjson.JSONObject;
 import group.ydq.model.entity.dm.DeclareRule;
 import group.ydq.model.entity.dm.Project;
 import group.ydq.model.entity.rbac.User;
@@ -12,17 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Daylight
  * @date 2018/11/12 16:22
  */
-public interface ProjectRepository extends JpaRepository<Project,Long>{
-    Page<Project> findProjectsByLeader(Pageable pageable,User leader);
+public interface ProjectRepository extends JpaRepository<Project, Long> {
+    Page<Project> findProjectsByLeader(Pageable pageable, User leader);
 
     Page<Project> findProjectsBySubmitTrue(Pageable pageable);
 
-    Page<Project> findProjectsByManagerAndSubmitTrueAndStateBetween(Pageable pageable,User manager,int state1,int state2);
+    Page<Project> findProjectsByManagerAndSubmitTrueAndStateBetween(Pageable pageable, User manager, int state1, int state2);
 
     @Modifying
     @Transactional
@@ -33,7 +35,13 @@ public interface ProjectRepository extends JpaRepository<Project,Long>{
 
     int countProjectsByEntrance(DeclareRule rule);
 
-    Page<Project> queryProjectsByLeaderAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(Pageable pageable,User leader,String name, Collection level,Collection state,Collection major,Date start,Date end);
+    Page<Project> queryProjectsByLeaderAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(Pageable pageable, User leader, String name, Collection level, Collection state, Collection major, Date start, Date end);
 
-    Page<Project> queryProjectsByManagerAndSubmitTrueAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(Pageable pageable,User manager,String name, Collection level,Collection state,Collection major,Date start,Date end);
+    Page<Project> queryProjectsByManagerAndSubmitTrueAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(Pageable pageable, User manager, String name, Collection level, Collection state, Collection major, Date start, Date end);
+
+    int countProjectsByMajor(int Major);
+
+    int countProjectsByState(int State);
+
+
 }

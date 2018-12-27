@@ -14,10 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Daylight
@@ -36,6 +33,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     /**
      * 项目保存操作
+     *
      * @param project
      */
     @Override
@@ -45,6 +43,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     /**
      * 查询项目详情
+     *
      * @param projectId
      * @return
      */
@@ -60,31 +59,36 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
 
     @Override
     public Page<Project> getProjectsOfLeader(int page, int limit, String userNumber) {
-        Pageable pageable= PageRequest.of(page-1,limit);
-        return projectRepository.findProjectsByLeader(pageable,userRepository.findByUserNumber(userNumber));
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        return projectRepository.findProjectsByLeader(pageable, userRepository.findByUserNumber(userNumber));
     }
 
     @Override
     public Page<Project> getAllProject(int page, int limit) {
-        Pageable pageable= PageRequest.of(page-1,limit);
+        Pageable pageable = PageRequest.of(page - 1, limit);
         return projectRepository.findProjectsBySubmitTrue(pageable);
     }
 
     @Override
+    public List<Project> findAll() {
+        return projectRepository.findAll();
+    }
+
+    @Override
     public Page<Project> getProjectsOfManagerInDeclareStage(int page, int limit, String userNumber) {
-        Pageable pageable= PageRequest.of(page-1,limit);
-        return projectRepository.findProjectsByManagerAndSubmitTrueAndStateBetween(pageable,userRepository.findByUserNumber(userNumber),0,6);
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        return projectRepository.findProjectsByManagerAndSubmitTrueAndStateBetween(pageable, userRepository.findByUserNumber(userNumber), 0, 6);
     }
 
     @Override
     public Page<ExpertReview> getProjectOfExpert(int page, int limit, String userNumber) {
-        Pageable pageable=PageRequest.of(page-1,limit);
-        return expertRepository.findExpertProjectsByExpert(pageable,userRepository.findByUserNumber(userNumber));
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        return expertRepository.findExpertProjectsByExpert(pageable, userRepository.findByUserNumber(userNumber));
     }
 
     @Override
     public void changeState(long projectId, int state) {
-        projectRepository.changeState(projectId, state,new Date());
+        projectRepository.changeState(projectId, state, new Date());
     }
 
     @Override
@@ -108,24 +112,24 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     }
 
     @Override
-    public Page<Project> searchProject(int role, int page, int limit, User user,String name, String level, String state, String major, String start, String end) {
-        Pageable pageable=PageRequest.of(page-1,limit);
-        switch (role){
+    public Page<Project> searchProject(int role, int page, int limit, User user, String name, String level, String state, String major, String start, String end) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        switch (role) {
             case 1:
-                return projectRepository.queryProjectsByLeaderAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(pageable,user,name, strToCollection(level), strToCollection(state), strToCollection(major), DateUtil.strToDate(start,DateUtil.format1),DateUtil.strToDate(end,DateUtil.format1));
+                return projectRepository.queryProjectsByLeaderAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(pageable, user, name, strToCollection(level), strToCollection(state), strToCollection(major), DateUtil.strToDate(start, DateUtil.format1), DateUtil.strToDate(end, DateUtil.format1));
             case 2:
-                return projectRepository.queryProjectsByManagerAndSubmitTrueAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(pageable,user,name, strToCollection(level), strToCollection(state), strToCollection(major), DateUtil.strToDate(start,DateUtil.format1),DateUtil.strToDate(end,DateUtil.format1));
+                return projectRepository.queryProjectsByManagerAndSubmitTrueAndNameContainingAndLevelInAndStateInAndMajorInAndCreateTimeBetween(pageable, user, name, strToCollection(level), strToCollection(state), strToCollection(major), DateUtil.strToDate(start, DateUtil.format1), DateUtil.strToDate(end, DateUtil.format1));
         }
         return null;
     }
 
     @Override
-    public Page<ExpertReview> searchExpertReview(int page, int limit, User user,String name, String level, String state, String major, String start, String end) {
-        Pageable pageable=PageRequest.of(page-1,limit);
+    public Page<ExpertReview> searchExpertReview(int page, int limit, User user, String name, String level, String state, String major, String start, String end) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
         if (state.equals(""))
-            return expertRepository.queryExpertReviewsWithoutMarkCondition(user,name, strToCollection(level),  strToCollection(major),DateUtil.strToDate(start,DateUtil.format1),DateUtil.strToDate(end,DateUtil.format1),pageable);
+            return expertRepository.queryExpertReviewsWithoutMarkCondition(user, name, strToCollection(level), strToCollection(major), DateUtil.strToDate(start, DateUtil.format1), DateUtil.strToDate(end, DateUtil.format1), pageable);
         else
-            return expertRepository.queryExpertReviewsWithMarkCondition(user,name, strToCollection(level), Boolean.parseBoolean(state), strToCollection(major),DateUtil.strToDate(start,DateUtil.format1),DateUtil.strToDate(end,DateUtil.format1),pageable);
+            return expertRepository.queryExpertReviewsWithMarkCondition(user, name, strToCollection(level), Boolean.parseBoolean(state), strToCollection(major), DateUtil.strToDate(start, DateUtil.format1), DateUtil.strToDate(end, DateUtil.format1), pageable);
     }
 
     @Override
@@ -133,16 +137,37 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
         expertRepository.save(review);
     }
 
-    static Collection strToCollection(String str){
-        List<Integer> integers=new ArrayList<>();
-        int integer=-2;
-        if (str!=null&&!str.equals(""))
-            integer=Integer.parseInt(str);
-        if (integer==-2){
-            for (int i=-1;i<11;i++){
+    @Override
+    public Map<String, Object> getMajorCount() {
+        Map<String, Object> obj = new HashMap<>();
+        obj.put("计算机科学与技术", projectRepository.countProjectsByMajor(0));
+        obj.put("电子信息工程", projectRepository.countProjectsByMajor(1));
+        obj.put("电子信息科学与技术", projectRepository.countProjectsByMajor(2));
+        obj.put("数字媒体技术", projectRepository.countProjectsByMajor(3));
+        return obj;
+    }
+
+    @Override
+    public Map<String, Object> getStateCount() {
+        Map<String, Object> obj = new HashMap<>();
+        obj.put("初审通过", projectRepository.countProjectsByState(1));
+        obj.put("立项评审完成", projectRepository.countProjectsByState(4));
+        obj.put("已立项", projectRepository.countProjectsByState(5));
+        obj.put("中期检查通过", projectRepository.countProjectsByState(8));
+        obj.put("已结题", projectRepository.countProjectsByState(10));
+        return obj;
+    }
+
+    static Collection strToCollection(String str) {
+        List<Integer> integers = new ArrayList<>();
+        int integer = -2;
+        if (str != null && !str.equals(""))
+            integer = Integer.parseInt(str);
+        if (integer == -2) {
+            for (int i = -1; i < 11; i++) {
                 integers.add(i);
             }
-        }else
+        } else
             integers.add(integer);
         return integers;
     }

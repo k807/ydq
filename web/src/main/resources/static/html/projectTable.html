@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>项目列表</title>
+    <link rel="stylesheet" href="/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/assets/style/admin.css">
+</head>
+<body layadmin-themealias="default">
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layuiadmin-card-header-auto">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div id="main" style="width: 700px;height:300px;"></div>
+                </div>
+                <div class="layui-col-md3">
+                    <div id="pie" style="width: 500px;height:300px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table class="layui-hide" id="table" lay-filter="table"></table>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="/assets/layui/layui.js"></script>
+<script src="/assets/echarts.common.min.js"></script>
+<script>
+    layui.use(['carousel', 'jquery', 'table', 'laydate', 'form'], function () {
+
+
+        var $ = layui.$;
+        var table = layui.table;
+        var form = layui.form;
+        var tableIns = table.render({
+            elem: '#table',
+            toolbar: '#toolbar',
+            height: 'full-200',
+            cols: [
+                [
+                    {field: 'name', title: "项目名 ", sort: true},
+                    {
+                        field: 'entrance', title: "所属入口 ", sort: true
+                        , templet: function (row) {
+                            return row.entrance.title
+                        }
+                    },
+                    {
+                        field: 'major', title: "所属专业 ", sort: true, templet: function (row) {
+                            switch (row.major) {
+                                case 0:
+                                    return '计算机科学与技术'
+                                case 1:
+                                    return '电子信息工程'
+                                case 2:
+                                    return '电子信息科学与技术'
+                                case 3:
+                                    return '数字媒体技术'
+                                default:
+                                    return '未知'
+
+
+                            }
+                        }
+                    },
+                    {
+                        field: 'state', title: "状态", sort: true, templet: function (row) {
+                            switch (row.state) {
+                                case -1:
+                                    return '未提交'
+                                case 0:
+                                    return '审核中'
+                                case 1:
+                                    return '初审通过'
+                                case 2:
+                                    return '初审未通过'
+                                case 3:
+                                    return '立项评审中'
+                                case 4:
+                                    return '立项评审完成'
+                                case 5:
+                                    return '已立项'
+                                case 6:
+                                    return '不立项'
+                                case 7:
+                                    return '中期检查待整改'
+                                case 8:
+                                    return '中期检查通过'
+                                case 9:
+                                    return '结题验收待整改'
+                                case 10:
+                                    return '已结题'
+                            }
+                        }
+                    },
+                    {
+                        field: 'leader', title: "项目负责人", sort: true
+                        , templet: function (row) {
+                            return row.leader.nick
+                        }
+                    },
+                    {field: 'email', title: "电子邮箱", sort: true},
+                    {
+                        field: 'createTime', title: "创建时间", sort: true, templet: function (d) {
+                            var date = new Date(d.createTime);
+                            return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+                        }
+                    },
+
+                ]
+            ],
+            page: true,
+            limit: 15,
+            limits: [15, 30, 45, 60, 75, 90],
+            url: "/project/list",
+            response: {
+                statusCode: 200
+            },
+            parseData: function (res) {
+                return {
+                    "code": res.statusCode,
+                    "data": res.object.content,
+                    "count": res.object.totalElements
+                };
+            }
+        });
+
+        //柱状图
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        myChart.showLoading(); //数据加载完之前先显示一段简单的loading动画
+        $.get('/project/stateCount').done(function (data) {
+            myChart.hideLoading();
+            var option = {
+                color: ['#FFB800'],
+                title: {
+                    text: '项目审核状态',
+                    x: '200px',
+                    y: '5px'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['项目数'],
+                    x: '350px',
+                    y: '7px'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['初审通过', '立项评审完成', '已立项', '中期检查通过', '已结题']
+                },
+                yAxis: {
+                    type: 'value',
+                    minInterval: 1
+                },
+                series: [{
+                    name: '项目数',
+                    type: 'bar',
+                    barWidth: '50%',
+                    data: [
+                        {value: data.object.初审通过, name: '初审通过'},
+                        {value: data.object.立项评审完成, name: '立项评审完成'},
+                        {value: data.object.已立项, name: '已立项'},
+                        {value: data.object.中期检查通过, name: '中期检查通过'},
+                        {value: data.object.已结题, name: '已结题'},
+                    ]
+                }]
+            }
+            myChart.setOption(option);
+        });
+
+
+        //饼状图
+        var pieChart = echarts.init(document.getElementById('pie'));
+        pieChart.showLoading(); //数据加载完之前先显示一段简单的loading动画
+        $.get('/project/majorCount').done(function (data) {
+            pieChart.hideLoading();
+            var option = {
+                title: {
+                    text: '项目专业分布',
+                    x: '100px',
+                    y: '5px'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'right',
+                    data: ['计算机科学与技术', '电子信息工程', '电子信息科学与技术', '数字媒体技术']
+                },
+                series: [
+                    {
+                        name: '所属专业',
+                        type: 'pie',
+                        radius: '80%',
+                        data: [
+                            {value: data.object.计算机科学与技术, name: '计算机科学与技术'},
+                            {value: data.object.电子信息工程, name: '电子信息工程'},
+                            {value: data.object.电子信息科学与技术, name: '电子信息科学与技术'},
+                            {value: data.object.数字媒体技术, name: '数字媒体技术'},
+                        ],
+                        itemStyle: {
+                            normal: {
+                                label: {        //此处为指示线文字
+                                    show: true,
+                                    position: 'inner', //标签的位置
+                                    textStyle: {
+                                        fontWeight: 200,
+                                        fontSize: 14    //文字的字体大小
+                                    },
+                                    formatter: '{d}%'
+                                },
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+            pieChart.setOption(option);
+        });
+
+
+    });
+
+
+</script>
+
+</body>
+</html>

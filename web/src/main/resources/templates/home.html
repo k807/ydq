@@ -65,22 +65,17 @@
 
         <div class="layui-side layui-side-menu">
             <div class="layui-side-scroll">
-                <div class="layui-logo" lay-href="/html/userManage.html">
+                <div class="layui-logo" lay-href="/html/projectTable.html">
                     <span>layuiAdmin</span>
                 </div>
 
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
                     lay-filter="layadmin-system-side-menu">
                     <li data-name="home" class="layui-nav-item layui-nav-itemed">
-                        <a lay-tips="主页" lay-direction="2">
+                        <a lay-tips="首页" lay-direction="2" lay-href="/html/projectTable.html">
                             <i class="layui-icon layui-icon-home"></i>
-                            <cite>主页</cite>
+                            <cite>首页</cite>
                         </a>
-                        <dl class="layui-nav-child">
-                            <dd data-name="console" class="layui-this">
-                                <a lay-href="/html/userManage.html">用户信息管理</a>
-                            </dd>
-                        </dl>
 
                     </li>
                     <li class="layui-nav-item"
@@ -179,15 +174,17 @@
             </div>
             <div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="/html/userManage.html" lay-attr="/html/userManage.html" class="layui-this" style=""><i
-                            class="layui-icon layui-icon-home"></i><i class="layui-icon layui-unselect layui-tab-close">ဆ</i>
+                    <li lay-id="/html/projectTable.html" lay-attr="/html/projectTable.html" class="layui-this" style="">
+                        <i
+                                class="layui-icon layui-icon-home"></i><i
+                            class="layui-icon layui-unselect layui-tab-close">ဆ</i>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="layui-body" id="LAY_app_body">
             <div class="layadmin-tabsbody-item layui-show">
-                <iframe id="frame" src="/html/userManage.html" frameborder="0" class="layadmin-iframe"></iframe>
+                <iframe id="frame" src="/html/projectTable.html" frameborder="0" class="layadmin-iframe"></iframe>
             </div>
         </div>
         <div class="layadmin-body-shade" layadmin-event="shade"></div>
