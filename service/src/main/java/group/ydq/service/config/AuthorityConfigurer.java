@@ -35,11 +35,14 @@ public class AuthorityConfigurer {
         manager.configureUnlimitedPath("/assets/.*");
         manager.configureUnlimitedPath("/html/.*");
         manager.configureUnlimitedPath("/js/.*");
-        manager.configureUnlimitedPath("/userInfo");
         manager.configureUnlimitedPath("/register");
         // 配置需要登陆才能获取的权限
         manager.configureLoginLimitedPath("/authority/logout");
         manager.configureLoginLimitedPath("^/user/.*$");
+        manager.configureLoginLimitedPath("/userInfo");
+        manager.configureLoginLimitedPath("/project/list");
+        manager.configureLoginLimitedPath("/project/stateCount");
+        manager.configureLoginLimitedPath("/project/majorCount");
         // 支持注册监听器
         manager.registListener("logListener", new LogListener());
         return manager;

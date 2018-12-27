@@ -16,8 +16,8 @@ function userIn() {
         url: "/authority/getSelfInfo",
         dataType: "json",
         success: function (result) {
-            var role = result.object.role.name
-            switch (role) {
+            var roleName = result.object.role.name
+            switch (roleName) {
                 case "manager":
                     role = 1
                     break

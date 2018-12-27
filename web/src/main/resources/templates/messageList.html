@@ -78,9 +78,9 @@
                 <legend><b style="font-size:20px;color:#009688;">{{item.title}}</b></legend>
                 <div class="layui-field-box">
                     <span>{{item.content}}</span>
-                    {{# if(isWho() == 2&&item.remark !=null&&item.remark.hasOwnProperty("ruleId")) { }}
+                    {{# if(isWho()===2&&item.remark !=null&&item.remark.hasOwnProperty("ruleId")) { }}
                     <br>
-                    <a onclick="newTab('/project/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
+                    <a onclick="newTab('/teacher/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
                     {{# } }}
                 </div>
             </fieldset>
@@ -99,14 +99,10 @@
 
 <script>
     function newTab(url, tit) {
-        if (isWho() == 2) {
-            if (top.layui.index) {
-                top.layui.index.openTabsPage(url, tit)
-            } else {
-                window.open(url)
-            }
+        if (top.layui.index) {
+            top.layui.index.openTabsPage(url, tit)
         } else {
-            layui.layer.msg("您没有权限")
+            window.open(url)
         }
     }
 </script>

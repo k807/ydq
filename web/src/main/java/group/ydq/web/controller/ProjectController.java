@@ -26,7 +26,6 @@ import java.util.*;
  * @date 2018/11/29 0:41
  */
 @Controller
-@RequestMapping("/project")
 public class ProjectController {
     @Resource
     private ProjectService projectService;
@@ -43,7 +42,7 @@ public class ProjectController {
     @Resource
     private FileService fileService;
 
-    @RequestMapping("/save")
+    @RequestMapping("/project/save")
     @ResponseBody
     public BaseResponse saveProject(@RequestBody Project project) {
         if (projectService.isProjectExist(project.getId())) {
@@ -57,7 +56,7 @@ public class ProjectController {
         return RetResponse.error();
     }
 
-    @RequestMapping("/review")
+    @RequestMapping("/expert/review")
     @ResponseBody
     public BaseResponse reviewProject(@RequestBody Map<String, Object> obj) {
         if (obj != null) {
@@ -77,7 +76,7 @@ public class ProjectController {
         return RetResponse.error();
     }
 
-    @RequestMapping("/changeState")
+    @RequestMapping("/project/changeState")
     @ResponseBody
     public BaseResponse changeState(long projectId, int state) {
         if (projectService.isProjectExist(projectId)) {
@@ -89,7 +88,7 @@ public class ProjectController {
         return RetResponse.error();
     }
 
-    @RequestMapping("/{stage:.+}/uploadFile")
+    @RequestMapping("/project/{stage:.+}/uploadFile")
     @ResponseBody
     public BaseResponse uploadFile(@PathVariable String stage, long projectId, long fileId) {
         if (projectService.isProjectExist(projectId)) {
@@ -107,7 +106,7 @@ public class ProjectController {
     }
 
 
-    @RequestMapping("/new/{type:.+}")
+    @RequestMapping("/project/new/{type:.+}")
     @ResponseBody
     public BaseResponse saveOrSubmitProject(@PathVariable String type, @RequestBody Project project) {
         project.setLeader(((User) SubjectUtils.getSubject().getBindMap("user")));
@@ -121,7 +120,7 @@ public class ProjectController {
         return RetResponse.success(projectService.save(project).getId());
     }
 
-    @RequestMapping("/delete")
+    @RequestMapping("/project/delete")
     @ResponseBody
     public BaseResponse deleteProject(long id) {
         if (projectService.isProjectExist(id)) {
@@ -136,7 +135,7 @@ public class ProjectController {
         return RetResponse.error();
     }
 
-    @RequestMapping("/getDetails/{id:.+}")
+    @RequestMapping("/project/getDetails/{id:.+}")
     public String getDetails(@PathVariable long id, Model model) {
         Project project = projectService.getProject(id);
         int stage = 0;
@@ -217,6 +216,102 @@ public class ProjectController {
         return "projectDetails";
     }
 
+    @RequestMapping("/{role:.+}/search")
+    @ResponseBody
+    public BaseResponse search(@PathVariable String role, int page, int limit, String name, String level, String state, String major, String start, String end) {
+        if (start.equals(""))
+            start = "1900-01-01 00:00:00";
+        if (end.equals(""))
+            end = "2200-12-31 23:59:59";
+        User user = ((User) SubjectUtils.getSubject().getBindMap("user"));
+        Map<String, Object> obj = new HashMap<>();
+        if (role.equals("expert")) {
+            Page<ExpertReview> projects = projectService.searchExpertReview(page, limit, user, name, level, state, major, start, end);
+            obj.put("count", projects.getTotalElements());
+            obj.put("data", expertMapList(projects));
+        } else {
+            Page<Project> projects;
+            if (role.equals("teacher")) {
+                projects = projectService.searchProject(1, page, limit, user, name, level, state, major, start, end);
+                obj.put("data", teacherMapList(projects));
+            } else {
+                projects = projectService.searchProject(2, page, limit, user, name, level, state, major, start, end);
+                obj.put("data", managerMapList(projects));
+            }
+            obj.put("count", projects.getTotalElements());
+        }
+        return RetResponse.success(obj);
+    }
+
+    @RequestMapping("/{role:.+}/list")
+    @ResponseBody
+    public BaseResponse getProjectList(@PathVariable String role, int page, int limit) {
+        String userNumber = ((User) SubjectUtils.getSubject().getBindMap("user")).getUserNumber();
+        Map<String, Object> obj = new HashMap<>();
+        if (role.equals("expert")) {
+            Page<ExpertReview> projects = projectService.getProjectOfExpert(page, limit, userNumber);
+            obj.put("count", projects.getTotalElements());
+            obj.put("data", expertMapList(projects));
+        } else {
+            Page<Project> projects;
+            if (role.equals("teacher")) {
+                projects = projectService.getProjectsOfLeader(page, limit, userNumber);
+                obj.put("data", teacherMapList(projects));
+            } else {
+                projects = projectService.getProjectsOfManagerInDeclareStage(page, limit, userNumber);
+                obj.put("data", managerMapList(projects));
+            }
+            obj.put("count", projects.getTotalElements());
+        }
+        return RetResponse.success(obj);
+    }
+
+    @RequestMapping("/manager/expertList")
+    @ResponseBody
+    public BaseResponse getExperts() {
+        List<User> experts = rbacService.getUsersByRole(rbacService.getRoleByRoleName("expert"));
+        Map<String, Object> map = new HashMap<>();
+        map.put("data", experts);
+        map.put("count", experts.size());
+        return RetResponse.success(map);
+    }
+
+    @RequestMapping("/manager/distributeExperts")
+    @ResponseBody
+    public BaseResponse distributeExperts(long projectId, @RequestBody List<Long> ids) {
+        if (ids != null && ids.size() != 0) {
+            declareService.distributeExpert(projectId, ids);
+            changeState(projectId, 3);
+            return RetResponse.success();
+        }
+        return RetResponse.error();
+    }
+
+    @RequestMapping("/teacher/declare.htm")
+    public String declarePage(Model model) {
+        model.addAttribute("user", SubjectUtils.getSubject().getBindMap("user"));
+        return "/projectDeclare";
+    }
+
+    @RequestMapping("/project/list")
+    @ResponseBody
+    public BaseResponse getAllProject(int page, int limit) {
+        return RetResponse.success(projectService.getAllProject(page, limit));
+    }
+
+    @RequestMapping("/project/majorCount")
+    @ResponseBody
+    public BaseResponse findAllProjectByMajor() {
+        return RetResponse.success(projectService.getMajorCount());
+    }
+
+    @RequestMapping("/project/stateCount")
+    @ResponseBody
+    public BaseResponse findAllProjectByState() {
+        return RetResponse.success(projectService.getStateCount());
+    }
+
+
     private List<Map<String, Object>> expertMapList(Page<ExpertReview> projects) {
         List<Map<String, Object>> list = new ArrayList<>();
         for (ExpertReview project : projects) {
@@ -273,103 +368,6 @@ public class ProjectController {
         }
         return list;
     }
-
-    @RequestMapping("/{role:.+}/search")
-    @ResponseBody
-    public BaseResponse search(@PathVariable String role, int page, int limit, String name, String level, String state, String major, String start, String end) {
-        if (start.equals(""))
-            start = "1900-01-01 00:00:00";
-        if (end.equals(""))
-            end = "2200-12-31 23:59:59";
-        User user = ((User) SubjectUtils.getSubject().getBindMap("user"));
-        Map<String, Object> obj = new HashMap<>();
-        if (role.equals("expert")) {
-            Page<ExpertReview> projects = projectService.searchExpertReview(page, limit, user, name, level, state, major, start, end);
-            obj.put("count", projects.getTotalElements());
-            obj.put("data", expertMapList(projects));
-        } else {
-            Page<Project> projects;
-            if (role.equals("teacher")) {
-                projects = projectService.searchProject(1, page, limit, user, name, level, state, major, start, end);
-                obj.put("data", teacherMapList(projects));
-            } else {
-                projects = projectService.searchProject(2, page, limit, user, name, level, state, major, start, end);
-                obj.put("data", managerMapList(projects));
-            }
-            obj.put("count", projects.getTotalElements());
-        }
-        return RetResponse.success(obj);
-    }
-
-    @RequestMapping("/{role:.+}/list")
-    @ResponseBody
-    public BaseResponse getProjectList(@PathVariable String role, int page, int limit) {
-        String userNumber = ((User) SubjectUtils.getSubject().getBindMap("user")).getUserNumber();
-        Map<String, Object> obj = new HashMap<>();
-        if (role.equals("expert")) {
-            Page<ExpertReview> projects = projectService.getProjectOfExpert(page, limit, userNumber);
-            obj.put("count", projects.getTotalElements());
-            obj.put("data", expertMapList(projects));
-        } else {
-            Page<Project> projects;
-            if (role.equals("teacher")) {
-                projects = projectService.getProjectsOfLeader(page, limit, userNumber);
-                obj.put("data", teacherMapList(projects));
-            } else {
-                projects = projectService.getProjectsOfManagerInDeclareStage(page, limit, userNumber);
-                obj.put("data", managerMapList(projects));
-            }
-            obj.put("count", projects.getTotalElements());
-        }
-        return RetResponse.success(obj);
-    }
-
-    @RequestMapping("/expertList")
-    @ResponseBody
-    public BaseResponse getExperts() {
-        List<User> experts = rbacService.getUsersByRole(rbacService.getRoleByRoleName("expert"));
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", experts);
-        map.put("count", experts.size());
-        return RetResponse.success(map);
-    }
-
-    @RequestMapping("/distributeExperts")
-    @ResponseBody
-    public BaseResponse distributeExperts(long projectId, @RequestBody List<Long> ids) {
-        if (ids != null && ids.size() != 0) {
-            declareService.distributeExpert(projectId, ids);
-            changeState(projectId, 3);
-            return RetResponse.success();
-        }
-        return RetResponse.error();
-    }
-
-    @RequestMapping("/declare.htm")
-    public String declarePage(Model model) {
-        model.addAttribute("user", SubjectUtils.getSubject().getBindMap("user"));
-        return "/projectDeclare";
-    }
-
-    @RequestMapping("/list")
-    @ResponseBody
-    public BaseResponse getAllProject(int page, int limit) {
-        return RetResponse.success(projectService.getAllProject(page, limit));
-    }
-
-
-    @RequestMapping("/majorCount")
-    @ResponseBody
-    public BaseResponse findAllProjectByMajor() {
-        return RetResponse.success(projectService.getMajorCount());
-    }
-
-    @RequestMapping("/stateCount")
-    @ResponseBody
-    public BaseResponse findAllProjectByState() {
-        return RetResponse.success(projectService.getStateCount());
-    }
-
 
     private void deleteFile(ProjectFile file) {
         if (FileUtil.delete(file.getUuid(), FileUtil.getSuffix(file.getName())))

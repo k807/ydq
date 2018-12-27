@@ -26,6 +26,8 @@
                     <span style="color: black">起始时间：</span><span th:text="${rule.startTime}"></span></p>
                 <p style="font-size: 14px;margin-top: 5px;margin-left: 5px">
                     <span style="color: black">截止时间：</span><span th:text="${rule.endTime}"></span></p>
+                <p style="font-size: 14px;margin-top: 5px;margin-left: 5px">
+                    <span style="color: black">管理员：</span><span th:text="${rule.publisher.nick}"></span></p>
                 <fieldset class="layui-elem-field" style="margin-top: 10px">
                     <legend style="color: black;font-size: 14px">申报规则</legend>
                     <div class="layui-field-box" th:if="${rule.content!=''}" th:utext="${rule.content}"></div>
