@@ -6,42 +6,38 @@ layui.use(['element', 'jquery'], function () {
         console.log(data.index); //得到当前Tab的所在下标
         console.log(data.elem); //得到当前的Tab大容器
     });
-    var $ = layui.jquery
+    $ = layui.jquery
     role = null
-    $(function () {
-        userIn()
-    })
-
-    function userIn() {
-        $.ajax({
-            type: "POST",
-            url: "/authority/getSelfInfo",
-            dataType: "json",
-            success: function (result) {
-                var role = result.object.role.name
-                switch (role) {
-                    case "manager":
-                        role = 1
-                        break
-                    case "teacher":
-                        role = 2
-                        break
-                    case "expert":
-                        role = 3
-                        break
-                    default:
-                }
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        })
-
-    }
-
 });
 
+function userIn() {
+    $.ajax({
+        type: "POST",
+        url: "/authority/getSelfInfo",
+        dataType: "json",
+        success: function (result) {
+            var role = result.object.role.name
+            switch (role) {
+                case "manager":
+                    role = 1
+                    break
+                case "teacher":
+                    role = 2
+                    break
+                case "expert":
+                    role = 3
+                    break
+                default:
+            }
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
 function isWho() {
+    userIn()
     return role
 }
 
@@ -95,6 +91,8 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
     var form = layui.form;
     var tableIns = table.render({
         elem: '#table',
+        toolbar: '#toolbar',
+        height: 'full-200',
         cols: [[
             {field: 'title', title: "标题", sort: true},
             {field: 'type', title: "消息类型", sort: true},
@@ -104,7 +102,7 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
             {
                 field: 'receiver', title: "接收人", sort: true
                 , templet: function (row) {
-                    return row.sender == "" ? "所有用户" : row.sender
+                    return row.reveiver == null ? "所有用户" : row.reveiver
                 }
             },
             {
@@ -128,6 +126,9 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
             },
             {fixed: 'right', title: '操作', align: 'center', toolbar: '#bar'}
         ]],
+        text: {
+            none: '暂无相关数据'
+        },
         page: true,
         limit: 10,
         limits: [10, 20, 30],
@@ -135,7 +136,6 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
         initSort: {field: 'date', type: 'desc'},
         response: {
             statusCode: 200
-            , countName: 'count'
         },
         parseData: function (res) {
             return {
@@ -143,10 +143,6 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
                 "data": res.object,
                 "count": res.count,
             };
-        } //用于对分页请求的参数：page、limit重新设定名称
-        , request: {
-            pageName: 'page' //页码的参数名称，默认：page
-            , limitName: 'limit' //每页数据量的参数名，默认：limit
         }
     });
     table.on('tool(table)', function (obj) {
@@ -202,6 +198,7 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
                 title: data.field.title,
                 receiver: data.field.receiver
             },
+
             page: {
                 curr: 1
             }
@@ -216,26 +213,13 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
                 title: $("#title").val(),
                 receiver: $("#receiver").val()
             },
+
             page: {
                 curr: 1
             }
         });
     });
 
-    // $("#submit").click(search)
-    //
-    // function search() {
-    //     table.reload('table', {
-    //         url: "/pm/queryPM"
-    //         , where: {
-    //             type: $("#type").val(),
-    //             title: $("#title").val(),
-    //         } //设定异步数据接口的额外参数
-    //         , page: {
-    //             page: 1 //重新从第 1 页开始
-    //         }
-    //     });
-    // }
 
     function newTab(url, tit) {
         if (top.layui.index) {

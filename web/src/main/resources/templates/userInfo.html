@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>基本资料</title>
+    <link rel="stylesheet" href="/assets/layui/css/layui.css">
+    <link rel="stylesheet" href="/assets/style/admin.css">
+</head>
+<body layadmin-themealias="default">
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">设置我的资料</div>
+                <div class="layui-card-body" pad15="">
+                    <div class="layui-form" lay-filter="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户ID</label>
+                            <div class="layui-input-inline">
+                                <input th:value="${userRole}" name="role" class="layui-input"
+                                       style="background-color: rgb(250, 255, 189);"
+                                       type="text" readonly="" webkit-autofilled="rgb(250, 255, 189)">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">当前角色不可更改为其他角色。</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户ID</label>
+                            <div class="layui-input-inline">
+                                <input th:value="${userNumber}" name="userNumber" class="layui-input"
+                                       style="background-color: rgb(250, 255, 189);"
+                                       type="text" readonly="" webkit-autofilled="rgb(250, 255, 189)">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">昵称</label>
+                            <div class="layui-input-inline">
+                                <input th:value="${userNick}" name="nick" class="layui-input" type="text"
+                                       placeholder="请输入昵称"
+                                       autocomplete="off" lay-verify="nickname">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">手机</label>
+                            <div class="layui-input-inline">
+                                <input th:value="${userPhone}" name="phone" class="layui-input" type="text" value=""
+                                       autocomplete="off"
+                                       lay-verify="phone">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-filter="setmyinfo" lay-submit="">确认修改</button>
+                                <button class="layui-btn layui-btn-primary" type="reset">重新填写</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.config({
+        base: '/assets/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use('index');
+</script>
+
+</body>
+</html>

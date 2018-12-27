@@ -35,6 +35,7 @@ public class AuthorityConfigurer {
         manager.configureUnlimitedPath("/assets/.*");
         manager.configureUnlimitedPath("/html/.*");
         manager.configureUnlimitedPath("/js/.*");
+        manager.configureUnlimitedPath("/userInfo");
         manager.configureUnlimitedPath("/register");
         // 配置需要登陆才能获取的权限
         manager.configureLoginLimitedPath("/authority/logout");

@@ -24,6 +24,16 @@ public class PageController {
         return "home";
     }
 
+    @RequestMapping("/userInfo")
+    public String userInfo(Model model) {
+        User user = (User) SubjectUtils.getSubject().getBindMap("user");
+        model.addAttribute("userNumber", user.getUserNumber());
+        model.addAttribute("userNick", user.getNick());
+        model.addAttribute("userPhone", user.getPhone());
+        model.addAttribute("userRole", user.getRole().getName());
+        return "userInfo";
+    }
+
     @RequestMapping("/login")
     public String login() {
         return "login";
