@@ -137,7 +137,7 @@
         $.get('/project/stateCount').done(function (data) {
             myChart.hideLoading();
             var option = {
-                color: ['#FFB800'],
+                color: ['#9BCA63'],
                 title: {
                     text: '项目审核状态',
                     x: '200px',
@@ -180,6 +180,7 @@
         $.get('/project/majorCount').done(function (data) {
             pieChart.hideLoading();
             var option = {
+                color: ['#C1232B','#B5C334','#FCCE10','#E87C25',],
                 title: {
                     text: '项目专业分布',
                     x: '100px',
