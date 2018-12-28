@@ -48,7 +48,10 @@ public class StageController {
             Project project = checkStageService.findACheckStageByCheckStageID(Long.parseLong(s)).getProject();
             String projectName = project.getName();
             User u2=project.getLeader();
-            Message m = new Message(new Date(), 0, projectName+title, content, "", u1, u2);
+            JSONObject remarkJson = new JSONObject();
+            remarkJson.put("projectId", project.getId());
+            remarkJson.put("projectName", project.getName());
+            Message m = new Message(new Date(), 0, projectName+title, content, JSONObject.toJSONString(remarkJson), u1, u2);
             messageService.sendMessage(m);
         }
         return RetResponse.success();
