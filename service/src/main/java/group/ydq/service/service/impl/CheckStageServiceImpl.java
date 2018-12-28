@@ -115,6 +115,7 @@ public class CheckStageServiceImpl implements CheckStageService {
             jsonObject.put("name", checkStage.getProject().getName());
             jsonObject.put("leader", checkStage.getProject().getLeader().getNick());
             jsonObject.put("stage", checkStage.getStage());
+            jsonObject.put("updateTime",checkStage.getProject().getUpdateTime());
             jsonObject.put("createTime", checkStage.getProject().getCreateTime());
             jsonObject.put("status", checkStage.getStatus());
             if(null == checkStage.getVerifiers()){
