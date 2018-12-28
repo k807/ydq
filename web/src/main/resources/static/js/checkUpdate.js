@@ -27,7 +27,7 @@ layui.use('jquery', function () {
         })
     }
 
-    setInterval(checkUpdate, 60000);
+    // setInterval(checkUpdate, 300000);
 });
 
 

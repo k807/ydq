@@ -79,7 +79,9 @@
                 <div class="layui-field-box">
                     <span>{{item.content}}</span>
                     {{# if(d.role===2&&item.remark !=null&&item.remark.hasOwnProperty("ruleId")) { }}
-                    <br>
+                    <a onclick="newTab('/teacher/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
+                    {{# } }}
+                    {{# if(item.remark !=null&&item.remark.hasOwnProperty("projectId")) { }}
                     <a onclick="newTab('/teacher/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
                     {{# } }}
                 </div>
