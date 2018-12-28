@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -78,8 +79,8 @@ public class PMcontroller {
      * */
     @GetMapping(value = "/queryPM")
     @ResponseBody
-    public Map<String, Object> queryPM(int type, String title,String receiver, int page, int limit) {
-        return messageServiceImpl.getPMQuery(type, title,receiver, page, limit);
+    public Map<String, Object> queryPM(int type, String title, String receiver, int page, int limit) {
+        return messageServiceImpl.getPMQuery(type, title, receiver, page, limit);
     }
 
     /*
@@ -104,6 +105,14 @@ public class PMcontroller {
             return RetResponse.success();
         }
         return RetResponse.error();
+    }
+
+    @GetMapping(value = "/checkNewPM")
+    @ResponseBody
+    public BaseResponse checkNewPM() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("count", messageServiceImpl.checkNewMessage());
+        return RetResponse.success(map);
     }
 
 }

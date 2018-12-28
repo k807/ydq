@@ -24,4 +24,5 @@ public interface MessageService {
 
     Map<String, Object> getPMQuery(int type, String title, String receiver, int page, int limit);
 
+    int checkNewMessage();
 }

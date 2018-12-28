@@ -95,6 +95,7 @@ layui.use(['jquery', 'layer', 'table', 'form'], function () {
             {field: 'title', title: "标题", sort: true},
             {field: 'type', title: "消息类型", sort: true},
             {field: 'date', title: "发送日期", sort: true},
+            {field: 'read', title: "是否已读", sort: true},
             {field: 'content', title: "消息内容", event: "msgContent"},
             {field: 'sender', title: "发送人", sort: true},
             {

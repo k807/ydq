@@ -60,6 +60,10 @@ public class MessageServiceImpl implements MessageService {
         Map<String, Object> obj = new HashMap<>();
         User receiver = (User) SubjectUtils.getSubject().getBindMap("user");
         List<Message> allList = messageRepository.findByReceiver(receiver);
+        for (Message message : allList) {
+            message.setSeen(true);
+            messageRepository.save(message);
+        }
         List<Message> noticeList = new ArrayList<>();
         List<Message> messageList = new ArrayList<>();
         for (Message m : allList) {
@@ -92,6 +96,7 @@ public class MessageServiceImpl implements MessageService {
             m.put("title", message.getTitle());
             m.put("date", DateUtil.dateToStr(message.getDate(), DateUtil.format4));
             m.put("type", message.getType() == 0 ? "公告" : "消息");
+            m.put("read", message.isSeen() ? "已读" : "未读");
             m.put("content", message.getContent());
             m.put("sender", message.getSender().getNick());
             User r = message.getReceiver();
@@ -133,6 +138,12 @@ public class MessageServiceImpl implements MessageService {
         map.put("object", listMap);
 
         return map;
+    }
+
+    @Override
+    public int checkNewMessage() {
+        User receiver = (User) SubjectUtils.getSubject().getBindMap("user");
+        return messageRepository.countMessagesByReceiverAndSeen(receiver, false);
     }
 
 

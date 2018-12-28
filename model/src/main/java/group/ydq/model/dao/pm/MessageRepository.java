@@ -30,4 +30,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query(value = "select m from Message m where m.type IN ?1 AND m.title LIKE %?2% AND m.sender = ?3 AND ( m.receiver IN ( SELECT u FROM User u WHERE u.nick LIKE %?4% ) OR m.receiver = null ) ORDER BY m.date DESC")
     Page<Message> queryPMNick(int type, String title, User sender, String receiver, Pageable pageable);
 
+    int countMessagesByReceiverAndSeen(User receiver, boolean seen);
+
 }

@@ -2,8 +2,26 @@ layui.use('jquery', function () {
 
     var $ = layui.jquery;
     $(function () {
-        getNow()
+        // getNow()
+        checkNewPM()
     })
+
+    function checkNewPM() {
+        $.ajax({
+            type: "GET",
+            url: "pm/checkNewPM",
+            dataType: "json",
+            success: function (result) {
+                console.log(result)
+                var num = result.object.count
+                if (num > 0)
+                    $("#red-dot").append("<span class=\"layui-badge-dot\"></span>")
+            },
+            error: function (result) {
+                console.log(result)
+            }
+        })
+    }
 
     function checkUpdate() {
         $.ajax({

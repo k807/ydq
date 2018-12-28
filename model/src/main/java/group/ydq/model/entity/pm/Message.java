@@ -14,13 +14,6 @@ public class Message {
     public Message() {
     }
 
-    public Message(Date date, int type, String title, String content, String remark) {
-        this.date = date;
-        this.type = type;
-        this.title = title;
-        this.content = content;
-        this.remark = remark;
-    }
 
     public Message(Date date, int type, String title, String content, String remark, User sender, User receiver) {
         this.date = date;
@@ -30,6 +23,7 @@ public class Message {
         this.remark = remark;
         this.sender = sender;
         this.receiver = receiver;
+        this.seen = false;
     }
 
     @Id
@@ -49,7 +43,7 @@ public class Message {
      * */
     private String title;
 
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String remark;
@@ -60,6 +54,10 @@ public class Message {
     @ManyToOne
     private User receiver;
 
+    /*
+     * read表示私信类型是否被用户读过，读过为1，未读为0，默认为0
+     * */
+    private boolean seen;
 
     public Long getId() {
         return id;
@@ -121,21 +119,16 @@ public class Message {
         return receiver;
     }
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", date=" + date +
-                ", type=" + type +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", remark='" + remark + '\'' +
-                ", sender=" + sender +
-                ", receiver=" + receiver +
-                '}';
-    }
-
     public void setReceiver(User receiver) {
         this.receiver = receiver;
+    }
+
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

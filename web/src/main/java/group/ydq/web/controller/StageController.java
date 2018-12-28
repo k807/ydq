@@ -23,7 +23,6 @@ import java.util.*;
 /**
  * author:Leo
  * date:2018/11/30
- *
  */
 @RestController
 @RequestMapping("/stage")
@@ -47,27 +46,27 @@ public class StageController {
         for (String s : stage) {
             Project project = checkStageService.findACheckStageByCheckStageID(Long.parseLong(s)).getProject();
             String projectName = project.getName();
-            User u2=project.getLeader();
+            User u2 = project.getLeader();
             JSONObject remarkJson = new JSONObject();
             remarkJson.put("projectId", project.getId());
             remarkJson.put("projectName", project.getName());
-            Message m = new Message(new Date(), 0, projectName+title, content, JSONObject.toJSONString(remarkJson), u1, u2);
+            Message m = new Message(new Date(), 0, projectName + title, content, JSONObject.toJSONString(remarkJson), u1, u2);
             messageService.sendMessage(m);
         }
         return RetResponse.success();
     }
 
     @RequestMapping("/getAll")
-    private BaseResponse getAll(@RequestParam(name = "page",defaultValue = "1") int page,
+    private BaseResponse getAll(@RequestParam(name = "page", defaultValue = "1") int page,
                                 @RequestParam(name = "limit", defaultValue = "15") int limit, HttpServletRequest httpServletRequest) throws NullPointerException {
-        Page<CheckStage> all = checkStageService.findCheckStagesByStage(page,limit,1);
+        Page<CheckStage> all = checkStageService.findCheckStagesByStage(page, limit, 1);
         return new BaseResponse(checkStageService.decorateData(all));
     }
 
 
     @RequestMapping("/getByConditions")
     @ResponseBody
-    private BaseResponse getByConditions(@RequestParam(name = "page",defaultValue = "1") int page,
+    private BaseResponse getByConditions(@RequestParam(name = "page", defaultValue = "1") int page,
                                          @RequestParam(name = "limit", defaultValue = "15") int limit,
                                          @RequestParam(name = "name", defaultValue = "") String name,
                                          @RequestParam(name = "leader", defaultValue = "") String leader,
@@ -75,14 +74,14 @@ public class StageController {
                                          @RequestParam(name = "stage", defaultValue = "1") int stage,
                                          @RequestParam(name = "createTime", defaultValue = "1970-01-01 00:00:00") String createTime,
                                          @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime, HttpServletRequest httpServletRequest) {
-        Page<CheckStage> dataList = checkStageService.findByConditions(page,limit,name, leader, stage, status, createTime, endTime);
+        Page<CheckStage> dataList = checkStageService.findByConditions(page, limit, name, leader, stage, status, createTime, endTime);
         return new BaseResponse(checkStageService.decorateData(dataList));
     }
 
     @RequestMapping("/changeState")
     @ResponseBody
     //这个接口用于并处理接收审核的数据
-    private BaseResponse changeState(@RequestBody Map<String, Object> paramsMap,HttpServletRequest httpServletRequest){
+    private BaseResponse changeState(@RequestBody Map<String, Object> paramsMap, HttpServletRequest httpServletRequest) {
         /*
          * checkStageID --> StageCheck表中的主键ID
          * checkStageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
@@ -93,7 +92,7 @@ public class StageController {
          *
          * */
 
-        Long checkStageID = ((Integer)paramsMap.get("id")).longValue();
+        Long checkStageID = ((Integer) paramsMap.get("id")).longValue();
         String checkMessage = (String) paramsMap.get("msg");
         int checkStageCode = (int) paramsMap.get("stage");
         int checkStageStatus = (int) paramsMap.get("status");
@@ -101,16 +100,16 @@ public class StageController {
         String messageTitle;
         CheckStage toBeChangedCheckStage = checkStageService.findACheckStageByCheckStageID(checkStageID);
         Project project = toBeChangedCheckStage.getProject();
-        int beingVerifiedProjStatusCode = StageCheckStatusToProjStatus.changeToProjectStatus(checkStageCode,checkStageStatus);
+        int beingVerifiedProjStatusCode = StageCheckStatusToProjStatus.changeToProjectStatus(checkStageCode, checkStageStatus);
         Date endTime = null;
-        switch (beingVerifiedProjStatusCode){
+        switch (beingVerifiedProjStatusCode) {
             case 7:
                 messageTitle = "中期审核未通过！";
                 break;
             case 8:
                 messageTitle = "中期审核已经通过！";
                 endTime = new Date(System.currentTimeMillis());
-                checkStageService.startStage(project.getId(),2);
+                checkStageService.startStage(project.getId(), 2);
                 break;
             case 9:
                 messageTitle = "结题验收未通过！";
@@ -124,7 +123,7 @@ public class StageController {
                 break;
         }
         projectService.changeState(project.getId(), beingVerifiedProjStatusCode);
-        checkStageService.changeVerifyMessage(checkStageID, checkMessage, checkStageStatus, verifier,endTime);
+        checkStageService.changeVerifyMessage(checkStageID, checkMessage, checkStageStatus, verifier, endTime);
         JSONObject remarkJson = new JSONObject();
         remarkJson.put("projectId", project.getId());
         remarkJson.put("projectName", project.getName());
