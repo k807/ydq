@@ -74,10 +74,13 @@
                 data: JSON.stringify(json),
                 success: function (data) {
                     if (data.statusCode === "400") {
-                        layer.msg("登陆失败");
+                        layer.msg("用户名或密码错误");
                     } else {
                         window.location.href = "/";//需要跳转的地址
                     }
+                },
+                error: function (data) {
+                    layer.msg("用户名或密码错误");
                 }
             })
         });

@@ -14,8 +14,9 @@ layui.use('jquery', function () {
             success: function (result) {
                 console.log(result)
                 var num = result.object.count
-                if (num > 0)
-                    $("#red-dot").append("<span class=\"layui-badge-dot\"></span>")
+                if (num > 0) {
+                    $("#red-dot").append("<span class=\"layui-badge-dot\">" + num + "</span>")
+                }
             },
             error: function (result) {
                 console.log(result)
