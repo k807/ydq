@@ -82,7 +82,7 @@
                     <a onclick="newTab('/teacher/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
                     {{# } }}
                     {{# if(item.remark !=null&&item.remark.hasOwnProperty("projectId")) { }}
-                    <a onclick="newTab('/teacher/declare.htm?rule={{item.remark.ruleId}}&publisher={{item.remark.publisher}}','{{item.remark.ruleTitle}}')">进入入口</a>
+                    <a onclick="newTab('/project/getDetails/{{item.remark.projectId}}','{{item.remark.projectName}}')">项目详情</a>
                     {{# } }}
                 </div>
             </fieldset>
