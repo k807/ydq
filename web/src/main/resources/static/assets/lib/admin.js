@@ -102,7 +102,7 @@
                     }
                 })
             }, message: function (e) {
-                e.find(".layui-badge-dot").remove()
+                e.find(".layui-badge").remove()
             }, theme: function () {
                 P.popupRight({
                     id: "LAY_adminPopupTheme", success: function () {

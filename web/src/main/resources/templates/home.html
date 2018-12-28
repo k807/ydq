@@ -29,7 +29,8 @@
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 
                 <li class="layui-nav-item " lay-unselect="" style="">
-                    <a id="red-dot" layadmin-event="message"
+                    <a id="red-dot"
+                       onclick="cleanDot()"
                        th:attr="lay-href=${ifshow_pm_messageTable?'/pm/messageTable':'/pm/messageList'},lay-text=${ifshow_pm_messageTable?'消息管理':'站内消息'}">
                         <i class="layui-icon layui-icon-notice"></i>
                     </a>
@@ -80,7 +81,8 @@
                     </li>
                     <li class="layui-nav-item"
                         th:if="${ifshow_pm_messageList}">
-                        <a lay-tips="站内消息"
+                        <a id="pmList" lay-tips="站内消息"
+                           onclick="cleanDot()"
                            lay-href="/pm/messageList">
                             <i class="layui-icon layui-icon-dialogue"></i>
                             <cite>站内消息</cite>

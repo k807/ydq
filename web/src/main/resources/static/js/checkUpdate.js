@@ -1,28 +1,11 @@
 layui.use('jquery', function () {
 
-    var $ = layui.jquery;
+    $ = layui.jquery;
     $(function () {
         // getNow()
         checkNewPM()
     })
 
-    function checkNewPM() {
-        $.ajax({
-            type: "GET",
-            url: "pm/checkNewPM",
-            dataType: "json",
-            success: function (result) {
-                console.log(result)
-                var num = result.object.count
-                if (num > 0) {
-                    $("#red-dot").append("<span class=\"layui-badge-dot\">" + num + "</span>")
-                }
-            },
-            error: function (result) {
-                console.log(result)
-            }
-        })
-    }
 
     function checkUpdate() {
         $.ajax({
@@ -49,6 +32,30 @@ layui.use('jquery', function () {
     // setInterval(checkUpdate, 300000);
 });
 
+function checkNewPM() {
+    $.ajax({
+        type: "GET",
+        url: "pm/checkNewPM",
+        dataType: "json",
+        success: function (result) {
+            console.log(result)
+            var num = result.object.count
+
+            if (num > 0) {
+                $("#red-dot").append("<span class=\"layui-badge-dot\">" + num + "</span>")
+                $("#pmList").append("<span class=\"layui-badge\">" + num + "</span>")
+            }
+        },
+        error: function (result) {
+            console.log(result)
+        }
+    })
+}
+
+function cleanDot() {
+    $("#red-dot").find(".layui-badge-dot").remove()
+    $("#pmList").find(".layui-badge").remove()
+}
 
 function getNow() {
     nowTime = new Date().getTime()
