@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 public class RBACServiceImpl extends BaseServiceImpl implements RBACService {
-    private static final String DEFAULT_ROLE = "supermanager";
+    private static final String DEFAULT_ROLE = "teacher";
 
     @Autowired
     private RoleRepository roleRepository;

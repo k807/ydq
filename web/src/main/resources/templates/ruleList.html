@@ -9,7 +9,7 @@
 <body>
 <div style="padding: 10px">
     <div class="layui-card" th:each="rule:${list}">
-        <a th:attr="lay-href='/teacher/declare.htm?rule='+${rule.id}+'&publisher='+${rule.publisher.id}" onclick="closeLayer()">
+        <a th:attr="lay-href='/html/teacher/projectDeclare.html?rule='+${rule.id}+'&publisher='+${rule.publisher.id}" onclick="closeLayer()">
             <div class="layui-card-header" th:text="${rule.title}" style="font-size: medium"></div>
         </a>
         <div class="layui-card-body">
