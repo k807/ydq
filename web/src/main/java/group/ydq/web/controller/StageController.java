@@ -41,13 +41,14 @@ public class StageController {
     @SuppressWarnings("unchecked")
     private BaseResponse addRule(@RequestBody Map<String, Object> msg, HttpServletRequest httpServletRequest) throws NullPointerException {
         String title = (String) msg.get("title");
-        System.out.println(title);
         String content = (String) msg.get("content");
         ArrayList<String> stage = (ArrayList<String>) msg.get("stage");
         User u1 = (User) SubjectUtils.getSubject().getBindMap("user");
         for (String s : stage) {
-            User u2 = checkStageService.findACheckStageByCheckStageID(Long.parseLong(s)).getProject().getLeader();
-            Message m = new Message(new Date(), 0, title, content, "", u1, u2);
+            Project project = checkStageService.findACheckStageByCheckStageID(Long.parseLong(s)).getProject();
+            String projectName = project.getName();
+            User u2=project.getLeader();
+            Message m = new Message(new Date(), 0, projectName+title, content, "", u1, u2);
             messageService.sendMessage(m);
         }
         return RetResponse.success();

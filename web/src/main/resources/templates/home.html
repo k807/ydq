@@ -28,7 +28,7 @@
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
                 <li class="layui-nav-item " lay-unselect="" style="">
-                    <a id="red-dot"
+                    <a id="red-dot" layadmin-event="message"
                        th:attr="lay-href=${ifshow_pm_messageTable?'/pm/messageTable':'/pm/messageList'},lay-text=${ifshow_pm_messageTable?'消息管理':'站内消息'}">
                         <i class="layui-icon layui-icon-notice"></i>
                     </a>

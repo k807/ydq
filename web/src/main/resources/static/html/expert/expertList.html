@@ -40,7 +40,7 @@
             text: {
                 none: '暂无相关数据'
             },
-            url: "/project/expertList",
+            url: "/manager/expertList",
             response: {
                 statusCode: 200
             },
@@ -63,19 +63,18 @@
                 data.push(checkStatus.data[i].id);
             }
             var projectId=window.location.search.split('&')[0].split('=')[1];
-            var projectName=window.location.search.split('&')[1].split('=')[1];
             switch (obj.event) {
                 case 'submit':
                     $.ajax({
                         type:'post',
-                        url:'/project/distributeExperts?projectId='+projectId,
+                        url:'/manager/distributeExperts?projectId='+projectId,
                         data:JSON.stringify(data),
                         dataType:'json',
                         contentType:'application/json',
                         success:function (res) {
                             if (res.statusCode==='200'){
                                 for (var i=0;i<data.length;i++)
-                                    parent.sendMsg('立项评审工作分配',projectName+'等待您的评审',data[i],projectId,projectName);
+                                    parent.sendMsg('立项评审工作分配',parent.projectName+'等待您的评审',data[i],projectId,parent.projectName);
                                 parent.refresh();
                                 parent.layer.msg('专家分配成功', {icon: 1});
                                 parent.layer.close(index);

@@ -253,7 +253,7 @@
                 if (obj.event === 'save')
                     $.ajax({
                         type: 'post',
-                        url: '/project/review',
+                        url: '/expert/review',
                         data: JSON.stringify({id: data.id, score: data.score, remark: data.remark, mark: data.mark}),
                         dataType: 'json',
                         contentType: 'application/json',

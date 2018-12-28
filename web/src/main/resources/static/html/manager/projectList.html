@@ -96,7 +96,7 @@
 </div>
 <script src="/assets/layui/layui.js"></script>
 <script>
-    var tableIns;
+    var tableIns,projectName;
     layui.use(['table', 'layer', 'laydate', 'form', 'jquery'], function () {
         var $ = layui.$;
         var table = layui.table;
@@ -215,13 +215,14 @@
             if (obj.event === 'detail') {
                 newTab('/project/getDetails/' + data.id, data.name);
             } else if (obj.event === 'distribute') {
+                projectName=data.name;
                 layer.open({
                     type: 2,
                     title: '分配专家',
                     shadeClose: true,
                     shade: 0.8,
                     area: ['30%'],
-                    content: '/html/expert/expertList.html?id=' + data.id + '&name=' + data.name
+                    content: '/html/expert/expertList.html?id=' + data.id
                 });
             } else if (obj.event === 'verify') {
                 layer.confirm('是否通过审核？', {
