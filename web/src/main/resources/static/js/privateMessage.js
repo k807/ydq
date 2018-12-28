@@ -8,6 +8,9 @@ layui.use(['element', 'jquery'], function () {
     });
     $ = layui.jquery
     role = null
+    $(function () {
+        userIn()
+    })
 });
 
 function userIn() {
@@ -36,11 +39,6 @@ function userIn() {
     })
 }
 
-function isWho() {
-    userIn()
-    return role
-}
-
 function getList() {
     layui.$.ajax({
         url: "getPMList",
@@ -62,7 +60,7 @@ function getList() {
 function initNoticeList(list) {
     layui.use(['laytpl'], function () {
         var temp = noticemessage.innerHTML;
-        layui.laytpl(temp).render({list: list}, function (html) {
+        layui.laytpl(temp).render({list: list, role: role}, function (html) {
             noticelist.innerHTML += html;
         });
         layui.$("#noticelist").append("  <li class=\"layui-timeline-item\">\n" +
@@ -77,7 +75,7 @@ function initNoticeList(list) {
 function initMessageList(list) {
     layui.use(['laytpl', 'jquery'], function () {
         var temp = privatemessage.innerHTML;
-        layui.laytpl(temp).render({list: list}, function (html) {
+        layui.laytpl(temp).render({list: list, role: role}, function (html) {
             messageList.innerHTML += html;
         });
     });
