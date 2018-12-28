@@ -94,6 +94,13 @@ layui.use(['jquery', 'form', 'upload','layer'], function () {
             }
         });
     }
+
+    $.get('/authority/getSelfInfo',function (res) {
+        form.val('form',{
+            'leader':res.object.nick
+        })
+    });
+
     form.on('submit(submit)',function(data){
         if (pics.length===0)
             layer.tips('请上传立项承诺书！！！','#upload-img',{

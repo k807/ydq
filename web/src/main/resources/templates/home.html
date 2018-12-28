@@ -51,7 +51,7 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect="" style="margin-right: 30px">
                     <a>
-                        <cite th:text="${nick}"></cite>
+                        <cite th:text="${nick}" id="nick"></cite>
                         <span class="layui-nav-more"></span></a>
                     <dl class="layui-nav-child layui-anim layui-anim-upbit">
                         <dd><a lay-href="/userInfo" style="text-align: center;">基本资料</a></dd>
@@ -197,7 +197,7 @@
         base: '/assets/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use('index');
+    }).use(['index','jquery']);
 
     function openEntrance() {
         layui.use(['layer'], function () {

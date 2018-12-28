@@ -287,12 +287,6 @@ public class ProjectController {
         return RetResponse.error();
     }
 
-    @RequestMapping("/teacher/declare.htm")
-    public String declarePage(Model model) {
-        model.addAttribute("user", SubjectUtils.getSubject().getBindMap("user"));
-        return "/projectDeclare";
-    }
-
     @RequestMapping("/project/list")
     @ResponseBody
     public BaseResponse getAllProject(int page, int limit) {
