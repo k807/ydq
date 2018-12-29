@@ -117,16 +117,15 @@
             height: 'full-200',
             cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'},
-                    {field: 'id',title:'ID',width:60, hide: true},
+                    {field: 'id',title:'ID',width:'4%', hide: true},
                     {field: 'name', title: "项目名称"},
-                    {field:'level',title:'项目级别',width:100,templet:function(d){
+                    {field:'level',title:'项目级别',width:'6%',templet:function(d){
                         switch (d.level){
                             case 0:return "校级一类";
                             case 1:return "校级二类";
                         }
                     }},
-                    {field: 'major', title: "所属专业",width:180,sort:true,templet:function(d){
+                    {field: 'major', title: "所属专业",width:'12%',sort:true,templet:function(d){
                         switch (d.major){
                             case 0:return '计算机科学与技术';
                             case 1:return '电子信息工程';
@@ -134,15 +133,15 @@
                             case 3:return '数字媒体技术';
                         }
                     }},
-                    {field:'entrance',title:'申报入口',sort:true,event:'showRule',width:200,templet:function (d) {
+                    {field:'entrance',title:'申报入口',sort:true,event:'showRule',width:'12%',templet:function (d) {
                             return d.entrance.title;
                         }},
-                    {field:'manager',title:'管理员',sort:true,width:120,templet:function (d) {
+                    {field:'manager',title:'管理员',sort:true,width:'10%',templet:function (d) {
                             return d.manager.nick;
                         }},
-                    {field: 'createTime', title: "创建时间",width:180,sort:true},
-                    {field: 'updateTime', title: "更新时间",width:180,sort:true},
-                    {field: 'state',title:'状态',width:140,sort:true,templet:function(d){
+                    {field: 'createTime', title: "创建时间",width:'12%',sort:true},
+                    {field: 'updateTime', title: "更新时间",width:'12%',sort:true},
+                    {field: 'state',title:'状态',width:'9%',sort:true,templet:function(d){
                         switch(d.state){
                             case -1:return '未提交';
                             case 0:return '审核中';
@@ -158,7 +157,7 @@
                             case 10:return '已结题';
                         }
                     }},
-                    {title: '操作',align:'center', toolbar: '#bar'}
+                    {title: '操作',align:'center',width:'10%', toolbar: '#bar'}
                 ]
             ],
             text: {
@@ -218,7 +217,7 @@
 
         form.on('submit(search)', function (data) {
             tableIns.reload({
-                url: '/project/teacher/search',
+                url: '/teacher/search',
                 where: {
                     name: data.field.name,
                     level: data.field.level,

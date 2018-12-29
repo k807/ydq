@@ -115,16 +115,15 @@
             projectId: 'projectId,sex',
             cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'},
-                    {field: 'id', title: 'ID', width: 60, sort: true, hide: true},
-                    {field: 'name', title: "项目名称", width: 150},
+                    {field: 'id', title: 'ID', width: '4%', sort: true, hide: true},
+                    {field: 'name', title: "项目名称", width: '12%'},
                     {
-                        field: 'leader', title: "负责人", width: 100, sort: true, templet: function (d) {
+                        field: 'leader', title: "负责人", width: '8%', sort: true, templet: function (d) {
                             return d.leader.nick
                         }
                     },
                     {
-                        field: 'level', title: '项目级别', width: 100, templet: function (d) {
+                        field: 'level', title: '项目级别', width: '6%', templet: function (d) {
                             switch (d.level) {
                                 case 0:
                                     return "校级一类";
@@ -134,7 +133,7 @@
                         }
                     },
                     {
-                        field: 'major', title: "所属专业", width: 170, sort: true, templet: function (d) {
+                        field: 'major', title: "所属专业", width: '10%', sort: true, templet: function (d) {
                             switch (d.major) {
                                 case 0:
                                     return '计算机科学与技术';
@@ -148,13 +147,13 @@
                         }
                     },
                     {
-                        field: 'manager', title: '管理员', sort: true, width: 100, templet: function (d) {
+                        field: 'manager', title: '管理员', sort: true, width: '8%', templet: function (d) {
                             return d.manager.nick;
                         }
                     },
-                    {field: 'createTime', title: "创建时间", width: 170, sort: true},
+                    {field: 'createTime', title: "创建时间", width: '12%', sort: true},
                     {
-                        field: 'mark', title: '状态', width: 100, sort: true, templet: function (d) {
+                        field: 'mark', title: '状态', width: '5%', sort: true, templet: function (d) {
                             if (d.mark)
                                 return '已评分';
                             else
@@ -162,7 +161,7 @@
                         }
                     },
                     {
-                        field: 'score', title: '评分', width: 90, align: 'center', sort: true, templet: function (d) {
+                        field: 'score', title: '评分', width: '7%', align: 'center', sort: true, templet: function (d) {
                             if (!d.mark)
                                 return '尚未评分';
                             else
@@ -170,7 +169,7 @@
                         }
                     },
                     {field: 'remark', title: '评语'},
-                    {title: '操作', align: 'center', width: 190, toolbar: '#bar'}
+                    {title: '操作', align: 'center', width: '13%', toolbar: '#bar'}
                 ]
             ],
             text: {
@@ -195,10 +194,10 @@
         table.on('tool(table)', function (obj) {
             var data = obj.data;
             var tr = obj.tr;
-            var remark = tr.children('td').eq(10);
-            var btn = tr.children('td').eq(11).children('div').children('a').eq(1);
-            var cancel = tr.children('td').eq(11).children('div').children('a').eq(2);
-            var score = tr.children('td').eq(9);
+            var remark = tr.children('td').eq(9);
+            var btn = tr.children('td').eq(10).children('div').children('a').eq(1);
+            var cancel = tr.children('td').eq(10).children('div').children('a').eq(2);
+            var score = tr.children('td').eq(8);
             if (obj.event === 'detail') {
                 newTab('/project/getDetails/' + obj.data.projectId, obj.data.name);
             } else if (obj.event === 'edit') {
@@ -269,7 +268,7 @@
 
         form.on('submit(search)', function (data) {
             tableIns.reload({
-                url: '/project/expert/search',
+                url: '/expert/search',
                 where: {
                     name: data.field.name,
                     level: data.field.level,

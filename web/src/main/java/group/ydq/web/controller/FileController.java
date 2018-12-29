@@ -59,6 +59,7 @@ public class FileController {
             ProjectFile projectFile = fileService.getFile(id);
             String uuid = projectFile.getUuid();
             String filename = projectFile.getName();
+            FileUtil.createDirIfNotExists();
             File file = new File(FileUtil.absolutePath, FileUtil.staticDir+ uuid + FileUtil.getSuffix(filename));
             if (file.exists()) {
                 return ResponseEntity

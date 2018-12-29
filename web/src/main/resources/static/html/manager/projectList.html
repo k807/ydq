@@ -119,16 +119,15 @@
             height: 'full-200',
             cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'},
-                    {field: 'id', title: 'ID', width: 60, sort: true, hide: true},
+                    {field: 'id', title: 'ID', width: '4%', sort: true, hide: true},
                     {field: 'name', title: "项目名称"},
                     {
-                        field: 'leader', title: "负责人", width: 120, sort: true, templet: function (d) {
+                        field: 'leader', title: "负责人", width: '10%', sort: true, templet: function (d) {
                             return d.leader.nick
                         }
                     },
                     {
-                        field: 'level', title: '项目级别', width: 100, templet: function (d) {
+                        field: 'level', title: '项目级别', width: '6%', templet: function (d) {
                             switch (d.level) {
                                 case 0:
                                     return "校级一类";
@@ -138,7 +137,7 @@
                         }
                     },
                     {
-                        field: 'major', title: "所属专业", width: 180, sort: true, templet: function (d) {
+                        field: 'major', title: "所属专业", width: '11%', sort: true, templet: function (d) {
                             switch (d.major) {
                                 case 0:
                                     return '计算机科学与技术';
@@ -152,7 +151,7 @@
                         }
                     },
                     {
-                        field: 'experts', title: '分配专家', templet: function (d) {
+                        field: 'experts', title: '分配专家',width:'12%', templet: function (d) {
                             if (d.experts.length === 0)
                                 return "尚未分配";
                             else {
@@ -165,10 +164,10 @@
                             }
                         }
                     },
-                    {field: 'createTime', title: "创建时间", width: 170, sort: true},
-                    {field: 'updateTime', title: "更新时间", width: 170, sort: true},
+                    {field: 'createTime', title: "创建时间", width: '12%', sort: true},
+                    {field: 'updateTime', title: "更新时间", width: '12%', sort: true},
                     {
-                        field: 'state', title: '状态', width: 120, sort: true, templet: function (d) {
+                        field: 'state', title: '状态', width: '8%', sort: true, templet: function (d) {
                             switch (d.state) {
                                 case 0:
                                     return '审核中';
@@ -187,7 +186,7 @@
                             }
                         }
                     },
-                    {title: '操作', toolbar: '#bar', width: 160}
+                    {title: '操作', toolbar: '#bar', width: '10%'}
                 ]
             ],
             text: {
@@ -259,7 +258,7 @@
 
         form.on('submit(search)', function (data) {
             tableIns.reload({
-                url: '/project/manager/search',
+                url: '/manager/search',
                 where: {
                     name: data.field.name,
                     level: data.field.level,

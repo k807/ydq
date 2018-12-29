@@ -36,7 +36,7 @@ public class FileUtil {
      * 创建文件夹路径
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static void createDirIfNotExists() {
+    public static void createDirIfNotExists() {
         if (!absolutePath.isEmpty()) {return;}
 
         //获取跟目录
