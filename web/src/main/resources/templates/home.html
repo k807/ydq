@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/assets/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/assets/style/admin.css" media="all">
 </head>
-<body class="layui-layout-body" layadmin-themealias="default">
+<body class="layui-layout-body" layadmin-themealias="default" onbeforeunload="logout()">
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
@@ -213,6 +213,10 @@
                 content: '/rule/list'
             });
         })
+    }
+    
+    function logout() {
+        layui.$.get('/authority/logout');
     }
 </script>
 </body>
