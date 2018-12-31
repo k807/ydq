@@ -81,7 +81,7 @@ public class StageController {
     @RequestMapping("/changeState")
     @ResponseBody
     //这个接口用于并处理接收审核的数据
-    private BaseResponse changeState(@RequestBody Map<String, Object> paramsMap, HttpServletRequest httpServletRequest) {
+    private BaseResponse changeState(@RequestBody Map<String, Object> paramsMap) {
         /*
          * checkStageID --> StageCheck表中的主键ID
          * checkStageStatus --> StageCheck表中的审核状态代码 1表示通过 2表示待整改（未通过）
