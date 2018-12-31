@@ -38,7 +38,7 @@ public class StageController {
 
     @RequestMapping("/addRule")
     @SuppressWarnings("unchecked")
-    private BaseResponse addRule(@RequestBody Map<String, Object> msg, HttpServletRequest httpServletRequest) throws NullPointerException {
+    private BaseResponse addRule(@RequestBody Map<String, Object> msg) throws NullPointerException {
         String title = (String) msg.get("title");
         String content = (String) msg.get("content");
         ArrayList<String> stage = (ArrayList<String>) msg.get("stage");
@@ -58,7 +58,7 @@ public class StageController {
 
     @RequestMapping("/getAll")
     private BaseResponse getAll(@RequestParam(name = "page", defaultValue = "1") int page,
-                                @RequestParam(name = "limit", defaultValue = "15") int limit, HttpServletRequest httpServletRequest) throws NullPointerException {
+                                @RequestParam(name = "limit", defaultValue = "15") int limit) throws NullPointerException {
         Page<CheckStage> all = checkStageService.findCheckStagesByStage(page, limit, 1);
         return new BaseResponse(checkStageService.decorateData(all));
     }
@@ -73,7 +73,7 @@ public class StageController {
                                          @RequestParam(name = "status", defaultValue = "") String status,
                                          @RequestParam(name = "stage", defaultValue = "1") int stage,
                                          @RequestParam(name = "createTime", defaultValue = "1970-01-01 00:00:00") String createTime,
-                                         @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime, HttpServletRequest httpServletRequest) {
+                                         @RequestParam(name = "endTime", defaultValue = "2049-12-31 23:59:59") String endTime) {
         Page<CheckStage> dataList = checkStageService.findByConditions(page, limit, name, leader, stage, status, createTime, endTime);
         return new BaseResponse(checkStageService.decorateData(dataList));
     }
